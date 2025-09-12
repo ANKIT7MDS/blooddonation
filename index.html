@@ -23,10 +23,14 @@
     }
   }
 </script>
-<style> body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; } </style>
+<style>
+  body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
+  .toast { position: fixed; inset-inline: 0; top: 10px; margin-inline: auto; width: fit-content; z-index: 50; }
+</style>
 
 </head>
 <body class="min-h-screen bg-slate-50">
+  <div id="toast" class="toast hidden"></div>
   
 <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
   <div class="max-w-6xl mx-auto px-4 py-2"></div>
@@ -43,8 +47,7 @@
       <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
       <div class="mt-1 text-6xl sm:text-7xl font-extrabold text-red-700 leading-tight">रक्तदाता पोर्टल</div>
       <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
-        माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर,
-        <b>सेवा पखवाड़ा (17 सितम्बर — 2 अक्टूबर 2025)</b> हेतु यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
+        माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
       </p>
       <div class="mt-4 inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
         <img src="seva-pakhwada-2025-clean-1024.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded" />
@@ -121,26 +124,43 @@
   <script>
     const MANDALS = ["अन्य","भेंसोदा","भानपुरा","गरोठ","मेलखेडा","खड़ावदा","शामगढ़","सुवासरा","बसाई","सीतामऊ","क्यामपुर","सीतामऊ ग्रामीण","गुर्जर बरडिया","धुंधधड़का","बुढा","पिपलिया मंडी","मल्हारगढ़","दलोदा","मगरामाता जी","मंदसौर ग्रामीण","मंदसौर उत्तर","मंदसौर दक्षिण","अन्य जिले से"];
     const BLOOD_GROUPS = ["A+","A-","B+","B-","O+","O-","AB+","AB-"];
-
-    function $(id){ return document.getElementById(id); }
-    function fill(el, arr, first){ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
+    const $ = (id)=>document.getElementById(id);
+    const fill = (el, arr, first)=>{ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
+    document.getElementById('year').textContent = new Date().getFullYear();
     fill($('qGroup'), BLOOD_GROUPS, 'ब्लड ग्रुप');
     fill($('qMandal'), MANDALS, 'मंडल');
+    fill($('r_group'), BLOOD_GROUPS, 'चुनें');
     const cg = document.getElementById('chipGroups');
     BLOOD_GROUPS.forEach(g=>{ const b=document.createElement('button'); b.type='button'; b.className='px-3 py-1 rounded-full bg-peach-100 text-saffron-800 border hover:bg-white'; b.textContent=g; b.onclick=()=>{ $('qGroup').value=g; render(); }; cg.appendChild(b); });
-    fill($('r_group'), BLOOD_GROUPS, 'चुनें');
-    document.getElementById('year').textContent = new Date().getFullYear();
+    const fmtTS = (ts)=>{ try{ const d = ts?.toDate? ts.toDate(): new Date(ts); return d.toLocaleDateString('en-GB'); }catch{ return '' } };
+    const isWilling = (d)=>{ if(!d) return true; const w=d.willing; if(w===false) return false; if(typeof w==='string'){ const s=w.trim().toLowerCase(); if(['no','नहीं','nahi','nai'].includes(s)) return false; } return true; };
 
-    function fmtTS(ts){ try{ var d = ts && ts.toDate ? ts.toDate() : new Date(ts); return d.toLocaleDateString('en-GB'); }catch(e){ return ''; } }
-    function isWilling(d){ if(!d) return true; var w = d.willing; if(w===false) return false; if(typeof w==='string'){ var s=w.trim().toLowerCase(); if(['no','नहीं','nahi','nai'].indexOf(s)>=0) return false; } return true; }
+    const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
+    const TELEGRAM_CHAT_ID = "@bjpbloodbot";
+    async function sendTelegram(text) {
+      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type':'application/json' },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
+        });
+        if(!res.ok) throw new Error('HTTP '+res.status);
+      } catch(err) {
+        const img = new Image();
+        img.src = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(TELEGRAM_CHAT_ID)}&text=${encodeURIComponent(text)}`;
+      }
+    }
+    function showToast(html, ok=true) {
+      const t = document.getElementById('toast'); t.className = 'toast';
+      t.innerHTML = `<div class="mx-auto max-w-lg bg-white border rounded-2xl shadow px-4 py-3 ${ok?'border-green-600':'border-red-600'}"><div class="text-sm ${ok?'text-green-700':'text-red-700'}">${html}</div></div>`;
+      setTimeout(()=> t.classList.add('hidden'), 3500);
+    }
   </script>
 
   <script type="module">
-    const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
-    const TELEGRAM_CHAT_ID = "@bjpbloodbot";
-
-    const {{ initializeApp }} = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
-    const {{ getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp }} = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
+    const { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
     
 const firebaseConfig = {
   apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
@@ -161,6 +181,7 @@ const firebaseConfig = {
     ['qText','qGroup','qMandal'].forEach(id=> document.getElementById(id).addEventListener('input', render));
 
     function render(){
+      const $ = (id)=>document.getElementById(id);
       const t = $('qText').value.trim().toLowerCase();
       const g = $('qGroup').value;
       const m = $('qMandal').value;
@@ -200,6 +221,7 @@ const firebaseConfig = {
 
     document.getElementById('reqForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
+      const $ = (id)=>document.getElementById(id);
       const payload = {
         requester: $('r_requester').value.trim(),
         phone: $('r_phone').value.trim().replace(/[^0-9]/g,''),
@@ -211,20 +233,18 @@ const firebaseConfig = {
         createdAt: serverTimestamp(),
         status: "new"
       };
-      const msg = document.getElementById('reqMsg'); msg.textContent='';
+      const msg = $('reqMsg'); msg.textContent='';
       try {
         await addDoc(collection(db,'requests'), payload);
-        msg.textContent = '✅ अनुरोध भेज दिया गया। हमारी टीम आपसे शीघ्र संपर्क करेगी।';
-        fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text:
-            `🆘 रक्त अनुरोध\nनाम: ${payload.requester}\nमोबाइल: ${payload.phone}\nरोगी: ${payload.patient||'-'}\nब्लड: ${payload.bloodGroup||'-'} (${payload.units} यूनिट)\nस्थान: ${payload.location||'-'}\nअस्पताल/नोट्स: ${payload.hospital||'-'}`
-          })
-        }).catch(()=>{});
+        msg.className = 'text-green-700';
+        msg.textContent = '✅ अनुरोध सफलतापूर्वक दर्ज हो गया। हमारी टीम शीघ्र संपर्क करेगी।';
+        showToast('आपका अनुरोध दर्ज हो गया।', true);
+        sendTelegram(`🆘 रक्त अनुरोध\nनाम: ${payload.requester}\nमोबाइल: ${payload.phone}\nरोगी: ${payload.patient||'-'}\nब्लड: ${payload.bloodGroup||'-'} (${payload.units} यूनिट)\nस्थान: ${payload.location||'-'}\nअस्पताल/नोट्स: ${payload.hospital||'-'}`);
         e.target.reset();
       } catch(err) {
-        console.error(err); msg.textContent = '❌ त्रुटि: कृपया बाद में पुनः प्रयास करें।';
+        console.error(err);
+        msg.className = 'text-red-700'; msg.textContent = '❌ त्रुटि: कृपया बाद में पुनः प्रयास करें।';
+        showToast('अनुरोध भेजने में समस्या हुई।', false);
       }
     });
   </script>

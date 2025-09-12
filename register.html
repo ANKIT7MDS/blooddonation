@@ -23,10 +23,14 @@
     }
   }
 </script>
-<style> body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; } </style>
+<style>
+  body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
+  .toast { position: fixed; inset-inline: 0; top: 10px; margin-inline: auto; width: fit-content; z-index: 50; }
+</style>
 
 </head>
 <body class="min-h-screen bg-slate-50">
+  <div id="toast" class="toast hidden"></div>
   
 <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
   <div class="max-w-6xl mx-auto px-4 py-2"></div>
@@ -43,8 +47,7 @@
       <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
       <div class="mt-1 text-6xl sm:text-7xl font-extrabold text-red-700 leading-tight">रक्तदाता पोर्टल</div>
       <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
-        माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर,
-        <b>सेवा पखवाड़ा (17 सितम्बर — 2 अक्टूबर 2025)</b> हेतु यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
+        माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
       </p>
       <div class="mt-4 inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
         <img src="seva-pakhwada-2025-clean-1024.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded" />
@@ -93,7 +96,7 @@
           <div>
             <label class="text-sm text-slate-600">लिंग</label>
             <select id="f_gender" class="mt-1 w-full rounded-xl border px-4 py-4 text-base">
-              <option value="">चुनें</option>
+              <option value="">چुनें</option>
               <option value="पुरुष">पुरुष</option>
               <option value="महिला">महिला</option>
               <option value="अन्य">अन्य</option>
@@ -128,17 +131,32 @@
   <script>
     const MANDALS = ["अन्य","भेंसोदा","भानपुरा","गरोठ","मेलखेडा","खड़ावदा","शामगढ़","सुवासरा","बसाई","सीतामऊ","क्यामपुर","सीतामऊ ग्रामीण","गुर्जर बरडिया","धुंधधड़का","बुढा","पिपलिया मंडी","मल्हारगढ़","दलोदा","मगरामाता जी","मंदसौर ग्रामीण","मंदसौर उत्तर","मंदसौर दक्षिण","अन्य जिले से"];
     const BLOOD_GROUPS = ["A+","A-","B+","B-","O+","O-","AB+","AB-"];
-    function $(id){ return document.getElementById(id); }
-    function fill(el, arr, first){ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
+    const $ = (id)=>document.getElementById(id);
+    const fill = (el, arr, first)=>{ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
     document.getElementById('year').textContent = new Date().getFullYear();
     fill($('f_group'), BLOOD_GROUPS, 'चुनें');
     fill($('f_mandal'), MANDALS, 'चुनें');
+
+    const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
+    const TELEGRAM_CHAT_ID = "@bjpbloodbot";
+    async function sendTelegram(text) {
+      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type':'application/json' },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
+        });
+        if(!res.ok) throw new Error('HTTP '+res.status);
+      } catch(err) {
+        const img = new Image();
+        img.src = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(TELEGRAM_CHAT_ID)}&text=${encodeURIComponent(text)}`;
+      }
+    }
+    function showToast(txt, ok=true){ const t=document.getElementById('toast'); t.className='toast'; t.innerHTML=`<div class="mx-auto max-w-lg bg-white border rounded-2xl shadow px-4 py-3 ${ok?'border-green-600':'border-red-600'}"><div class="text-sm ${ok?'text-green-700':'text-red-700'}">${txt}</div></div>`; setTimeout(()=>t.classList.add('hidden'), 3500); }
   </script>
 
   <script type="module">
-    const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
-    const TELEGRAM_CHAT_ID = "@bjpbloodbot";
-
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
     const { getFirestore, collection, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
     
@@ -157,34 +175,33 @@ const firebaseConfig = {
 
     document.getElementById('donorForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
-      const msg = document.getElementById('formMsg'); msg.textContent='';
+      const $ = (id)=>document.getElementById(id);
+      const msg = $('formMsg'); msg.textContent='';
       try {
         const payload = {
-          name: document.getElementById('f_name').value.trim(),
-          phone: document.getElementById('f_phone').value.trim().replace(/[^0-9]/g,''),
-          whatsapp: document.getElementById('f_whatsapp').value.trim().replace(/[^0-9]/g,''),
-          bloodGroup: document.getElementById('f_group').value,
-          mandal: document.getElementById('f_mandal').value,
-          address: document.getElementById('f_address').value.trim(),
-          age: document.getElementById('f_age').value ? Number(document.getElementById('f_age').value) : null,
-          gender: document.getElementById('f_gender').value,
-          lastDonationDate: document.getElementById('f_last').value ? new Date(document.getElementById('f_last').value) : null,
-          willing: document.getElementById('f_willing').value === 'yes',
-          notes: document.getElementById('f_notes').value.trim(),
+          name: $('f_name').value.trim(),
+          phone: $('f_phone').value.trim().replace(/[^0-9]/g,''),
+          whatsapp: $('f_whatsapp').value.trim().replace(/[^0-9]/g,''),
+          bloodGroup: $('f_group').value,
+          mandal: $('f_mandal').value,
+          address: $('f_address').value.trim(),
+          age: $('f_age').value ? Number($('f_age').value) : null,
+          gender: $('f_gender').value,
+          lastDonationDate: $('f_last').value ? new Date($('f_last').value) : null,
+          willing: $('f_willing').value === 'yes',
+          notes: $('f_notes').value.trim(),
           createdAt: serverTimestamp(),
         };
         await addDoc(collection(db,'donors'), payload);
+        msg.className = 'text-green-700';
         msg.textContent = '✅ धन्यवाद! आपका विवरण सफलतापूर्वक जमा हो गया।';
-        fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text:
-            `🆕 नया रक्तदाता\nनाम: ${payload.name}\nमोबाइल: ${payload.phone}\nब्लड: ${payload.bloodGroup||'-'}\nमंडल: ${payload.mandal||'-'}\nपता: ${payload.address||'-'}`
-          })
-        }).catch(()=>{});
+        showToast('नया रक्तदाता रजिस्टर हुआ।', true);
+        sendTelegram(`🆕 नया रक्तदाता\nनाम: ${payload.name}\nमोबाइल: ${payload.phone}\nब्लड: ${payload.bloodGroup||'-'}\nमंडल: ${payload.mandal||'-'}\nपता: ${payload.address||'-'}`);
         document.getElementById('donorForm').reset();
       } catch(err) {
-        console.error(err); msg.textContent = '❌ त्रुटि: कृपया बाद में पुनः प्रयास करें।';
+        console.error(err);
+        msg.className='text-red-700'; msg.textContent='❌ त्रुटि: कृपया बाद में पुनः प्रयास करें।';
+        showToast('पंजीकरण में समस्या हुई।', false);
       }
     });
   </script>
