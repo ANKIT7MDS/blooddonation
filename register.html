@@ -1,0 +1,175 @@
+
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>रक्तदाता पंजीकरण • बीजेपी जिला मंदसौर</title>
+  
+<!-- Tailwind (Play CDN) and Theme -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          saffron: {
+            50: '#FFF4E8',
+            100: '#FFE8D6',
+            200: '#FFD7B3',
+            300: '#FFC48A',
+            400: '#FFA24D',
+            500: '#FF7F0E',
+            600: '#E06900',
+            700: '#C25700',
+            800: '#A34500',
+            900: '#873800'
+          },
+          peach: {
+            50: '#FFF7EF',
+            100: '#FFEFE0',
+            200: '#FFE3C6'
+          }
+        }
+      }
+    }
+  }
+</script>
+
+</head>
+<body class="min-h-screen bg-slate-50">
+  <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="font-extrabold tracking-wide text-lg sm:text-xl">बीजेपी जिला मंदसौर • रक्तदाता पोर्टल</a>
+      <nav class="flex gap-2 text-sm">
+        <a href="index.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">डोनर सर्च</a>
+        <a href="register.html" class="px-3 py-2 rounded-xl bg-white/10">रक्तदाता पंजीकरण</a>
+        <a href="admin.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-4 space-y-4">
+    <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
+      <h1 class="text-xl font-bold text-saffron-800 mb-1">रक्तदाता पंजीकरण फ़ॉर्म</h1>
+      <p class="text-sm text-slate-600 mb-4">कृपया सही जानकारी भरें — आवश्यकता पड़ने पर आपसे संपर्क किया जाएगा।</p>
+
+      <form id="donorForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="text-sm text-slate-600">पूरा नाम</label>
+          <input required id="f_name" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="जैसे: राम शर्मा" />
+        </div>
+        <div>
+          <label class="text-sm text-slate-600">मोबाइल</label>
+          <input required id="f_phone" pattern="[0-9]{10}" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="10 अंकों का नंबर" />
+        </div>
+        <div>
+          <label class="text-sm text-slate-600">व्हाट्सऐप नंबर (वैकल्पिक)</label>
+          <input id="f_whatsapp" pattern="[0-9]{10}" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="optional" />
+        </div>
+        <div>
+          <label class="text-sm text-slate-600">ब्लड ग्रुप</label>
+          <select required id="f_group" class="mt-1 w-full rounded-xl border px-4 py-3 text-base"></select>
+        </div>
+        <div>
+          <label class="text-sm text-slate-600">मंडल</label>
+          <select required id="f_mandal" class="mt-1 w-full rounded-xl border px-4 py-3 text-base"></select>
+        </div>
+        <div>
+          <label class="text-sm text-slate-600">वार्ड / बूथ / पता</label>
+          <input id="f_address" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="उदाहरण: वार्ड 12, बूथ 45, राम टेकरी रोड" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-sm text-slate-600">उम्र</label>
+            <input type="number" min="18" max="65" id="f_age" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="18-65" />
+          </div>
+          <div>
+            <label class="text-sm text-slate-600">लिंग</label>
+            <select id="f_gender" class="mt-1 w-full rounded-xl border px-4 py-3 text-base">
+              <option value="">चुनें</option>
+              <option value="पुरुष">पुरुष</option>
+              <option value="महिला">महिला</option>
+              <option value="अन्य">अन्य</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="text-sm text-slate-600">आख़िरी रक्तदान (यदि किया है)</label>
+          <input type="date" id="f_last" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" />
+        </div>
+        <div>
+          <label class="text-sm text-slate-600">क्या आवश्यकता पड़ने पर आपको रक्त दान के लिए संपर्क कर सकते हैं?</label>
+          <select id="f_willing" class="mt-1 w-full rounded-xl border px-4 py-3 text-base">
+            <option value="yes">हाँ</option>
+            <option value="no">नहीं</option>
+          </select>
+        </div>
+        <div class="sm:col-span-2">
+          <label class="text-sm text-slate-600">नोट्स</label>
+          <textarea id="f_notes" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" rows="3" placeholder="विशेष जानकारी (उदाहरण: उपलब्ध समय)"></textarea>
+        </div>
+        <div class="sm:col-span-2 flex items-center gap-3">
+          <button class="px-5 py-3 rounded-xl bg-saffron-700 text-white font-semibold">जमा करें</button>
+          <span id="formMsg" class="text-sm"></span>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500">© <span id="year"></span> BJP जिला मंदसौर • रक्तदान सेवा</footer>
+
+  <script type="module">
+    const MANDALS = ["भेंसोदा","भानपुरा","गरोठ","मेलखेडा","खड़ावदा","शामगढ़","सुवासरा","बसाई","सीतामऊ","क्यामपुर","सीतामऊ ग्रामीण","गुर्जर बरडिया","धुंधधड़का","बुढा","पिपलिया मंडी","मल्हारगढ़","दलोदा","मगरामाता जी","मंदसौर ग्रामीण","मंदसौर उत्तर","मंदसौर दक्षिण","अन्य जिले से"];
+    const BLOOD_GROUPS = ["A+","A-","B+","B-","O+","O-","AB+","AB-"];
+    const $ = (id)=>document.getElementById(id);
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const fill = (el, arr, first)=>{ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
+    fill(document.getElementById('f_group'), BLOOD_GROUPS, 'चुनें');
+    fill(document.getElementById('f_mandal'), MANDALS, 'चुनें');
+
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
+    const { getFirestore, collection, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
+    
+const firebaseConfig = {
+  apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
+  authDomain: "blodddonation-9c44e.firebaseapp.com",
+  projectId: "blodddonation-9c44e",
+  storageBucket: "blodddonation-9c44e.firebasestorage.app",
+  messagingSenderId: "636578091772",
+  appId: "1:636578091772:web:276d08168f8fc9c221fd79",
+  measurementId: "G-3TPG0JCF3R"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById('donorForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const msg = document.getElementById('formMsg'); msg.textContent='';
+      try {
+        const payload = {
+          name: document.getElementById('f_name').value.trim(),
+          phone: document.getElementById('f_phone').value.trim().replace(/[^0-9]/g,''),
+          whatsapp: document.getElementById('f_whatsapp').value.trim().replace(/[^0-9]/g,''),
+          bloodGroup: document.getElementById('f_group').value,
+          mandal: document.getElementById('f_mandal').value,
+          address: document.getElementById('f_address').value.trim(),
+          age: document.getElementById('f_age').value ? Number(document.getElementById('f_age').value) : null,
+          gender: document.getElementById('f_gender').value,
+          lastDonationDate: document.getElementById('f_last').value ? new Date(document.getElementById('f_last').value) : null,
+          willing: document.getElementById('f_willing').value === 'yes',
+          notes: document.getElementById('f_notes').value.trim(),
+          createdAt: serverTimestamp(),
+        };
+        await addDoc(collection(db,'donors'), payload);
+        msg.textContent = '✅ धन्यवाद! आपका विवरण सफलतापूर्वक जमा हो गया।';
+        document.getElementById('donorForm').reset();
+      } catch(err) {
+        console.error(err); msg.textContent = '❌ त्रुटि: कृपया बाद में पुनः प्रयास करें।';
+      }
+    });
+  </script>
+</body>
+</html>
