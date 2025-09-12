@@ -4,51 +4,66 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin • बीजेपी जिला मंदसौर</title>
+  <title>Admin • रक्तदाता पोर्टल</title>
   
-<!-- Tailwind (Play CDN) and Theme -->
+<!-- Tailwind + Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
     theme: {
       extend: {
+        fontFamily: { devanagari: ['"Noto Sans Devanagari"', 'system-ui', 'sans-serif'] },
         colors: {
-          saffron: {
-            50: '#FFF4E8',
-            100: '#FFE8D6',
-            200: '#FFD7B3',
-            300: '#FFC48A',
-            400: '#FFA24D',
-            500: '#FF7F0E',
-            600: '#E06900',
-            700: '#C25700',
-            800: '#A34500',
-            900: '#873800'
-          },
-          peach: {
-            50: '#FFF7EF',
-            100: '#FFEFE0',
-            200: '#FFE3C6'
-          }
+          saffron: { 50:'#FFF4E8',100:'#FFE8D6',200:'#FFD7B3',300:'#FFC48A',400:'#FFA24D',500:'#FF7F0E',600:'#E06900',700:'#C25700',800:'#A34500',900:'#873800' },
+          peach: { 50:'#FFF7EF',100:'#FFEFE0',200:'#FFE3C6' }
         }
       }
     }
   }
 </script>
+<style> body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; } </style>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="min-h-screen bg-slate-50">
-  <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="index.html" class="font-extrabold tracking-wide text-lg sm:text-xl">बीजेपी जिला मंदसौर • रक्तदाता पोर्टल</a>
-      <nav class="flex gap-2 text-sm">
-        <a href="index.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">डोनर सर्च</a>
-        <a href="register.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">रक्तदाता पंजीकरण</a>
-        <a href="admin.html" class="px-3 py-2 rounded-xl bg-white/10">Admin</a>
-      </nav>
+  
+<header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2"></div>
+    <nav class="flex gap-2 text-sm">
+      <a href="index.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">डोनर सर्च</a>
+      <a href="register.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">रक्तदाता पंजीकरण</a>
+      <a href="admin.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">Admin</a>
+    </nav>
+  </div>
+</header>
+
+
+  
+<section class="bg-peach-50 border-y border-peach-200">
+  <div class="max-w-6xl mx-auto px-4 py-8 grid md:grid-cols-[1.1fr_0.9fr] gap-6 items-center">
+    <div class="text-center md:text-left w-full">
+      <div class="text-slate-800 text-base sm:text-lg font-semibold">भारतीय जनता पार्टी • जिला मंदसौर</div>
+      <div class="mt-1 text-3xl sm:text-4xl font-extrabold text-red-700">रक्तदाता पोर्टल</div>
+      <p class="mt-2 text-slate-700 text-sm sm:text-base max-w-2xl md:max-w-none md:pr-6 mx-auto md:mx-0">
+        माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर,
+        <b>सेवा पखवाड़ा (17 सितम्बर — 2 अक्टूबर 2025)</b> हेतु यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
+      </p>
+      <div class="mt-4 inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
+        <img src="seva-pakhwada-2025-clean-1024.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded" />
+        <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
+      </div>
     </div>
-  </header>
+    <div class="justify-self-center md:justify-self-end">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg"
+           alt="प्रधानमंत्री नरेंद्र मोदी" class="w-64 h-auto rounded-3xl shadow-xl border border-white" />
+    </div>
+  </div>
+</section>
+
 
   <main class="max-w-6xl mx-auto p-4 space-y-4">
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
@@ -144,31 +159,38 @@
           <tbody id="donationsTbody"></tbody>
         </table>
       </div>
+
+      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border overflow-x-auto -mx-2 sm:mx-0">
+        <h3 class="text-base font-semibold mb-3">Requests (रक्त आवश्यकता)</h3>
+        <table class="min-w-[720px] w-full text-sm">
+          <thead>
+            <tr class="bg-slate-100 text-slate-700">
+              <th class="p-2 text-left">तारीख़</th>
+              <th class="p-2 text-left">नाम/मोबाइल</th>
+              <th class="p-2 text-left">रोगी</th>
+              <th class="p-2 text-left">ग्रुप/यूनिट</th>
+              <th class="p-2 text-left">स्थान</th>
+              <th class="p-2 text-left">अस्पताल/नोट्स</th>
+            </tr>
+          </thead>
+          <tbody id="reqTbody"></tbody>
+        </table>
+      </div>
     </div>
   </main>
 
-  <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500">© <span id="year"></span> BJP जिला मंदसौर • रक्तदान सेवा</footer>
+  <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500 text-center">© <span id="year"></span> भारतीय जनता पार्टी • जिला मंदसौर</footer>
 
   <script type="module">
-    const BLOOD_GROUPS = ["A+","A-","B+","B-","O+","O-","AB+","AB-"];
-    const MANDALS = ["भेंसोदा","भानपुरा","गरोठ","मेलखेडा","खड़ावदा","शामगढ़","सुवासरा","बसाई","सीतामऊ","क्यामपुर","सीतामऊ ग्रामीण","गुर्जर बरडिया","धुंधधड़का","बुढा","पिपलिया मंडी","मल्हारगढ़","दलोदा","मगरामाता जी","मंदसौर ग्रामीण","मंदसौर उत्तर","मंदसौर दक्षिण","अन्य जिले से"];
+    const BLOOD_GROUPS = __BGS__;
+    const MANDALS = (function(arr){ if(!arr.includes("अन्य")) arr = ["अन्य", ...arr]; return arr; })(__MANDALS__);
     const $ = (id)=>document.getElementById(id);
     const fmtDate = (ts)=>{ try{ const d = ts?.toDate? ts.toDate(): new Date(ts); return d.toLocaleDateString('en-GB'); }catch{ return '' } };
     document.getElementById('year').textContent = new Date().getFullYear();
 
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
     const { getFirestore, collection, onSnapshot, query, orderBy, addDoc, updateDoc, doc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
-    
-const firebaseConfig = {
-  apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
-  authDomain: "blodddonation-9c44e.firebaseapp.com",
-  projectId: "blodddonation-9c44e",
-  storageBucket: "blodddonation-9c44e.firebasestorage.app",
-  messagingSenderId: "636578091772",
-  appId: "1:636578091772:web:276d08168f8fc9c221fd79",
-  measurementId: "G-3TPG0JCF3R"
-};
-
+    __FIREBASE__
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
@@ -179,7 +201,7 @@ const firebaseConfig = {
       } else alert('गलत PIN');
     };
 
-    let donors = []; let donations = [];
+    let donors = []; let donations = []; let requests = [];
     const sel = document.getElementById('selDonor');
 
     onSnapshot(query(collection(db,'donors'), orderBy('createdAt','desc')), snap=>{
@@ -191,6 +213,10 @@ const firebaseConfig = {
       donations = snap.docs.map(d=>({ id:d.id, ...d.data() }));
       renderDonationsTable();
       updateCharts();
+    });
+    onSnapshot(query(collection(db,'requests'), orderBy('createdAt','desc')), snap=>{
+      requests = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+      renderRequestsTable();
     });
 
     function renderAdminDonorSelect(){
@@ -242,13 +268,26 @@ const firebaseConfig = {
       const tb = document.getElementById('donationsTbody'); tb.innerHTML='';
       donations.forEach(x=> tb.insertAdjacentHTML('beforeend', `
         <tr class="odd:bg-white even:bg-slate-50">
-          <td class="p-2">${{x.date?fmtDate(x.date):'—'}}</td>
-          <td class="p-2 font-medium">${{x.donorName}} <span class="text-slate-400">(${{x.donorPhone||''}})</span></td>
-          <td class="p-2">${{x.bloodGroup||''}}</td>
-          <td class="p-2">${{x.mandal||''}}</td>
-          <td class="p-2">${{x.units||''}}</td>
-          <td class="p-2">${{x.recipientName||'—'}}</td>
-          <td class="p-2">${{x.hospital||'—'}}</td>
+          <td class="p-2">${x.date?fmtDate(x.date):'—'}</td>
+          <td class="p-2 font-medium">${x.donorName} <span class="text-slate-400">(${x.donorPhone||''})</span></td>
+          <td class="p-2">${x.bloodGroup||''}</td>
+          <td class="p-2">${x.mandal||''}</td>
+          <td class="p-2">${x.units||''}</td>
+          <td class="p-2">${x.recipientName||'—'}</td>
+          <td class="p-2">${x.hospital||'—'}</td>
+        </tr>`));
+    }
+
+    function renderRequestsTable(){
+      const tb = document.getElementById('reqTbody'); tb.innerHTML='';
+      requests.forEach(r=> tb.insertAdjacentHTML('beforeend', `
+        <tr class="odd:bg-white even:bg-slate-50">
+          <td class="p-2">${r.createdAt?fmtDate(r.createdAt):'—'}</td>
+          <td class="p-2 font-medium">${r.requester||'-'} <span class="text-slate-400">(${r.phone||''})</span></td>
+          <td class="p-2">${r.patient||'-'}</td>
+          <td class="p-2">${r.bloodGroup||'-'} / ${r.units||'-'}</td>
+          <td class="p-2">${r.location||'-'}</td>
+          <td class="p-2">${r.hospital||'-'}</td>
         </tr>`));
     }
   </script>

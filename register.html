@@ -4,50 +4,65 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>रक्तदाता पंजीकरण • बीजेपी जिला मंदसौर</title>
+  <title>रक्तदाता पंजीकरण • रक्तदाता पोर्टल</title>
   
-<!-- Tailwind (Play CDN) and Theme -->
+<!-- Tailwind + Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
     theme: {
       extend: {
+        fontFamily: { devanagari: ['"Noto Sans Devanagari"', 'system-ui', 'sans-serif'] },
         colors: {
-          saffron: {
-            50: '#FFF4E8',
-            100: '#FFE8D6',
-            200: '#FFD7B3',
-            300: '#FFC48A',
-            400: '#FFA24D',
-            500: '#FF7F0E',
-            600: '#E06900',
-            700: '#C25700',
-            800: '#A34500',
-            900: '#873800'
-          },
-          peach: {
-            50: '#FFF7EF',
-            100: '#FFEFE0',
-            200: '#FFE3C6'
-          }
+          saffron: { 50:'#FFF4E8',100:'#FFE8D6',200:'#FFD7B3',300:'#FFC48A',400:'#FFA24D',500:'#FF7F0E',600:'#E06900',700:'#C25700',800:'#A34500',900:'#873800' },
+          peach: { 50:'#FFF7EF',100:'#FFEFE0',200:'#FFE3C6' }
         }
       }
     }
   }
 </script>
+<style> body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; } </style>
 
 </head>
 <body class="min-h-screen bg-slate-50">
-  <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="index.html" class="font-extrabold tracking-wide text-lg sm:text-xl">बीजेपी जिला मंदसौर • रक्तदाता पोर्टल</a>
-      <nav class="flex gap-2 text-sm">
-        <a href="index.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">डोनर सर्च</a>
-        <a href="register.html" class="px-3 py-2 rounded-xl bg-white/10">रक्तदाता पंजीकरण</a>
-        <a href="admin.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">Admin</a>
-      </nav>
+  
+<header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2"></div>
+    <nav class="flex gap-2 text-sm">
+      <a href="index.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">डोनर सर्च</a>
+      <a href="register.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">रक्तदाता पंजीकरण</a>
+      <a href="admin.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">Admin</a>
+    </nav>
+  </div>
+</header>
+
+
+  
+<section class="bg-peach-50 border-y border-peach-200">
+  <div class="max-w-6xl mx-auto px-4 py-8 grid md:grid-cols-[1.1fr_0.9fr] gap-6 items-center">
+    <div class="text-center md:text-left w-full">
+      <div class="text-slate-800 text-base sm:text-lg font-semibold">भारतीय जनता पार्टी • जिला मंदसौर</div>
+      <div class="mt-1 text-3xl sm:text-4xl font-extrabold text-red-700">रक्तदाता पोर्टल</div>
+      <p class="mt-2 text-slate-700 text-sm sm:text-base max-w-2xl md:max-w-none md:pr-6 mx-auto md:mx-0">
+        माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर,
+        <b>सेवा पखवाड़ा (17 सितम्बर — 2 अक्टूबर 2025)</b> हेतु यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
+      </p>
+      <div class="mt-4 inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
+        <img src="seva-pakhwada-2025-clean-1024.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded" />
+        <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
+      </div>
     </div>
-  </header>
+    <div class="justify-self-center md:justify-self-end">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg"
+           alt="प्रधानमंत्री नरेंद्र मोदी" class="w-64 h-auto rounded-3xl shadow-xl border border-white" />
+    </div>
+  </div>
+</section>
+
 
   <main class="max-w-6xl mx-auto p-4 space-y-4">
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
@@ -117,11 +132,14 @@
     </div>
   </main>
 
-  <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500">© <span id="year"></span> BJP जिला मंदसौर • रक्तदान सेवा</footer>
+  <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500 text-center">© <span id="year"></span> भारतीय जनता पार्टी • जिला मंदसौर</footer>
 
   <script type="module">
-    const MANDALS = ["भेंसोदा","भानपुरा","गरोठ","मेलखेडा","खड़ावदा","शामगढ़","सुवासरा","बसाई","सीतामऊ","क्यामपुर","सीतामऊ ग्रामीण","गुर्जर बरडिया","धुंधधड़का","बुढा","पिपलिया मंडी","मल्हारगढ़","दलोदा","मगरामाता जी","मंदसौर ग्रामीण","मंदसौर उत्तर","मंदसौर दक्षिण","अन्य जिले से"];
-    const BLOOD_GROUPS = ["A+","A-","B+","B-","O+","O-","AB+","AB-"];
+    const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
+    const TELEGRAM_CHAT_ID = "@bjpbloodbot";
+
+    const MANDALS = (function(arr){ if(!arr.includes("अन्य")) arr = ["अन्य", ...arr]; return arr; })(__MANDALS__);
+    const BLOOD_GROUPS = __BGS__;
     const $ = (id)=>document.getElementById(id);
 
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -131,17 +149,7 @@
 
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
     const { getFirestore, collection, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
-    
-const firebaseConfig = {
-  apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
-  authDomain: "blodddonation-9c44e.firebaseapp.com",
-  projectId: "blodddonation-9c44e",
-  storageBucket: "blodddonation-9c44e.firebasestorage.app",
-  messagingSenderId: "636578091772",
-  appId: "1:636578091772:web:276d08168f8fc9c221fd79",
-  measurementId: "G-3TPG0JCF3R"
-};
-
+    __FIREBASE__
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
@@ -165,6 +173,17 @@ const firebaseConfig = {
         };
         await addDoc(collection(db,'donors'), payload);
         msg.textContent = '✅ धन्यवाद! आपका विवरण सफलतापूर्वक जमा हो गया।';
+
+        // Telegram notify
+        if(TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID){
+          const text = `🆕 नया रक्तदाता\nनाम: ${payload.name}\nमोबाइल: ${payload.phone}\nब्लड: ${payload.bloodGroup||'-'}\nमंडल: ${payload.mandal||'-'}\nपता: ${payload.address||'-'}`;
+          fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
+          }).catch(()=>{});
+        }
+
         document.getElementById('donorForm').reset();
       } catch(err) {
         console.error(err); msg.textContent = '❌ त्रुटि: कृपया बाद में पुनः प्रयास करें।';
