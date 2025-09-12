@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>बीजेपी जिला मंदसौर • रक्तदाता पोर्टल</title>
+  <!-- TailwindCSS (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js for graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Firebase v10 (ESM CDN) -->
+  <script type="module" id="firebase-modules">
+    // We import inside main script to keep one module block below.
+    // (This tag stays empty intentionally.)
+  </script>
+  <style>
+    /* Small helpers */
+    .tab-btn-active { @apply bg-slate-900 text-white; }
+    .tab-btn-inactive { @apply bg-slate-100 text-slate-900; }
+    .card { @apply bg-white p-4 sm:p-6 rounded-2xl shadow-sm border; }
+    .k { @apply text-sm text-slate-600; }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50">
+  <header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div>
+        <h1 class="text-xl sm:text-2xl font-bold text-slate-800">भारतीय जनता पार्टी — जिला मंदसौर • रक्तदाता पोर्टल</h1>
+        <p class="text-sm text-slate-500">मंडलों से डोनर सूची • त्वरित खोज • दान प्रविष्टि • आँकड़े</p>
+      </div>
+      <nav class="flex gap-2">
+        <button id="btnForm" class="px-3 py-2 rounded-xl text-sm font-medium tab-btn-active">डोनर फ़ॉर्म</button>
+        <button id="btnSearch" class="px-3 py-2 rounded-xl text-sm font-medium tab-btn-inactive">सर्च</button>
+        <button id="btnAdmin" class="px-3 py-2 rounded-xl text-sm font-medium bg-red-50 text-red-700 border border-red-200">Admin</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-4 space-y-4">
+    <!-- Form Tab -->
+    <section id="tabForm" class="space-y-4">
+      <div class="card">
+        <h2 class="text-lg font-semibold mb-1">रक्तदाता पंजीकरण फ़ॉर्म</h2>
+        <p class="text-sm text-slate-500 mb-4">कृपया सही जानकारी भरें — आवश्यकता पड़ने पर आपसे संपर्क किया जाएगा।</p>
+        <form id="donorForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="k">पूरा नाम</label>
+            <input required id="f_name" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="जैसे: राम शर्मा" />
+          </div>
+          <div>
+            <label class="k">मोबाइल</label>
+            <input required id="f_phone" pattern="[0-9]{10}" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="10 अंकों का नंबर" />
+          </div>
+          <div>
+            <label class="k">ब्लड ग्रुप</label>
+            <select required id="f_group" class="mt-1 w-full rounded-xl border px-3 py-2"></select>
+          </div>
+          <div>
+            <label class="k">मंडल</label>
+            <select required id="f_mandal" class="mt-1 w-full rounded-xl border px-3 py-2"></select>
+          </div>
+          <div>
+            <label class="k">शहर/गाँव</label>
+            <input id="f_city" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="जैसे: मंदसौर" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="k">उम्र</label>
+              <input type="number" min="18" max="65" id="f_age" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="18-65" />
+            </div>
+            <div>
+              <label class="k">लिंग</label>
+              <select id="f_gender" class="mt-1 w-full rounded-xl border px-3 py-2">
+                <option value="">चुनें</option>
+                <option value="पुरुष">पुरुष</option>
+                <option value="महिला">महिला</option>
+                <option value="अन्य">अन्य</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="k">आख़िरी रक्तदान (यदि किया है)</label>
+            <input type="date" id="f_last" class="mt-1 w-full rounded-xl border px-3 py-2" />
+          </div>
+          <div>
+            <label class="k">क्या आप इच्छा से दान करेंगे?</label>
+            <select id="f_willing" class="mt-1 w-full rounded-xl border px-3 py-2">
+              <option value="yes">हाँ</option>
+              <option value="no">नहीं</option>
+            </select>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="k">नोट्स</label>
+            <textarea id="f_notes" class="mt-1 w-full rounded-xl border px-3 py-2" rows="3" placeholder="विशेष जानकारी"></textarea>
+          </div>
+          <div class="sm:col-span-2 flex items-center gap-3">
+            <button class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold">जमा करें</button>
+            <span id="formMsg" class="text-sm"></span>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3 class="text-base font-semibold mb-2">शेयर करने योग्य लिंक</h3>
+        <p class="text-sm text-slate-600 mb-3">इस लिंक को व्हाट्सएप/सोशल पर भेजें, लोग सीधे फ़ॉर्म भर पाएँगे।</p>
+        <div class="flex gap-2 items-center">
+          <input id="shareUrl" readonly class="flex-1 rounded-xl border px-3 py-2" />
+          <button id="btnCopy" class="px-3 py-2 rounded-xl bg-slate-900 text-white">कॉपी</button>
+          <span id="copyMsg" class="text-sm text-green-600 hidden">कॉपी हुआ!</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search Tab -->
+    <section id="tabSearch" class="hidden">
+      <div class="card">
+        <h2 class="text-lg font-semibold mb-1">डोनर सर्च</h2>
+        <p class="text-sm text-slate-500 mb-4">ज़रूरत पड़ने पर रक्तदाता जल्दी खोजें।</p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+          <input id="qText" class="w-full rounded-xl border px-3 py-2" placeholder="नाम/मोबाइल/शहर" />
+          <select id="qGroup" class="w-full rounded-xl border px-3 py-2"></select>
+          <select id="qMandal" class="w-full rounded-xl border px-3 py-2"></select>
+        </div>
+        <div class="overflow-x-auto -mx-2 sm:mx-0">
+          <table class="min-w-[640px] w-full text-sm" id="donorTable">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700">
+                <th class="p-2 text-left">नाम</th>
+                <th class="p-2 text-left">मोबाइल</th>
+                <th class="p-2 text-left">ब्लड</th>
+                <th class="p-2 text-left">मंडल</th>
+                <th class="p-2 text-left">शहर</th>
+                <th class="p-2 text-left">आख़िरी दान</th>
+              </tr>
+            </thead>
+            <tbody id="donorTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin Tab -->
+    <section id="tabAdmin" class="hidden space-y-4">
+      <div class="card">
+        <h2 class="text-lg font-semibold mb-2">Admin पहुँच</h2>
+        <div id="adminGate" class="flex items-center gap-2">
+          <input id="adminPin" type="password" class="rounded-xl border px-3 py-2" placeholder="Admin PIN" />
+          <button id="btnUnlock" class="px-3 py-2 rounded-xl bg-red-600 text-white">Unlock</button>
+          <span class="text-xs text-slate-500">(डेमो PIN: 2720 — बदलें)</span>
+        </div>
+        <div id="adminOk" class="hidden text-green-700 font-semibold">Admin सक्षम</div>
+        <p class="text-xs text-slate-500 mt-1">नोट: यह केवल UI गेट है। असली सुरक्षा Firestore Rules/Auth से लागू करें।</p>
+      </div>
+
+      <div id="adminArea" class="hidden space-y-4">
+        <div class="card">
+          <h3 class="text-base font-semibold mb-3">दान लॉग करें</h3>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label class="k">डोनर चुनें</label>
+              <select id="selDonor" class="mt-1 w-full rounded-xl border px-3 py-2"></select>
+              <p id="selDonorInfo" class="text-xs text-slate-500 mt-1"></p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="k">यूनिट</label>
+                <input type="number" min="1" id="d_units" class="mt-1 w-full rounded-xl border px-3 py-2" value="1" />
+              </div>
+              <div>
+                <label class="k">तारीख़</label>
+                <input type="date" id="d_date" class="mt-1 w-full rounded-xl border px-3 py-2" />
+              </div>
+            </div>
+            <div>
+              <label class="k">रोगी का नाम</label>
+              <input id="d_recipient" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="किसको दिया?" />
+            </div>
+            <div>
+              <label class="k">रोगी मोबाइल</label>
+              <input id="d_recipient_phone" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="optional" />
+            </div>
+            <div>
+              <label class="k">अस्पताल/स्थान</label>
+              <input id="d_hospital" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="जैसे: जिला अस्पताल" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="k">नोट्स</label>
+              <textarea id="d_notes" class="mt-1 w-full rounded-xl border px-3 py-2" rows="2"></textarea>
+            </div>
+            <div class="sm:col-span-2">
+              <button id="btnSaveDonation" class="px-4 py-2 rounded-xl bg-red-600 text-white font-semibold">सेव करें</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="card">
+            <h3 class="text-base font-semibold mb-3">ब्लड ग्रुप अनुसार डोनर</h3>
+            <div class="h-64"><canvas id="chartGroups"></canvas></div>
+          </div>
+          <div class="card">
+            <h3 class="text-base font-semibold mb-3">मंडल अनुसार डोनर</h3>
+            <div class="h-64"><canvas id="chartMandals"></canvas></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="text-base font-semibold mb-3">माहवार रक्तदान (यूनिट)</h3>
+          <div class="h-64"><canvas id="chartMonthly"></canvas></div>
+        </div>
+
+        <div class="card">
+          <h3 class="text-base font-semibold mb-3">एक्सपोर्ट</h3>
+          <div class="flex flex-wrap gap-3">
+            <button id="btnExportDonors" class="px-4 py-2 rounded-xl bg-slate-900 text-white">Donors CSV</button>
+            <button id="btnExportDonations" class="px-4 py-2 rounded-xl bg-slate-900 text-white">Donations CSV</button>
+          </div>
+        </div>
+
+        <div class="card overflow-x-auto -mx-2 sm:mx-0">
+          <h3 class="text-base font-semibold mb-3">Recent Donations</h3>
+          <table class="min-w-[720px] w-full text-sm">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700">
+                <th class="p-2 text-left">तारीख़</th>
+                <th class="p-2 text-left">डोनर</th>
+                <th class="p-2 text-left">ब्लड</th>
+                <th class="p-2 text-left">मंडल</th>
+                <th class="p-2 text-left">यूनिट</th>
+                <th class="p-2 text-left">किसको</th>
+                <th class="p-2 text-left">अस्पताल</th>
+              </tr>
+            </thead>
+            <tbody id="donationsTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500">© <span id="year"></span> BJP जिला मंदसौर • रक्तदान सेवा</footer>
+
+  <!-- Main App Script (ES Modules) -->
+  <script type="module">
+    // ---- Constants ----
+    const MANDALS = [
+      "भेंसोदा","भानपुरा","गरोठ","मेलखेडा","खड़ावदा","शामगढ़","सुवासरा","बसाई","सीतामऊ","क्यामपुर","सीतामऊ ग्रामीण","गुर्जर बरडिया","धुंधधड़का","बुढा","पिपलिया मंडी","मल्हारगढ़","दलोदा","मगरामाता जी","मंदसौर ग्रामीण","मंदसौर उत्तर","मंदसौर दक्षिण","अन्य जिले से"
+    ];
+    const BLOOD_GROUPS = ["A+","A-","B+","B-","O+","O-","AB+","AB-"];
+
+    // ---- DOM helpers ----
+    const $ = (id)=>document.getElementById(id);
+    const fmtDate = (ts)=>{
+      try{ const d = ts?.toDate ? ts.toDate() : new Date(ts); return d.toLocaleDateString('en-GB'); }catch{ return ''}
+    }
+    const toCSV = (rows)=>{
+      if(!rows?.length) return '';
+      const headers = Object.keys(rows[0]);
+      const lines = [headers.join(',')];
+      rows.forEach(r=>lines.push(headers.map(h=>JSON.stringify(r[h]??'')).join(',')));
+      return lines.join('\n');
+    }
+    const download = (name, text)=>{
+      const a = document.createElement('a');
+      a.href = 'data:text/plain;charset=utf-8,'+encodeURIComponent(text);
+      a.download = name; a.style.display='none'; document.body.appendChild(a); a.click(); a.remove();
+    }
+
+    // ---- UI Init ----
+    $("year").textContent = new Date().getFullYear();
+    const fillOptions = (el, arr, first)=>{
+      el.innerHTML = '';
+      if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`);
+      arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`));
+    }
+    fillOptions($("f_group"), BLOOD_GROUPS, 'चुनें');
+    fillOptions($("f_mandal"), MANDALS, 'चुनें');
+    fillOptions($("qGroup"), BLOOD_GROUPS, 'ब्लड ग्रुप');
+    fillOptions($("qMandal"), MANDALS, 'मंडल');
+    $("shareUrl").value = window.location.href + '#form';
+    $("btnCopy").onclick = async ()=>{ await navigator.clipboard.writeText($("shareUrl").value); $("copyMsg").classList.remove('hidden'); setTimeout(()=>$("copyMsg").classList.add('hidden'),1200) };
+
+    // Tabs
+    const tabs = { btnForm: 'tabForm', btnSearch: 'tabSearch', btnAdmin: 'tabAdmin' };
+    Object.keys(tabs).forEach(btnId=>{
+      $(btnId).onclick = ()=>{
+        Object.values(tabs).forEach(id=> $(id).classList.add('hidden'));
+        $(tabs[btnId]).classList.remove('hidden');
+        // style
+        $("btnForm").classList.remove('tab-btn-active'); $("btnForm").classList.add('tab-btn-inactive');
+        $("btnSearch").classList.remove('tab-btn-active'); $("btnSearch").classList.add('tab-btn-inactive');
+        $("btnAdmin").classList.remove('tab-btn-active');
+        if(btnId==='btnAdmin') { $("btnAdmin").classList.remove('tab-btn-inactive') } else { $("btnAdmin").classList.add('tab-btn-inactive') }
+        $(btnId).classList.add('tab-btn-active');
+      }
+    });
+
+    // ---- Firebase (CDN ESM) ----
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
+    const { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
+      authDomain: "blodddonation-9c44e.firebaseapp.com",
+      projectId: "blodddonation-9c44e",
+      storageBucket: "blodddonation-9c44e.firebasestorage.app",
+      messagingSenderId: "636578091772",
+      appId: "1:636578091772:web:276d08168f8fc9c221fd79",
+      measurementId: "G-3TPG0JCF3R"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // ---- State ----
+    let donors = []; // array of {id, ...}
+    let donations = [];
+
+    // Realtime listeners
+    onSnapshot(query(collection(db,'donors'), orderBy('createdAt','desc')), snap=>{
+      donors = snap.docs.map(d=>({ id: d.id, ...d.data() }));
+      renderSearch();
+      renderAdminDonorSelect();
+      updateCharts();
+    });
+    onSnapshot(query(collection(db,'donations'), orderBy('date','desc')), snap=>{
+      donations = snap.docs.map(d=>({ id: d.id, ...d.data() }));
+      renderDonationsTable();
+      updateCharts();
+    });
+
+    // ---- Form Submit ----
+    $("donorForm").addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const msg = $("formMsg"); msg.textContent = '';
+      try{
+        const payload = {
+          name: $("f_name").value.trim(),
+          phone: $("f_phone").value.trim().replace(/[^0-9]/g,''),
+          bloodGroup: $("f_group").value,
+          mandal: $("f_mandal").value,
+          city: $("f_city").value.trim(),
+          age: $("f_age").value ? Number($("f_age").value) : null,
+          gender: $("f_gender").value,
+          lastDonationDate: $("f_last").value ? new Date($("f_last").value) : null,
+          willing: $("f_willing").value === 'yes',
+          notes: $("f_notes").value.trim(),
+          createdAt: serverTimestamp(),
+        };
+        await addDoc(collection(db,'donors'), payload);
+        msg.textContent = '✅ धन्यवाद! आपका विवरण सफलतापूर्वक जमा हो गया।';
+        $("donorForm").reset();
+      }catch(err){
+        console.error(err); msg.textContent = '❌ त्रुटि: कृपया बाद में पुनः प्रयास करें।';
+      }
+    });
+
+    // ---- Search ----
+    ["qText","qGroup","qMandal"].forEach(id=> $(id).addEventListener('input', renderSearch));
+    function renderSearch(){
+      const t = $("qText").value.trim().toLowerCase();
+      const g = $("qGroup").value; const m = $("qMandal").value;
+      const rows = donors.filter(d=>{
+        const okText = !t || [d.name,d.phone,d.city].some(v=> (v||'').toLowerCase().includes(t));
+        const okG = !g || d.bloodGroup===g;
+        const okM = !m || d.mandal===m;
+        return okText && okG && okM && d.willing !== false;
+      });
+      const tb = $("donorTbody"); tb.innerHTML='';
+      if(rows.length===0){ tb.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">कोई परिणाम नहीं</td></tr>`; return; }
+      rows.forEach(d=>{
+        tb.insertAdjacentHTML('beforeend', `
+          <tr class="odd:bg-white even:bg-slate-50">
+            <td class="p-2 font-medium">${d.name||''}</td>
+            <td class="p-2"><a class="underline" href="tel:${d.phone||''}">${d.phone||''}</a></td>
+            <td class="p-2">${d.bloodGroup||''}</td>
+            <td class="p-2">${d.mandal||''}</td>
+            <td class="p-2">${d.city||''}</td>
+            <td class="p-2">${d.lastDonationDate? fmtDate(d.lastDonationDate): '—'}</td>
+          </tr>`);
+      });
+    }
+
+    // ---- Admin Gate ----
+    let adminOK = false;
+    $("btnUnlock").onclick = ()=>{
+      if($("adminPin").value === '2720'){ // change this PIN
+        adminOK = true; $("adminGate").classList.add('hidden'); $("adminOk").classList.remove('hidden'); $("adminArea").classList.remove('hidden');
+      } else alert('गलत PIN');
+    };
+
+    // ---- Admin: donation logging ----
+    function renderAdminDonorSelect(){
+      const sel = $("selDonor"); sel.innerHTML = '<option value="">—</option>';
+      donors.forEach(d=> sel.insertAdjacentHTML('beforeend', `<option value="${d.id}">${d.name||''} • ${d.bloodGroup||''} • ${d.mandal||''}</option>`));
+      sel.onchange = ()=>{
+        const d = donors.find(x=>x.id===sel.value);
+        $("selDonorInfo").textContent = d ? `मोबाइल: ${d.phone||''} • आख़िरी दान: ${d.lastDonationDate?fmtDate(d.lastDonationDate):'—'}` : '';
+      }
+    }
+
+    $("btnSaveDonation").onclick = async ()=>{
+      if(!adminOK){ alert('Admin आवश्यक'); return; }
+      const id = $("selDonor").value; const d = donors.find(x=>x.id===id);
+      if(!d){ alert('डोनर चुनें'); return; }
+      const payload = {
+        donorId: d.id, donorName: d.name, donorPhone: d.phone,
+        mandal: d.mandal, bloodGroup: d.bloodGroup,
+        recipientName: $("d_recipient").value.trim(),
+        recipientPhone: $("d_recipient_phone").value.trim(),
+        units: Number($("d_units").value||1),
+        hospital: $("d_hospital").value.trim(),
+        date: $("d_date").value ? new Date($("d_date").value) : new Date(),
+        notes: $("d_notes").value.trim(),
+        createdAt: serverTimestamp(),
+      };
+      await addDoc(collection(db,'donations'), payload);
+      await updateDoc(doc(db,'donors', d.id), { lastDonationDate: payload.date });
+      alert('दान प्रविष्टि सेव हो गया।');
+      ["d_recipient","d_recipient_phone","d_units","d_hospital","d_date","d_notes"].forEach(id=> $(id).value='');
+      $("d_units").value = '1';
+    };
+
+    // ---- Analytics (Chart.js) ----
+    let chartGroups, chartMandals, chartMonthly;
+    function updateCharts(){
+      // group counts
+      const groups = BLOOD_GROUPS.map(g=>({label:g, count: donors.filter(d=>d.bloodGroup===g).length}));
+      const mandalMap = new Map(); donors.forEach(d=>{ const k=d.mandal||'अनिर्दिष्ट'; mandalMap.set(k,(mandalMap.get(k)||0)+1) });
+      const mandalsSorted = Array.from(mandalMap.entries()).sort((a,b)=>b[1]-a[1]);
+      const monthMap = new Map();
+      donations.forEach(x=>{ const dt = x.date?.toDate? x.date.toDate(): new Date(x.date); const k = dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,'0'); monthMap.set(k,(monthMap.get(k)||0)+(Number(x.units)||1)); });
+      const months = Array.from(monthMap.entries()).sort((a,b)=> a[0].localeCompare(b[0]));
+
+      const cfgBar = (labels, data)=>({ type:'bar', data:{ labels, datasets:[{ label:'कुल', data }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}});
+      const cfgLine = (labels, data)=>({ type:'line', data:{ labels, datasets:[{ label:'यूनिट', data, tension:0.3 }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}});
+
+      // Groups
+      const gEl = $("chartGroups"); if(chartGroups) chartGroups.destroy();
+      chartGroups = new Chart(gEl, cfgBar(groups.map(x=>x.label), groups.map(x=>x.count)));
+      // Mandals
+      const mEl = $("chartMandals"); if(chartMandals) chartMandals.destroy();
+      chartMandals = new Chart(mEl, cfgBar(mandalsSorted.map(x=>x[0]), mandalsSorted.map(x=>x[1])));
+      // Monthly
+      const moEl = $("chartMonthly"); if(chartMonthly) chartMonthly.destroy();
+      chartMonthly = new Chart(moEl, cfgLine(months.map(x=>x[0]), months.map(x=>x[1])));
+    }
+
+    // ---- Exports ----
+    $("btnExportDonors").onclick = ()=>{
+      const rows = donors.map(d=>({ id:d.id, name:d.name, phone:d.phone, bloodGroup:d.bloodGroup, mandal:d.mandal, city:d.city, age:d.age, gender:d.gender, willing:d.willing, lastDonationDate: d.lastDonationDate? fmtDate(d.lastDonationDate):'', createdAt: d.createdAt? fmtDate(d.createdAt):'', notes:d.notes }));
+      download('donors.csv', toCSV(rows));
+    };
+    $("btnExportDonations").onclick = ()=>{
+      const rows = donations.map(x=>({ id:x.id, donorId:x.donorId, donorName:x.donorName, donorPhone:x.donorPhone, mandal:x.mandal, bloodGroup:x.bloodGroup, recipientName:x.recipientName, recipientPhone:x.recipientPhone, hospital:x.hospital, units:x.units, date: x.date? fmtDate(x.date):'', createdAt: x.createdAt? fmtDate(x.createdAt):'', notes:x.notes }));
+      download('donations.csv', toCSV(rows));
+    };
+
+    // Hash navigation (optional)
+    if(location.hash==="#form"){ $("btnForm").click(); }
+  </script>
+</body>
+</html>
