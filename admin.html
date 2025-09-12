@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="hi">
 <head>
@@ -31,27 +30,20 @@
 <body class="min-h-screen bg-slate-50">
   
 <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
-  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-    <div></div>
-    <nav class="flex gap-2 text-sm">
-      <a href="index.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">डोनर सर्च</a>
-      <a href="register.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">रक्तदाता पंजीकरण</a>
-      <a href="admin.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">Admin</a>
-    </nav>
-  </div>
+  <div class="max-w-6xl mx-auto px-4 py-2"></div>
 </header>
 
   
 <section class="relative overflow-hidden">
   <div class="absolute inset-0">
-    <div class="absolute inset-0 bg-gradient-to-b from-white via-peach-50 to-white opacity-95"></div>
-    <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-right opacity-15"></div>
+    <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-center opacity-20"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-white/90 via-peach-50/90 to-white/95"></div>
   </div>
-  <div class="relative max-w-6xl mx-auto px-4 py-8">
-    <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-4 sm:px-6 py-6 shadow">
-      <div class="text-slate-800 text-base sm:text-lg font-semibold">भारतीय जनता पार्टी • जिला मंदसौर</div>
-      <div class="mt-1 text-4xl sm:text-5xl font-extrabold text-red-700">रक्तदाता पोर्टल</div>
-      <p class="mt-3 text-slate-700 text-sm sm:text-base max-w-3xl mx-auto">
+  <div class="relative max-w-6xl mx-auto px-4 py-6">
+    <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-5 sm:px-8 py-6 shadow">
+      <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
+      <div class="mt-1 text-6xl sm:text-7xl font-extrabold text-red-700 leading-tight">रक्तदाता पोर्टल</div>
+      <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
         माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर,
         <b>सेवा पखवाड़ा (17 सितम्बर — 2 अक्टूबर 2025)</b> हेतु यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
       </p>
@@ -68,8 +60,8 @@
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
       <h2 class="text-lg font-semibold mb-2">Admin पहुँच</h2>
       <div id="adminGate" class="flex items-center gap-2">
-        <input id="adminPin" type="password" class="rounded-xl border px-3 py-2" placeholder="Admin PIN" />
-        <button id="btnUnlock" class="px-3 py-2 rounded-xl bg-red-600 text-white">Unlock</button>
+        <input id="adminPin" type="password" class="rounded-xl border px-4 py-3" placeholder="Admin PIN" />
+        <button id="btnUnlock" class="px-4 py-3 rounded-xl bg-red-600 text-white">Unlock</button>
         <span class="text-xs text-slate-500">(डेमो PIN: 2720 — बदलें)</span>
       </div>
       <div id="adminOk" class="hidden text-green-700 font-semibold">Admin सक्षम</div>
@@ -82,37 +74,37 @@
         <div class="grid gap-3 sm:grid-cols-2">
           <div>
             <label class="text-sm text-slate-600">डोनर चुनें</label>
-            <select id="selDonor" class="mt-1 w-full rounded-xl border px-3 py-2"></select>
+            <select id="selDonor" class="mt-1 w-full rounded-xl border px-4 py-3"></select>
             <p id="selDonorInfo" class="text-xs text-slate-500 mt-1"></p>
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="text-sm text-slate-600">यूनिट</label>
-              <input type="number" min="1" id="d_units" class="mt-1 w-full rounded-xl border px-3 py-2" value="1" />
+              <input type="number" min="1" id="d_units" class="mt-1 w-full rounded-xl border px-4 py-3" value="1" />
             </div>
             <div>
               <label class="text-sm text-slate-600">तारीख़</label>
-              <input type="date" id="d_date" class="mt-1 w-full rounded-xl border px-3 py-2" />
+              <input type="date" id="d_date" class="mt-1 w-full rounded-xl border px-4 py-3" />
             </div>
           </div>
           <div>
             <label class="text-sm text-slate-600">रोगी का नाम</label>
-            <input id="d_recipient" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="किसको दिया?" />
+            <input id="d_recipient" class="mt-1 w-full rounded-xl border px-4 py-3" placeholder="किसको दिया?" />
           </div>
           <div>
             <label class="text-sm text-slate-600">रोगी मोबाइल</label>
-            <input id="d_recipient_phone" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="optional" />
+            <input id="d_recipient_phone" class="mt-1 w-full rounded-xl border px-4 py-3" placeholder="optional" />
           </div>
           <div>
             <label class="text-sm text-slate-600">अस्पताल/स्थान</label>
-            <input id="d_hospital" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="जैसे: जिला अस्पताल" />
+            <input id="d_hospital" class="mt-1 w-full rounded-xl border px-4 py-3" placeholder="जैसे: जिला अस्पताल" />
           </div>
           <div class="sm:col-span-2">
             <label class="text-sm text-slate-600">नोट्स</label>
-            <textarea id="d_notes" class="mt-1 w-full rounded-xl border px-3 py-2" rows="2"></textarea>
+            <textarea id="d_notes" class="mt-1 w-full rounded-xl border px-4 py-3" rows="2"></textarea>
           </div>
           <div class="sm:col-span-2">
-            <button id="btnSaveDonation" class="px-4 py-2 rounded-xl bg-saffron-700 text-white font-semibold">सेव करें</button>
+            <button id="btnSaveDonation" class="px-4 py-3 rounded-xl bg-saffron-700 text-white font-semibold">सेव करें</button>
           </div>
         </div>
       </div>
@@ -131,14 +123,6 @@
       <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
         <h3 class="text-base font-semibold mb-3">माहवार रक्तदान (यूनिट)</h3>
         <div class="h-64"><canvas id="chartMonthly"></canvas></div>
-      </div>
-
-      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-        <h3 class="text-base font-semibold mb-3">एक्सपोर्ट</h3>
-        <div class="flex flex-wrap gap-3">
-          <button id="btnExportDonors" class="px-4 py-2 rounded-xl bg-slate-900 text-white">Donors CSV</button>
-          <button id="btnExportDonations" class="px-4 py-2 rounded-xl bg-slate-900 text-white">Donations CSV</button>
-        </div>
       </div>
 
       <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border overflow-x-auto -mx-2 sm:mx-0">
@@ -166,7 +150,7 @@
             <tr class="bg-slate-100 text-slate-700">
               <th class="p-2 text-left">तारीख़</th>
               <th class="p-2 text-left">नाम/मोबाइल</th>
-              <th class="p-2 text-left">रोगी</th>
+              <th class="p-2 text-left">รोगी</th>
               <th class="p-2 text-left">ग्रुप/यूनिट</th>
               <th class="p-2 text-left">स्थान</th>
               <th class="p-2 text-left">अस्पताल/नोट्स</th>
@@ -180,16 +164,27 @@
 
   <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500 text-center">© <span id="year"></span> भारतीय जनता पार्टी • जिला मंदसौर</footer>
 
-  <script type="module">
-    const BLOOD_GROUPS = __BGS__;
-    const MANDALS = (arr => (arr.includes("अन्य")? arr : ["अन्य", ...arr]))(__MANDALS__);
-    const $ = (id)=>document.getElementById(id);
-    const fmtDate = (ts)=>{ try{ const d = ts?.toDate? ts.toDate(): new Date(ts); return d.toLocaleDateString('en-GB'); }catch{ return '' } };
+  <script>
+    const BLOOD_GROUPS = ["A+","A-","B+","B-","O+","O-","AB+","AB-"];
+    const MANDALS = ["अन्य","भेंसोदा","भानपुरा","गरोठ","मेलखेडा","खड़ावदा","शामगढ़","सुवासरा","बसाई","सीतामऊ","क्यामपुर","सीतामऊ ग्रामीण","गुर्जर बरडिया","धुंधधड़का","बुढा","पिपलिया मंडी","मल्हारगढ़","दलोदा","मगरामाता जी","मंदसौर ग्रामीण","मंदसौर उत्तर","मंदसौर दक्षिण","अन्य जिले से"];
     document.getElementById('year').textContent = new Date().getFullYear();
+    function fmtTS(ts){ try{ var d = ts && ts.toDate ? ts.toDate() : new Date(ts); return d.toLocaleDateString('en-GB'); }catch(e){ return ''; } }
+  </script>
 
+  <script type="module">
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
     const { getFirestore, collection, onSnapshot, query, orderBy, addDoc, updateDoc, doc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
-    __FIREBASE__
+    
+const firebaseConfig = {
+  apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
+  authDomain: "blodddonation-9c44e.firebaseapp.com",
+  projectId: "blodddonation-9c44e",
+  storageBucket: "blodddonation-9c44e.firebasestorage.app",
+  messagingSenderId: "636578091772",
+  appId: "1:636578091772:web:276d08168f8fc9c221fd79",
+  measurementId: "G-3TPG0JCF3R"
+};
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
@@ -225,7 +220,7 @@
     function renderAdminDonorSelect(){
       sel.innerHTML = '<option value="">—</option>';
       donors.forEach(d=> sel.insertAdjacentHTML('beforeend', `<option value="${d.id}">${d.name||''} • ${d.bloodGroup||''} • ${d.mandal||''}</option>`));
-      sel.onchange = ()=>{ const d = donors.find(x=>x.id===sel.value); document.getElementById('selDonorInfo').textContent = d ? `मोबाइल: ${d.phone||''} • आख़िरी दान: ${d.lastDonationDate?fmtDate(d.lastDonationDate):'—'}` : '' };
+      sel.onchange = ()=>{ const d = donors.find(x=>x.id===sel.value); document.getElementById('selDonorInfo').textContent = d ? `मोबाइल: ${d.phone||''} • आख़िरी दान: ${d.lastDonationDate?fmtTS(d.lastDonationDate):'—'}` : '' };
     }
 
     document.getElementById('btnSaveDonation').onclick = async ()=>{
@@ -256,7 +251,7 @@
       const mandalMap = new Map(); donors.forEach(d=>{ const k=d.mandal||'अनिर्दिष्ट'; mandalMap.set(k,(mandalMap.get(k)||0)+1) });
       const mandalsSorted = Array.from(mandalMap.entries()).sort((a,b)=>b[1]-a[1]);
       const monthMap = new Map();
-      donations.forEach(x=>{ const dt = x.date?.toDate? x.date.toDate(): new Date(x.date); const k = dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,'0'); monthMap.set(k,(monthMap.get(k)||0)+(Number(x.units)||1)); });
+      donations.forEach(x=>{ const dt = x.date && x.date.toDate ? x.date.toDate() : new Date(x.date); const k = dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,'0'); monthMap.set(k,(monthMap.get(k)||0)+(Number(x.units)||1)); });
       const months = Array.from(monthMap.entries()).sort((a,b)=> a[0].localeCompare(b[0]));
 
       const cfgBar = (labels, data)=>({ type:'bar', data:{ labels, datasets:[{ label:'कुल', data }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}});
@@ -271,7 +266,7 @@
       const tb = document.getElementById('donationsTbody'); tb.innerHTML='';
       donations.forEach(x=> tb.insertAdjacentHTML('beforeend', `
         <tr class="odd:bg-white even:bg-slate-50">
-          <td class="p-2">${x.date?fmtDate(x.date):'—'}</td>
+          <td class="p-2">${x.date?fmtTS(x.date):'—'}</td>
           <td class="p-2 font-medium">${x.donorName} <span class="text-slate-400">(${x.donorPhone||''})</span></td>
           <td class="p-2">${x.bloodGroup||''}</td>
           <td class="p-2">${x.mandal||''}</td>
@@ -285,7 +280,7 @@
       const tb = document.getElementById('reqTbody'); tb.innerHTML='';
       requests.forEach(r=> tb.insertAdjacentHTML('beforeend', `
         <tr class="odd:bg-white even:bg-slate-50">
-          <td class="p-2">${r.createdAt?fmtDate(r.createdAt):'—'}</td>
+          <td class="p-2">${r.createdAt?fmtTS(r.createdAt):'—'}</td>
           <td class="p-2 font-medium">${r.requester||'-'} <span class="text-slate-400">(${r.phone||''})</span></td>
           <td class="p-2">${r.patient||'-'}</td>
           <td class="p-2">${r.bloodGroup||'-'} / ${r.units||'-'}</td>

@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="hi">
 <head>
@@ -30,27 +29,20 @@
 <body class="min-h-screen bg-slate-50">
   
 <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
-  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-    <div></div>
-    <nav class="flex gap-2 text-sm">
-      <a href="index.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">डोनर सर्च</a>
-      <a href="register.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">रक्तदाता पंजीकरण</a>
-      <a href="admin.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">Admin</a>
-    </nav>
-  </div>
+  <div class="max-w-6xl mx-auto px-4 py-2"></div>
 </header>
 
   
 <section class="relative overflow-hidden">
   <div class="absolute inset-0">
-    <div class="absolute inset-0 bg-gradient-to-b from-white via-peach-50 to-white opacity-95"></div>
-    <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-right opacity-15"></div>
+    <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-center opacity-20"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-white/90 via-peach-50/90 to-white/95"></div>
   </div>
-  <div class="relative max-w-6xl mx-auto px-4 py-8">
-    <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-4 sm:px-6 py-6 shadow">
-      <div class="text-slate-800 text-base sm:text-lg font-semibold">भारतीय जनता पार्टी • जिला मंदसौर</div>
-      <div class="mt-1 text-4xl sm:text-5xl font-extrabold text-red-700">रक्तदाता पोर्टल</div>
-      <p class="mt-3 text-slate-700 text-sm sm:text-base max-w-3xl mx-auto">
+  <div class="relative max-w-6xl mx-auto px-4 py-6">
+    <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-5 sm:px-8 py-6 shadow">
+      <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
+      <div class="mt-1 text-6xl sm:text-7xl font-extrabold text-red-700 leading-tight">रक्तदाता पोर्टल</div>
+      <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
         माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर,
         <b>सेवा पखवाड़ा (17 सितम्बर — 2 अक्टूबर 2025)</b> हेतु यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
       </p>
@@ -65,42 +57,42 @@
 
   <main class="max-w-6xl mx-auto p-4 space-y-4">
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-      <h1 class="text-xl font-bold text-saffron-800 mb-1">रक्तदाता पंजीकरण फ़ॉर्म</h1>
-      <p class="text-sm text-slate-600 mb-4">कृपया सही जानकारी भरें — आवश्यकता पड़ने पर आपसे संपर्क किया जाएगा।</p>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-saffron-800 mb-1 text-center sm:text-left">रक्तदाता पंजीकरण</h1>
+      <p class="text-sm text-slate-600 mb-4 text-center sm:text-left">कृपया सही जानकारी भरें — आवश्यकता पड़ने पर आपसे संपर्क किया जाएगा।</p>
 
       <form id="donorForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="text-sm text-slate-600">पूरा नाम</label>
-          <input required id="f_name" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="जैसे: राम शर्मा" />
+          <input required id="f_name" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" placeholder="जैसे: राम शर्मा" autocomplete="name" />
         </div>
         <div>
           <label class="text-sm text-slate-600">मोबाइल</label>
-          <input required id="f_phone" pattern="[0-9]{10}" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="10 अंकों का नंबर" />
+          <input required id="f_phone" pattern="[0-9]{10}" inputmode="numeric" autocomplete="tel" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" placeholder="10 अंकों का नंबर" />
         </div>
         <div>
           <label class="text-sm text-slate-600">व्हाट्सऐप नंबर (वैकल्पिक)</label>
-          <input id="f_whatsapp" pattern="[0-9]{10}" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="optional" />
+          <input id="f_whatsapp" pattern="[0-9]{10}" inputmode="numeric" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" placeholder="optional" />
         </div>
         <div>
           <label class="text-sm text-slate-600">ब्लड ग्रुप</label>
-          <select required id="f_group" class="mt-1 w-full rounded-xl border px-4 py-3 text-base"></select>
+          <select required id="f_group" class="mt-1 w-full rounded-xl border px-4 py-4 text-base"></select>
         </div>
         <div>
           <label class="text-sm text-slate-600">मंडल (वैकल्पिक)</label>
-          <select id="f_mandal" class="mt-1 w-full rounded-xl border px-4 py-3 text-base"></select>
+          <select id="f_mandal" class="mt-1 w-full rounded-xl border px-4 py-4 text-base"></select>
         </div>
-        <div>
+        <div class="sm:col-span-2">
           <label class="text-sm text-slate-600">वार्ड / बूथ / पता</label>
-          <input id="f_address" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="उदाहरण: वार्ड 12, बूथ 45, राम टेकरी रोड" />
+          <input id="f_address" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" placeholder="उदाहरण: वार्ड 12, बूथ 45, राम टेकरी रोड" />
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="text-sm text-slate-600">उम्र</label>
-            <input type="number" min="18" max="65" id="f_age" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="18-65" />
+            <input type="number" min="18" max="65" id="f_age" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" placeholder="18-65" />
           </div>
           <div>
             <label class="text-sm text-slate-600">लिंग</label>
-            <select id="f_gender" class="mt-1 w-full rounded-xl border px-4 py-3 text-base">
+            <select id="f_gender" class="mt-1 w-full rounded-xl border px-4 py-4 text-base">
               <option value="">चुनें</option>
               <option value="पुरुष">पुरुष</option>
               <option value="महिला">महिला</option>
@@ -110,21 +102,21 @@
         </div>
         <div>
           <label class="text-sm text-slate-600">आख़िरी रक्तदान (यदि किया है)</label>
-          <input type="date" id="f_last" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" />
+          <input type="date" id="f_last" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" />
         </div>
         <div>
           <label class="text-sm text-slate-600">क्या आवश्यकता पड़ने पर आपको रक्त दान के लिए संपर्क कर सकते हैं?</label>
-          <select id="f_willing" class="mt-1 w-full rounded-xl border px-4 py-3 text-base">
+          <select id="f_willing" class="mt-1 w-full rounded-xl border px-4 py-4 text-base">
             <option value="yes">हाँ</option>
             <option value="no">नहीं</option>
           </select>
         </div>
         <div class="sm:col-span-2">
           <label class="text-sm text-slate-600">नोट्स</label>
-          <textarea id="f_notes" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" rows="3" placeholder="विशेष जानकारी (उदाहरण: उपलब्ध समय)"></textarea>
+          <textarea id="f_notes" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" rows="3" placeholder="विशेष जानकारी (उदाहरण: उपलब्ध समय)"></textarea>
         </div>
         <div class="sm:col-span-2 flex items-center gap-3">
-          <button class="px-5 py-3 rounded-xl bg-saffron-700 text-white font-semibold">जमा करें</button>
+          <button class="px-6 py-3 rounded-xl bg-saffron-700 text-white font-semibold w-full sm:w-auto">जमा करें</button>
           <span id="formMsg" class="text-sm"></span>
         </div>
       </form>
@@ -133,22 +125,33 @@
 
   <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500 text-center">© <span id="year"></span> भारतीय जनता पार्टी • जिला मंदसौर</footer>
 
+  <script>
+    const MANDALS = ["अन्य","भेंसोदा","भानपुरा","गरोठ","मेलखेडा","खड़ावदा","शामगढ़","सुवासरा","बसाई","सीतामऊ","क्यामपुर","सीतामऊ ग्रामीण","गुर्जर बरडिया","धुंधधड़का","बुढा","पिपलिया मंडी","मल्हारगढ़","दलोदा","मगरामाता जी","मंदसौर ग्रामीण","मंदसौर उत्तर","मंदसौर दक्षिण","अन्य जिले से"];
+    const BLOOD_GROUPS = ["A+","A-","B+","B-","O+","O-","AB+","AB-"];
+    function $(id){ return document.getElementById(id); }
+    function fill(el, arr, first){ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
+    document.getElementById('year').textContent = new Date().getFullYear();
+    fill($('f_group'), BLOOD_GROUPS, 'चुनें');
+    fill($('f_mandal'), MANDALS, 'चुनें');
+  </script>
+
   <script type="module">
     const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
     const TELEGRAM_CHAT_ID = "@bjpbloodbot";
 
-    const MANDALS = (arr => (arr.includes("अन्य")? arr : ["अन्य", ...arr]))(__MANDALS__);
-    const BLOOD_GROUPS = __BGS__;
-    const $ = (id)=>document.getElementById(id);
-
-    document.getElementById('year').textContent = new Date().getFullYear();
-    const fill = (el, arr, first)=>{ try{ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }catch(e){ console.error(e);} }
-    fill(document.getElementById('f_group'), BLOOD_GROUPS, 'चुनें');
-    fill(document.getElementById('f_mandal'), MANDALS, 'चुनें');
-
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
     const { getFirestore, collection, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
-    __FIREBASE__
+    
+const firebaseConfig = {
+  apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
+  authDomain: "blodddonation-9c44e.firebaseapp.com",
+  projectId: "blodddonation-9c44e",
+  storageBucket: "blodddonation-9c44e.firebasestorage.app",
+  messagingSenderId: "636578091772",
+  appId: "1:636578091772:web:276d08168f8fc9c221fd79",
+  measurementId: "G-3TPG0JCF3R"
+};
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
@@ -172,8 +175,6 @@
         };
         await addDoc(collection(db,'donors'), payload);
         msg.textContent = '✅ धन्यवाद! आपका विवरण सफलतापूर्वक जमा हो गया।';
-
-        // Telegram notify
         fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
@@ -181,7 +182,6 @@
             `🆕 नया रक्तदाता\nनाम: ${payload.name}\nमोबाइल: ${payload.phone}\nब्लड: ${payload.bloodGroup||'-'}\nमंडल: ${payload.mandal||'-'}\nपता: ${payload.address||'-'}`
           })
         }).catch(()=>{});
-
         document.getElementById('donorForm').reset();
       } catch(err) {
         console.error(err); msg.textContent = '❌ त्रुटि: कृपया बाद में पुनः प्रयास करें।';
