@@ -1,0 +1,180 @@
+
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>डोनर सर्च • बीजेपी जिला मंदसौर</title>
+  
+<!-- Tailwind (Play CDN) and Theme -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          saffron: {
+            50: '#FFF4E8',
+            100: '#FFE8D6',
+            200: '#FFD7B3',
+            300: '#FFC48A',
+            400: '#FFA24D',
+            500: '#FF7F0E',
+            600: '#E06900',
+            700: '#C25700',
+            800: '#A34500',
+            900: '#873800'
+          },
+          peach: {
+            50: '#FFF7EF',
+            100: '#FFEFE0',
+            200: '#FFE3C6'
+          }
+        }
+      }
+    }
+  }
+</script>
+
+</head>
+<body class="min-h-screen bg-slate-50">
+  <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="font-extrabold tracking-wide text-lg sm:text-xl">बीजेपी जिला मंदसौर • रक्तदाता पोर्टल</a>
+      <nav class="flex gap-2 text-sm">
+        <a href="index.html" class="px-3 py-2 rounded-xl bg-white/10">डोनर सर्च</a>
+        <a href="register.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">रक्तदाता पंजीकरण</a>
+        <a href="admin.html" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="bg-peach-50 border-y border-peach-200">
+    <div class="max-w-6xl mx-auto px-4 py-6 grid md:grid-cols-[1.2fr_0.8fr] gap-4 items-center">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-saffron-800 leading-snug">
+          माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <span class="whitespace-nowrap">17 सितम्बर</span> पर
+          आम नागरिकों के लिए समर्पित यह रक्तदाता सर्च पोर्टल
+        </h1>
+        <p class="mt-2 text-slate-700">
+          <span class="font-semibold">सेवा पखवाड़ा</span> — 17 सितम्बर से 2 अक्टूबर — के अवसर पर जन-सेवा हेतु
+          रक्तदान को बढ़ावा देने का प्रयास।
+        </p>
+        <div class="mt-3 inline-flex items-center gap-3 bg-white rounded-xl px-3 py-2 border">
+          <!-- Simple inline SVG 'Seva Pakhwada' badge -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="#FF7F0E" stroke-width="2"/>
+            <path d="M7 13c2 2 3.5 3 5 3s3-1 5-3" stroke="#FF7F0E" stroke-width="2" fill="none" />
+            <path d="M12 4v4" stroke="#FF7F0E" stroke-width="2" />
+          </svg>
+          <span class="text-sm"><b>सेवा पखवाड़ा:</b> 17 सितम्बर — 2 अक्टूबर</span>
+        </div>
+      </div>
+      <div class="justify-self-center">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg"
+             alt="प्रधानमंत्री नरेंद्र मोदी" class="w-52 h-auto rounded-2xl shadow-md border" />
+        <p class="text-[10px] text-slate-500 mt-1 text-center">Image: Govt of India / GODL-India (Wikimedia Commons)</p>
+      </div>
+    </div>
+  </section>
+
+  <main class="max-w-6xl mx-auto p-4 space-y-4">
+    <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
+      <h2 class="text-lg font-semibold mb-3">डोनर सर्च</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <input id="qText" class="rounded-xl border px-3 py-2" placeholder="नाम/मोबाइल/वार्ड/बूथ/पता" />
+        <select id="qGroup" class="rounded-xl border px-3 py-2"></select>
+        <select id="qMandal" class="rounded-xl border px-3 py-2"></select>
+      </div>
+
+      <div class="mt-3 flex flex-wrap gap-2" id="chipGroups"></div>
+
+      <div id="resultInfo" class="text-sm text-slate-500 mt-3"></div>
+      <div id="cardGrid" class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+    </div>
+  </main>
+
+  <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500">© <span id="year"></span> BJP जिला मंदसौर • रक्तदान सेवा</footer>
+
+  <!-- Firebase ESM + App JS -->
+  <script type="module">
+    const MANDALS = ["भेंसोदा","भानपुरा","गरोठ","मेलखेडा","खड़ावदा","शामगढ़","सुवासरा","बसाई","सीतामऊ","क्यामपुर","सीतामऊ ग्रामीण","गुर्जर बरडिया","धुंधधड़का","बुढा","पिपलिया मंडी","मल्हारगढ़","दलोदा","मगरामाता जी","मंदसौर ग्रामीण","मंदसौर उत्तर","मंदसौर दक्षिण","अन्य जिले से"];
+    const BLOOD_GROUPS = ["A+","A-","B+","B-","O+","O-","AB+","AB-"];
+    const $ = (id)=>document.getElementById(id);
+    const fmtDate = (ts)=>{{ try{{ const d = ts?.toDate? ts.toDate(): new Date(ts); return d.toLocaleDateString('en-GB'); }}catch{{ return '' }} }};
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Fill selects + chips
+    const fill = (el, arr, first)=>{{ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${{first}}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${{x}}">${{x}}</option>`)); }}
+    fill(document.getElementById('qGroup'), BLOOD_GROUPS, 'ब्लड ग्रुप');
+    fill(document.getElementById('qMandal'), MANDALS, 'मंडल');
+    // Chips
+    const cg = document.getElementById('chipGroups');
+    BLOOD_GROUPS.forEach(g=>{{ const b=document.createElement('button'); b.className='px-3 py-1 rounded-full bg-peach-100 text-saffron-800 border hover:bg-white'; b.textContent=g; b.onclick=()=>{{ document.getElementById('qGroup').value=g; render(); }}; cg.appendChild(b); }});
+
+    // Firebase
+    const {{ initializeApp }} = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
+    const {{ getFirestore, collection, onSnapshot, query, orderBy }} = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
+    
+const firebaseConfig = {
+  apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
+  authDomain: "blodddonation-9c44e.firebaseapp.com",
+  projectId: "blodddonation-9c44e",
+  storageBucket: "blodddonation-9c44e.firebasestorage.app",
+  messagingSenderId: "636578091772",
+  appId: "1:636578091772:web:276d08168f8fc9c221fd79",
+  measurementId: "G-3TPG0JCF3R"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let donors = [];
+    onSnapshot(query(collection(db,'donors'), orderBy('createdAt','desc')), snap=>{{ donors = snap.docs.map(d=>({{ id:d.id, ...d.data() }})); render(); }});
+
+    ["qText","qGroup","qMandal"].forEach(id=> document.getElementById(id).addEventListener('input', render));
+
+    function render(){{
+      const t = document.getElementById('qText').value.trim().toLowerCase();
+      const g = document.getElementById('qGroup').value;
+      const m = document.getElementById('qMandal').value;
+      const rows = donors.filter(d=>{{
+        const okText = !t || [d.name,d.phone,d.address,d.city].some(v=> (v||'').toLowerCase().includes(t));
+        const okG = !g || d.bloodGroup===g;
+        const okM = !m || d.mandal===m;
+        return okText && okG && okM && d.willing !== false;
+      }});
+      document.getElementById('resultInfo').textContent = rows.length ? `${{rows.length}} परिणाम` : 'कोई परिणाम नहीं';
+      const grd = document.getElementById('cardGrid'); grd.innerHTML='';
+      rows.forEach(d=>{{ 
+        const waNum = (d.whatsapp || d.phone || '').replace(/\D/g,'');
+        const msg = encodeURIComponent(`नमस्कार ${{d.name}}, रक्तदान हेतु सहायता चाहिए।`);
+        grd.insertAdjacentHTML('beforeend', `
+          <div class="bg-white border rounded-2xl p-3 flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <div class="font-semibold text-slate-800">${{d.name||''}}</div>
+              <span class="text-xs px-2 py-1 rounded-full bg-peach-100 text-saffron-800 border">${{d.bloodGroup||''}}</span>
+            </div>
+            <div class="text-sm text-slate-600">
+              <div><b>मंडल:</b> ${{d.mandal||'—'}}</div>
+              <div><b>वार्ड/बूथ/पता:</b> ${{d.address||'—'}}</div>
+              <div><b>मोबाइल:</b> <a class="underline" href="tel:${{d.phone||''}}">${{d.phone||''}}</a></div>
+              ${{d.whatsapp ? `<div><b>व्हाट्सऐप:</b> <a class="underline" href="https://wa.me/${{waNum}}">+91 ${{waNum}}</a></div>` : ''}}
+              <div><b>आख़िरी दान:</b> ${{d.lastDonationDate? fmtDate(d.lastDonationDate):'—'}}</div>
+            </div>
+            <div class="flex gap-2 pt-1">
+              <a class="px-3 py-2 rounded-xl bg-saffron-700 text-white text-sm" href="tel:${{d.phone||''}}">कॉल</a>
+              <a class="px-3 py-2 rounded-xl bg-green-600 text-white text-sm" target="_blank" href="https://wa.me/${{waNum}}?text=${{msg}}">व्हाट्सऐप</a>
+            </div>
+          </div>`);
+      }});
+    }}
+  </script>
+
+  <!-- Attribution footnote for image (not visible): 
+    Modi image: Official portrait, Govt of India, licensed under GODL-India via Wikimedia Commons.
+    Direct file URL used.
+  -->
+</body>
+</html>
