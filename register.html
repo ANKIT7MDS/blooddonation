@@ -57,7 +57,8 @@
             <span class="i">🧡</span> <b>सेवा सही संकल्प</b>
           </span>
           <div class="inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
-            <img src="seva-pakhwada-2025-clean-1024.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded">
+            <!-- UPDATED LOGO -->
+            <img src="Sevapakhwada.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded">
             <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
           </div>
           <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm">
@@ -158,22 +159,26 @@
     fill($('f_mandal'), MANDALS, 'चुनें');
 
     // === Telegram ===
-    // नया bot token/target भरें: चैनल के लिए @username, private/group के लिए -100… numeric id
-    const TELEGRAM_BOT_TOKEN = "PASTE_YOUR_NEW_BOT_TOKEN";
-    const TELEGRAM_CHAT_ID   = "@BJPBLOODREQUEST"; // <-- इसे अपने channel/group id से अपडेट करें
+    // UPDATED: आपका टोकन + आपका DM chat id
+    const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
+    const TELEGRAM_CHAT_ID   = "733804072"; // DM के लिए numeric id
+
     async function sendTelegram(text){
-      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
       try{
-        const res = await fetch(url,{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
+        // Recommended: Netlify serverless relay (अगर लगाया है)
+        await fetch('/.netlify/functions/send-tg', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
           body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
         });
-        if(!res.ok) throw new Error('HTTP '+res.status);
-      }catch(err){
-        // CORS-safe fallback
-        const img = new Image();
-        img.src = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(TELEGRAM_CHAT_ID)}&text=${encodeURIComponent(text)}`;
+      }catch(e){
+        // Direct API fallback (कुछ नेटवर्क पर ब्लॉक हो सकता है)
+        try{
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
+          });
+        }catch(_){}
       }
     }
 
