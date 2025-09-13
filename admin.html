@@ -73,14 +73,25 @@
     <!-- Admin Gate -->
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
       <h2 class="text-lg font-semibold mb-2">Admin पहुँच</h2>
-      <div id="adminGate" class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+
+      <!-- Google Sign-in row -->
+      <div class="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div class="flex gap-2">
+          <button id="btnGoogle" class="px-4 py-2 rounded-xl bg-saffron-700 text-white">Google Sign-in</button>
+          <button id="btnSignOut" class="px-4 py-2 rounded-xl bg-slate-800 text-white hidden">Sign out</button>
+        </div>
+        <span id="who" class="text-xs text-slate-600"></span>
+      </div>
+
+      <!-- (Optional) UI PIN gate -->
+      <div id="adminGate" class="mt-3 flex flex-col sm:flex-row items-start sm:items-center gap-2">
         <div class="flex items-center gap-2">
           <input id="adminPin" type="password" class="rounded-xl border px-4 py-3" placeholder="Admin PIN" />
           <button id="btnUnlock" class="px-4 py-3 rounded-xl bg-red-600 text-white">Unlock</button>
         </div>
-        <span class="text-xs text-slate-500">(डेमो PIN: 2720 — असली सुरक्षा Firestore Rules/Auth से)</span>
+        <span class="text-xs text-slate-500">(डेमो PIN: 2720 — असली सुरक्षा Google Sign-in + Firestore Rules से)</span>
       </div>
-      <div id="adminOk" class="hidden text-green-700 font-semibold">Admin सक्षम</div>
+      <div id="adminOk" class="hidden text-green-700 font-semibold mt-2">Admin सक्षम</div>
     </div>
 
     <!-- Telegram Settings -->
@@ -88,9 +99,9 @@
       <h3 class="text-base font-semibold mb-3">Telegram अलर्ट</h3>
       <div class="grid sm:grid-cols-3 gap-3 items-end">
         <div class="sm:col-span-2">
-          <label class="text-sm text-slate-600">Chat IDs (कॉमा से अलग करें) — DM/यूज़र के लिए numeric id, चैनल के लिए @username, प्राइवेट/ग्रुप के लिए -100…</label>
+          <label class="text-sm text-slate-600">Chat IDs (कॉमा से अलग करें) — DM/यूज़र: numeric id, चैनल: @username, प्राइवेट/ग्रुप: -100…</label>
           <input id="tgIds" class="mt-1 w-full rounded-xl border px-4 py-3" />
-          <p class="text-xs text-slate-500 mt-1">उदा: <code>733804072</code> या <code>@BJPBLOODREQUEST</code> या दोनों: <code>733804072,@BJPBLOODREQUEST</code></p>
+          <p class="text-xs text-slate-500 mt-1">उदा: <code>733804072</code>, <code>@BJPBLOODREQUEST</code> या दोनों: <code>733804072,@BJPBLOODREQUEST</code></p>
         </div>
         <div class="flex gap-2">
           <button id="btnSaveTg" class="px-4 py-3 rounded-xl bg-saffron-700 text-white">Save IDs</button>
@@ -100,8 +111,8 @@
       <p id="tgStatus" class="text-xs text-slate-600 mt-2"></p>
     </div>
 
-    <!-- Donation Logger -->
     <div id="adminArea" class="hidden space-y-4">
+      <!-- Donation Logger -->
       <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
         <h3 class="text-base font-semibold mb-3">दान लॉग करें</h3>
         <div class="grid gap-3 sm:grid-cols-2">
@@ -250,7 +261,7 @@
   <!-- Edit Donor Modal -->
   <div id="editModal" class="modal fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
     <div class="bg-white w-[92%] max-w-2xl rounded-2xl p-5">
-      <h3 class="text-lg font-semibold">डोनर संपादन</h3>
+      <h3 class="text-lg font-semibold">ڈोनर संपादन</h3>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
         <input id="ed_name" class="rounded-xl border px-4 py-3" placeholder="नाम">
         <input id="ed_phone" class="rounded-xl border px-4 py-3" placeholder="मोबाइल">
@@ -297,8 +308,10 @@
 
   <script type="module">
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
-    const { getFirestore, collection, onSnapshot, query, orderBy, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } =
+    const { getFirestore, collection, onSnapshot, query, orderBy, addDoc, updateDoc, deleteDoc, doc, getDoc, serverTimestamp } =
       await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
+    const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } =
+      await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js');
 
     const firebaseConfig = {
       apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
@@ -311,35 +324,84 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const db  = getFirestore(app);
 
-    // ---- Admin gate (UI) ----
+    // -------- Auth --------
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    document.getElementById('btnGoogle').onclick = async ()=>{ try{ await signInWithPopup(auth, provider); }catch(e){ alert(e.message || e); } };
+    document.getElementById('btnSignOut').onclick = ()=> signOut(auth);
+
+    // Optional UI PIN
     let adminOK = false;
-    $('btnUnlock').onclick = () => {
-      const pin = ($('adminPin').value || '').trim();
+    document.getElementById('btnUnlock').onclick = () => {
+      const pin = (document.getElementById('adminPin').value || '').trim();
       if(pin === '2720'){
         adminOK = true;
-        $('adminGate').classList.add('hidden');
-        $('adminOk').classList.remove('hidden');
-        $('adminArea').classList.remove('hidden');
+        document.getElementById('adminGate').classList.add('hidden');
+        document.getElementById('adminOk').classList.remove('hidden');
+        document.getElementById('adminArea').classList.remove('hidden');
       } else alert('गलत PIN');
     };
 
-    // ---- Telegram UI ----
-    const tgInput = $('tgIds');
+    onAuthStateChanged(auth, async (user)=>{
+      const who = document.getElementById('who');
+      if(user){
+        who.textContent = `Signed in: ${user.email}`;
+        document.getElementById('btnGoogle').classList.add('hidden');
+        document.getElementById('btnSignOut').classList.remove('hidden');
+
+        try{
+          const snap = await getDoc(doc(db,'settings','admins'));
+          let isAdmin = false;
+          if(snap.exists()){
+            const data = snap.data();
+            const email = user.email;
+            if (Array.isArray(data.emails)) isAdmin = data.emails.includes(email);
+            else if (data.emails && typeof data.emails === 'object') isAdmin = !!data.emails[email];
+          }
+          if(isAdmin){
+            adminOK = true;
+            document.getElementById('adminGate').classList.add('hidden');
+            document.getElementById('adminOk').classList.remove('hidden');
+            document.getElementById('adminArea').classList.remove('hidden');
+          } else {
+            adminOK = false;
+            document.getElementById('adminArea').classList.add('hidden');
+            document.getElementById('adminOk').classList.add('hidden');
+            document.getElementById('adminGate').classList.remove('hidden');
+            alert('आप admin सूची में नहीं हैं। Firestore → settings/admins → emails में अपना ईमेल जोड़ें।');
+          }
+        }catch(e){
+          console.error(e);
+          alert('Admin जाँच में त्रुटि: ' + (e?.message || e));
+        }
+      } else {
+        who.textContent = 'Signed out';
+        document.getElementById('btnGoogle').classList.remove('hidden');
+        document.getElementById('btnSignOut').classList.add('hidden');
+        adminOK = false;
+        document.getElementById('adminArea').classList.add('hidden');
+        document.getElementById('adminOk').classList.add('hidden');
+        document.getElementById('adminGate').classList.remove('hidden');
+      }
+    });
+
+    // -------- Telegram UI --------
+    const tgInput = document.getElementById('tgIds');
     tgInput.value = (localStorage.getItem('tgIds') || '733804072');
-    $('btnSaveTg').onclick = ()=>{
+    document.getElementById('btnSaveTg').onclick = ()=>{
       localStorage.setItem('tgIds', tgInput.value.trim());
       TELEGRAM_CHAT_IDS = tgInput.value.split(',').map(x=>x.trim()).filter(Boolean);
-      $('tgStatus').textContent = 'IDs सेव हो गईं ✅';
+      document.getElementById('tgStatus').textContent = 'IDs सेव हो गईं ✅';
     };
-    $('btnSendTest').onclick = ()=> sendTelegram(`Test ✅ ${new Date().toLocaleString()}`);
+    document.getElementById('btnSendTest').onclick = ()=> sendTelegram(`Test ✅ ${new Date().toLocaleString()}`);
 
     async function sendTelegram(text){
       const ids = TELEGRAM_CHAT_IDS && TELEGRAM_CHAT_IDS.length ? TELEGRAM_CHAT_IDS : ['733804072'];
-      $('tgStatus').textContent = 'भेजा जा रहा है…';
+      document.getElementById('tgStatus').textContent = 'भेजा जा रहा है…';
       try{
-        // 1) Netlify function (recommended)
+        // 1) Netlify function
         let ok = true;
         for (const id of ids) {
           const r = await fetch('/.netlify/functions/send-tg', {
@@ -349,32 +411,32 @@
           });
           ok = ok && r.ok;
         }
-        if (ok) { $('tgStatus').textContent = 'भेज दिया गया ✅'; return; }
-      }catch(e){ /* ignore & fallback */ }
+        if (ok) { document.getElementById('tgStatus').textContent = 'भेज दिया गया ✅'; return; }
+      }catch(e){ /* fallback below */ }
 
       try{
-        // 2) Direct Telegram API (if allowed by network)
+        // 2) Direct API
         for (const id of ids) {
           await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,{
             method:'POST', headers:{'Content-Type':'application/json'},
             body: JSON.stringify({ chat_id:id, text })
           });
         }
-        $('tgStatus').textContent = 'भेज दिया गया ✅';
+        document.getElementById('tgStatus').textContent = 'भेज दिया गया ✅';
       }catch(e){
-        // 3) CORS-safe pixel fallback
-        for (const id of TELEGRAM_CHAT_IDS) {
+        // 3) Pixel fallback
+        for (const id of ids) {
           const img = new Image();
           img.src = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(id)}&text=${encodeURIComponent(text)}`;
         }
-        $('tgStatus').textContent = 'भेजने की कोशिश की गई (fallback) ⚠️';
+        document.getElementById('tgStatus').textContent = 'भेजने की कोशिश की गई (fallback) ⚠️';
       }
     }
 
-    // ---- Data state ----
+    // -------- Data state --------
     let donors = []; let donations = []; let requests = [];
-    const donorsTbody = $('donorsTbody');
-    const sel = $('selDonor');
+    const donorsTbody = document.getElementById('donorsTbody');
+    const sel = document.getElementById('selDonor');
 
     onSnapshot(query(collection(db,'donors'), orderBy('createdAt','desc')), snap=>{
       donors = snap.docs.map(d=>({ id:d.id, ...d.data() }));
@@ -395,16 +457,16 @@
     function renderAdminDonorSelect(){
       sel.innerHTML = '<option value="">—</option>';
       donors.forEach(d=> sel.insertAdjacentHTML('beforeend', `<option value="${d.id}">${d.name||''} • ${d.bloodGroup||''} • ${d.mandal||''}</option>`));
-      sel.onchange = ()=>{ const d = donors.find(x=>x.id===sel.value); $('selDonorInfo').textContent = d ? `मोबाइल: ${d.phone||''} • आख़िरी दान: ${d.lastDonationDate?fmtTS(d.lastDonationDate):'—'}` : ''; };
+      sel.onchange = ()=>{ const d = donors.find(x=>x.id===sel.value); document.getElementById('selDonorInfo').textContent = d ? `मोबाइल: ${d.phone||''} • आख़िरी दान: ${d.lastDonationDate?fmtTS(d.lastDonationDate):'—'}` : ''; };
     }
 
     // Filters + pagination
-    const fText=$('fText'), fGroup=$('fGroup'), fMandal=$('fMandal'), fWilling=$('fWilling');
+    const fText=document.getElementById('fText'), fGroup=document.getElementById('fGroup'), fMandal=document.getElementById('fMandal'), fWilling=document.getElementById('fWilling');
     fill(fGroup, BLOOD_GROUPS, 'ब्लड ग्रुप'); fill(fMandal, MANDALS, 'मंडल');
     [fText,fGroup,fMandal,fWilling].forEach(el=> el.addEventListener('input', renderDonorTable));
     let page=1, perPage=100;
-    $('pgPrev').onclick=()=>{ if(page>1){ page--; renderDonorTable(); } };
-    $('pgNext').onclick=()=>{ page++; renderDonorTable(); };
+    document.getElementById('pgPrev').onclick=()=>{ if(page>1){ page--; renderDonorTable(); } };
+    document.getElementById('pgNext').onclick=()=>{ page++; renderDonorTable(); };
 
     function applyFilters(){
       const t=(fText.value||'').toLowerCase(), g=fGroup.value, m=fMandal.value, w=fWilling.value;
@@ -420,12 +482,12 @@
 
     function renderDonorTable(){
       const rows = applyFilters();
-      $('countAll').textContent = donors.length;
-      $('countFiltered').textContent = rows.length;
+      document.getElementById('countAll').textContent = donors.length;
+      document.getElementById('countFiltered').textContent = rows.length;
 
       const totalPages = Math.max(1, Math.ceil(rows.length/perPage));
       if(page>totalPages) page = totalPages;
-      $('pgInfo').textContent = `${page}/${totalPages}`;
+      document.getElementById('pgInfo').textContent = `${page}/${totalPages}`;
       const slice = rows.slice((page-1)*perPage, page*perPage);
 
       donorsTbody.innerHTML='';
@@ -448,7 +510,7 @@
       // row actions
       donorsTbody.querySelectorAll('button[data-act="del"]').forEach(btn=>{
         btn.onclick = async ()=>{
-          if(!adminOK) return alert('Admin आवश्यक');
+          if(!adminOK) return alert('Admin आवश्यक (Google Sign-in + Firestore admins)');
           const id = btn.dataset.id;
           if(!confirm('डोनर एंट्री डिलीट करें?')) return;
           try{
@@ -463,39 +525,40 @@
     }
 
     // Edit modal
-    fill($('ed_group'), BLOOD_GROUPS, 'ब्लड ग्रुप'); fill($('ed_mandal'), MANDALS, 'मंडल');
-    $('btnEdCancel').onclick = ()=> toggleEdit(false);
+    fill(document.getElementById('ed_group'), BLOOD_GROUPS, 'ब्लड ग्रुप');
+    fill(document.getElementById('ed_mandal'), MANDALS, 'मंडल');
+    document.getElementById('btnEdCancel').onclick = ()=> toggleEdit(false);
     let editingId=null;
     function openEditModal(id){
       const d = donors.find(x=>x.id===id); if(!d) return;
       editingId = id;
-      $('ed_name').value = d.name||''; $('ed_phone').value = d.phone||''; $('ed_whatsapp').value = d.whatsapp||'';
-      $('ed_group').value = d.bloodGroup||''; $('ed_mandal').value = d.mandal||'';
-      $('ed_address').value = d.address||''; $('ed_age').value = d.age||'';
-      $('ed_gender').value = d.gender||''; $('ed_notes').value = d.notes||'';
-      $('ed_last').value = d.lastDonationDate ? new Date(d.lastDonationDate.toDate ? d.lastDonationDate.toDate() : d.lastDonationDate).toISOString().slice(0,10) : '';
-      $('ed_willing').value = (d.willing===false || (typeof d.willing==='string' && d.willing.toLowerCase()==='no'))?'no':'yes';
+      document.getElementById('ed_name').value = d.name||''; document.getElementById('ed_phone').value = d.phone||''; document.getElementById('ed_whatsapp').value = d.whatsapp||'';
+      document.getElementById('ed_group').value = d.bloodGroup||''; document.getElementById('ed_mandal').value = d.mandal||'';
+      document.getElementById('ed_address').value = d.address||''; document.getElementById('ed_age').value = d.age||'';
+      document.getElementById('ed_gender').value = d.gender||''; document.getElementById('ed_notes').value = d.notes||'';
+      document.getElementById('ed_last').value = d.lastDonationDate ? new Date(d.lastDonationDate.toDate ? d.lastDonationDate.toDate() : d.lastDonationDate).toISOString().slice(0,10) : '';
+      document.getElementById('ed_willing').value = (d.willing===false || (typeof d.willing==='string' && d.willing.toLowerCase()==='no'))?'no':'yes';
       toggleEdit(true);
     }
     function toggleEdit(show){
-      const m = $('editModal'); if(show){ m.classList.remove('hidden'); m.classList.add('flex'); } else { m.classList.add('hidden'); m.classList.remove('flex'); }
+      const m = document.getElementById('editModal'); if(show){ m.classList.remove('hidden'); m.classList.add('flex'); } else { m.classList.add('hidden'); m.classList.remove('flex'); }
     }
-    $('btnEdSave').onclick = async ()=>{
-      if(!adminOK) return alert('Admin आवश्यक');
+    document.getElementById('btnEdSave').onclick = async ()=>{
+      if(!adminOK) return alert('Admin आवश्यक (Google Sign-in + Firestore admins)');
       if(!editingId) return;
       try{
         const payload = {
-          name:$('ed_name').value.trim(),
-          phone:$('ed_phone').value.trim(),
-          whatsapp:$('ed_whatsapp').value.trim(),
-          bloodGroup:$('ed_group').value,
-          mandal:$('ed_mandal').value,
-          address:$('ed_address').value.trim(),
-          age: $('ed_age').value? Number($('ed_age').value): null,
-          gender:$('ed_gender').value,
-          notes:$('ed_notes').value.trim(),
-          willing: $('ed_willing').value==='yes',
-          lastDonationDate: $('ed_last').value ? new Date($('ed_last').value) : null
+          name:document.getElementById('ed_name').value.trim(),
+          phone:document.getElementById('ed_phone').value.trim(),
+          whatsapp:document.getElementById('ed_whatsapp').value.trim(),
+          bloodGroup:document.getElementById('ed_group').value,
+          mandal:document.getElementById('ed_mandal').value,
+          address:document.getElementById('ed_address').value.trim(),
+          age: document.getElementById('ed_age').value? Number(document.getElementById('ed_age').value): null,
+          gender:document.getElementById('ed_gender').value,
+          notes:document.getElementById('ed_notes').value.trim(),
+          willing: document.getElementById('ed_willing').value==='yes',
+          lastDonationDate: document.getElementById('ed_last').value ? new Date(document.getElementById('ed_last').value) : null
         };
         await updateDoc(doc(db,'donors', editingId), payload);
         toggleEdit(false);
@@ -504,28 +567,28 @@
     };
 
     // Save donation
-    $('btnSaveDonation').onclick = async ()=>{
-      if(!adminOK) return alert('Admin आवश्यक');
+    document.getElementById('btnSaveDonation').onclick = async ()=>{
+      if(!adminOK) return alert('Admin आवश्यक (Google Sign-in + Firestore admins)');
       const id = sel.value; const d = donors.find(x=>x.id===id); if(!d) return alert('डोनर चुनें');
       const payload = {
         donorId: d.id, donorName: d.name, donorPhone: d.phone,
         mandal: d.mandal, bloodGroup: d.bloodGroup,
-        recipientName: $('d_recipient').value.trim(),
-        recipientPhone: $('d_recipient_phone').value.trim(),
-        units: Number($('d_units').value||1),
-        hospital: $('d_hospital').value.trim(),
-        date: $('d_date').value ? new Date($('d_date').value) : new Date(),
-        notes: $('d_notes').value.trim(),
+        recipientName: document.getElementById('d_recipient').value.trim(),
+        recipientPhone: document.getElementById('d_recipient_phone').value.trim(),
+        units: Number(document.getElementById('d_units').value||1),
+        hospital: document.getElementById('d_hospital').value.trim(),
+        date: document.getElementById('d_date').value ? new Date(document.getElementById('d_date').value) : new Date(),
+        notes: document.getElementById('d_notes').value.trim(),
         createdAt: serverTimestamp(),
       };
       await addDoc(collection(db,'donations'), payload);
       await updateDoc(doc(db,'donors', d.id), { lastDonationDate: payload.date });
       alert('दान प्रविष्टि सेव हो गया।');
-      ["d_recipient","d_recipient_phone","d_units","d_hospital","d_date","d_notes"].forEach(i=> $(i).value=''); $('d_units').value='1';
+      ["d_recipient","d_recipient_phone","d_units","d_hospital","d_date","d_notes"].forEach(i=> document.getElementById(i).value=''); document.getElementById('d_units').value='1';
     };
 
     // Export CSV
-    $('btnExportDonors').onclick = ()=>{
+    document.getElementById('btnExportDonors').onclick = ()=>{
       const header = ['name','phone','whatsapp','bloodGroup','mandal','address','age','gender','lastDonationDate','willing','createdAt'];
       const rows = donors.map(d=> ([
         d.name||'', d.phone||'', d.whatsapp||'', d.bloodGroup||'', d.mandal||'', (d.address||'').replace(/\n/g,' '),
@@ -533,7 +596,7 @@
       ]));
       downloadCSV('donors.csv', [header, ...rows]);
     };
-    $('btnExportDonations').onclick = ()=>{
+    document.getElementById('btnExportDonations').onclick = ()=>{
       const header = ['date','donorName','donorPhone','bloodGroup','mandal','units','recipientName','recipientPhone','hospital'];
       const rows = donations.map(x=> ([
         (x.date?fmtTS(x.date):''), x.donorName||'', x.donorPhone||'', x.bloodGroup||'', x.mandal||'', x.units||'',
@@ -567,7 +630,7 @@
     }
 
     function renderDonationsTable(){
-      const tb = $('donationsTbody'); tb.innerHTML='';
+      const tb = document.getElementById('donationsTbody'); tb.innerHTML='';
       donations.forEach(x=> tb.insertAdjacentHTML('beforeend', `
         <tr class="odd:bg-white even:bg-slate-50">
           <td class="p-2">${x.date?fmtTS(x.date):'—'}</td>
@@ -581,7 +644,7 @@
     }
 
     function renderRequestsTable(){
-      const tb = $('reqTbody'); tb.innerHTML='';
+      const tb = document.getElementById('reqTbody'); tb.innerHTML='';
       requests.forEach(r=> tb.insertAdjacentHTML('beforeend', `
         <tr class="odd:bg-white even:bg-slate-50">
           <td class="p-2">${r.createdAt?fmtTS(r.createdAt):'—'}</td>
