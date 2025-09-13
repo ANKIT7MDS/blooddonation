@@ -67,6 +67,12 @@
         <input id="adminPin" type="password" class="rounded-xl border px-4 py-3" placeholder="Admin PIN" />
         <button id="btnUnlock" class="px-4 py-3 rounded-xl bg-red-600 text-white">Unlock</button>
         <span class="text-xs text-slate-500">(डेमो PIN: 2720 — बदलें)</span>
+
+        <!-- Google Sign-in -->
+        <button id="btnLogin" class="px-3 py-2 rounded-xl border">Google Sign-in</button>
+        <button id="btnLogout" class="px-3 py-2 rounded-xl border hidden">Logout</button>
+        <span id="who" class="text-xs text-slate-600"></span>
+
         <button id="demoOpen" class="ml-auto px-3 py-2 rounded-xl border text-slate-700">Demo View</button>
       </div>
       <div id="adminOk" class="hidden text-green-700 font-semibold">Admin सक्षम</div>
@@ -253,7 +259,7 @@
   <!-- Edit Modal -->
   <div id="editModal" class="modal fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
     <div class="bg-white w-[90%] max-w-lg rounded-2xl p-4">
-      <div class="text-lg font-semibold mb-2">डोनर संपादन</div>
+      <div class="text-lg font-semibold mb-2">ਡोनर संपादन</div>
       <div class="grid gap-3">
         <input id="ed_name" class="rounded-xl border px-4 py-3" placeholder="नाम" />
         <input id="ed_phone" class="rounded-xl border px-4 py-3" placeholder="मोबाइल" />
@@ -286,6 +292,10 @@
     const { getFirestore, collection, onSnapshot, query, orderBy, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } =
       await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
 
+    /* Google Auth */
+    const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } =
+      await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js');
+
     const firebaseConfig = {
       apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
       authDomain: "blodddonation-9c44e.firebaseapp.com",
@@ -299,7 +309,27 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // --- Admin Gate ---
+    // Auth init
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    $('btnLogin').onclick = async () => {
+      try { await signInWithPopup(auth, provider); }
+      catch(e){ alert('Login error: ' + (e?.message||e)); }
+    };
+    $('btnLogout').onclick = async () => { await signOut(auth); };
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        $('who').textContent = user.email || '';
+        $('btnLogin').classList.add('hidden');
+        $('btnLogout').classList.remove('hidden');
+      } else {
+        $('who').textContent = '';
+        $('btnLogin').classList.remove('hidden');
+        $('btnLogout').classList.add('hidden');
+      }
+    });
+
+    // --- Admin Gate (UI) ---
     let adminOK = false;
     const openAdmin = () => {
       adminOK = true;
