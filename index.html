@@ -4,61 +4,75 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>डोनर सर्च • रक्तदाता पोर्टल</title>
-  
-<!-- Tailwind + Google Font -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        fontFamily: { devanagari: ['"Noto Sans Devanagari"', 'system-ui', 'sans-serif'] },
-        colors: {
-          saffron: { 50:'#FFF4E8',100:'#FFE8D6',200:'#FFD7B3',300:'#FFC48A',400:'#FFA24D',500:'#FF7F0E',600:'#E06900',700:'#C25700',800:'#A34500',900:'#873800' },
-          peach: { 50:'#FFF7EF',100:'#FFEFE0',200:'#FFE3C6' }
+
+  <!-- Tailwind + Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { devanagari: ['"Noto Sans Devanagari"', 'system-ui', 'sans-serif'] },
+          colors: {
+            saffron: { 50:'#FFF4E8',100:'#FFE8D6',200:'#FFD7B3',300:'#FFC48A',400:'#FFA24D',500:'#FF7F0E',600:'#E06900',700:'#C25700',800:'#A34500',900:'#873800' },
+            peach: { 50:'#FFF7EF',100:'#FFEFE0',200:'#FFE3C6' }
+          }
         }
       }
     }
-  }
-</script>
-<style>
-  body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
-  .toast { position: fixed; inset-inline: 0; top: 10px; margin-inline: auto; width: fit-content; z-index: 50; }
-</style>
-
+  </script>
+  <style>
+    body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
+    .toast { position: fixed; inset-inline: 0; top: 10px; margin-inline: auto; width: fit-content; z-index: 50; }
+  </style>
 </head>
 <body class="min-h-screen bg-slate-50">
   <div id="toast" class="toast hidden"></div>
-  
-<header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
-  <div class="max-w-6xl mx-auto px-4 py-2"></div>
-</header>
 
-  
-<section class="relative overflow-hidden">
-  <div class="absolute inset-0">
-    <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-center opacity-20"></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-white/90 via-peach-50/90 to-white/95"></div>
-  </div>
-  <div class="relative max-w-6xl mx-auto px-4 py-6">
-    <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-5 sm:px-8 py-6 shadow">
-      <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
-      <div class="mt-1 text-6xl sm:text-7xl font-extrabold text-red-700 leading-tight">रक्तदाता पोर्टल</div>
-      <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
-        माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
-      </p>
-      <div class="mt-4 inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
-        <img src="seva-pakhwada-2025-clean-1024.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded" />
-        <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
+  <!-- Top strip -->
+  <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
+    <div class="max-w-6xl mx-auto px-4 py-2"></div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-center opacity-20"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-white/90 via-peach-50/90 to-white/95"></div>
+    </div>
+    <div class="relative max-w-6xl mx-auto px-4 py-6">
+      <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-5 sm:px-8 py-6 shadow">
+        <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
+        <div class="mt-1 text-6xl sm:text-7xl font-extrabोल्ड text-red-700 leading-tight">रक्तदाता पोर्टल</div>
+        <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
+          माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
+        </p>
+
+        <!-- Badges row -->
+        <div class="mt-4 flex items-center justify-between gap-3">
+          <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm">
+            🧡 <b>सेवा सही संकल्प</b>
+          </span>
+          <div class="inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
+            <!-- UPDATED LOGO -->
+            <img src="Sevapakhwada.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded" />
+            <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
+          </div>
+          <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm">
+            <b>सेवा परमो धर्म</b> 🩸
+          </span>
+        </div>
       </div>
     </div>
-  </div>
-</section>
-
+  </section>
 
   <main class="max-w-6xl mx-auto p-4 space-y-4">
+    <!-- Search -->
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
       <div class="flex items-center justify-between gap-2 flex-wrap">
         <h2 class="text-lg font-semibold">डोनर सर्च</h2>
@@ -80,6 +94,7 @@
       <div id="cardGrid" class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
     </div>
 
+    <!-- Request -->
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
       <h3 class="text-base font-semibold mb-3">रक्त की आवश्यकता अनुरोध</h3>
       <form id="reqForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -117,6 +132,18 @@
         </div>
       </form>
     </div>
+
+    <!-- Charts -->
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
+        <h3 class="text-base font-semibold mb-3">ब्लड ग्रुप-वाइज़ उपलब्ध डोनर</h3>
+        <div class="h-64"><canvas id="chartGroups"></canvas></div>
+      </div>
+      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
+        <h3 class="text-base font-semibold mb-3">मंडल-वाइज़ उपलब्ध डोनर</h3>
+        <div class="h-64"><canvas id="chartMandals"></canvas></div>
+      </div>
+    </div>
   </main>
 
   <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500 text-center">© <span id="year"></span> भारतीय जनता पार्टी • जिला मंदसौर</footer>
@@ -135,22 +162,30 @@
     const fmtTS = (ts)=>{ try{ const d = ts?.toDate? ts.toDate(): new Date(ts); return d.toLocaleDateString('en-GB'); }catch{ return '' } };
     const isWilling = (d)=>{ if(!d) return true; const w=d.willing; if(w===false) return false; if(typeof w==='string'){ const s=w.trim().toLowerCase(); if(['no','नहीं','nahi','nai'].includes(s)) return false; } return true; };
 
+    /* TELEGRAM (Working: Function -> Direct API) */
     const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
-    const TELEGRAM_CHAT_ID = "@bjpbloodbot";
+    const TELEGRAM_CHAT_ID   = "733804072"; // आपका numeric DM id
+
     async function sendTelegram(text) {
-      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
       try {
-        const res = await fetch(url, {
+        // 1) Netlify function (recommended)
+        const r = await fetch('/.netlify/functions/send-tg', {
           method: 'POST',
           headers: { 'Content-Type':'application/json' },
           body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
         });
-        if(!res.ok) throw new Error('HTTP '+res.status);
-      } catch(err) {
-        const img = new Image();
-        img.src = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(TELEGRAM_CHAT_ID)}&text=${encodeURIComponent(text)}`;
-      }
+        if (r.ok) return;
+      } catch(_) {}
+      try {
+        // 2) Direct API fallback
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type':'application/json' },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
+        });
+      } catch(_) {}
     }
+
     function showToast(html, ok=true) {
       const t = document.getElementById('toast'); t.className = 'toast';
       t.innerHTML = `<div class="mx-auto max-w-lg bg-white border rounded-2xl shadow px-4 py-3 ${ok?'border-green-600':'border-red-600'}"><div class="text-sm ${ok?'text-green-700':'text-red-700'}">${html}</div></div>`;
@@ -161,22 +196,26 @@
   <script type="module">
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
     const { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
-    
-const firebaseConfig = {
-  apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
-  authDomain: "blodddonation-9c44e.firebaseapp.com",
-  projectId: "blodddonation-9c44e",
-  storageBucket: "blodddonation-9c44e.firebasestorage.app",
-  messagingSenderId: "636578091772",
-  appId: "1:636578091772:web:276d08168f8fc9c221fd79",
-  measurementId: "G-3TPG0JCF3R"
-};
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
+      authDomain: "blodddonation-9c44e.firebaseapp.com",
+      projectId: "blodddonation-9c44e",
+      storageBucket: "blodddonation-9c44e.firebasestorage.app",
+      messagingSenderId: "636578091772",
+      appId: "1:636578091772:web:276d08168f8fc9c221fd79",
+      measurementId: "G-3TPG0JCF3R"
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
     let donors = [];
-    onSnapshot(query(collection(db,'donors'), orderBy('createdAt','desc')), snap=>{ donors = snap.docs.map(d=>({ id:d.id, ...d.data() })); render(); });
+    onSnapshot(query(collection(db,'donors'), orderBy('createdAt','desc')), snap=>{
+      donors = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+      render();
+      updateCharts();
+    });
 
     ['qText','qGroup','qMandal'].forEach(id=> document.getElementById(id).addEventListener('input', render));
 
@@ -191,7 +230,7 @@ const firebaseConfig = {
         const okM = !m || d.mandal===m;
         return okText && okG && okM && isWilling(d);
       });
-      const rows = rowsAll.slice(0,3);
+      const rows = rowsAll.slice(0,3); // privacy: max 3
       $('resultInfo').textContent = rowsAll.length ? `${rows.length}/${rowsAll.length} परिणाम (गोपनीयता सीमा)` : 'कोई परिणाम नहीं';
       const grd = $('cardGrid'); grd.innerHTML='';
       rows.forEach(d=>{
@@ -219,6 +258,7 @@ const firebaseConfig = {
       });
     }
 
+    // Request submit
     document.getElementById('reqForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
       const $ = (id)=>document.getElementById(id);
@@ -247,6 +287,32 @@ const firebaseConfig = {
         showToast('अनुरोध भेजने में समस्या हुई।', false);
       }
     });
+
+    /* Charts */
+    let chartGroups, chartMandals;
+    function updateCharts(){
+      // group-wise
+      const groupCounts = BLOOD_GROUPS.map(g => donors.filter(d => d.bloodGroup===g && isWilling(d)).length);
+      const elG = document.getElementById('chartGroups');
+      if(chartGroups) chartGroups.destroy();
+      chartGroups = new Chart(elG, {
+        type:'bar',
+        data:{ labels:BLOOD_GROUPS, datasets:[{ label:'डोनर', data:groupCounts }] },
+        options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}
+      });
+
+      // mandal-wise
+      const map = new Map();
+      donors.forEach(d=>{ if(!isWilling(d)) return; const k=d.mandal||'अनिर्दिष्ट'; map.set(k,(map.get(k)||0)+1); });
+      const mandalPairs = Array.from(map.entries()).sort((a,b)=> b[1]-a[1]);
+      const elM = document.getElementById('chartMandals');
+      if(chartMandals) chartMandals.destroy();
+      chartMandals = new Chart(elM, {
+        type:'bar',
+        data:{ labels: mandalPairs.map(p=>p[0]), datasets:[{ label:'डोनर', data: mandalPairs.map(p=>p[1]) }] },
+        options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}
+      });
+    }
   </script>
 </body>
 </html>
