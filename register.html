@@ -4,60 +4,71 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>रक्तदाता पंजीकरण • रक्तदाता पोर्टल</title>
-  
-<!-- Tailwind + Google Font -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        fontFamily: { devanagari: ['"Noto Sans Devanagari"', 'system-ui', 'sans-serif'] },
-        colors: {
-          saffron: { 50:'#FFF4E8',100:'#FFE8D6',200:'#FFD7B3',300:'#FFC48A',400:'#FFA24D',500:'#FF7F0E',600:'#E06900',700:'#C25700',800:'#A34500',900:'#873800' },
-          peach: { 50:'#FFF7EF',100:'#FFEFE0',200:'#FFE3C6' }
+
+  <!-- Tailwind + Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { devanagari: ['"Noto Sans Devanagari"','system-ui','sans-serif'] },
+          colors: {
+            saffron:{50:'#FFF4E8',100:'#FFE8D6',200:'#FFD7B3',300:'#FFC48A',400:'#FFA24D',500:'#FF7F0E',600:'#E06900',700:'#C25700',800:'#A34500',900:'#873800'},
+            peach:{50:'#FFF7EF',100:'#FFEFE0',200:'#FFE3C6'}
+          }
         }
       }
     }
-  }
-</script>
-<style>
-  body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
-  .toast { position: fixed; inset-inline: 0; top: 10px; margin-inline: auto; width: fit-content; z-index: 50; }
-</style>
-
+  </script>
+  <style>
+    body{ font-family:"Noto Sans Devanagari",system-ui,sans-serif }
+    .toast{ position:fixed; inset-inline:0; top:10px; margin-inline:auto; width:fit-content; z-index:50 }
+    .modal{ transition:opacity .2s ease }
+  </style>
 </head>
 <body class="min-h-screen bg-slate-50">
   <div id="toast" class="toast hidden"></div>
-  
-<header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
-  <div class="max-w-6xl mx-auto px-4 py-2"></div>
-</header>
 
-  
-<section class="relative overflow-hidden">
-  <div class="absolute inset-0">
-    <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-center opacity-20"></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-white/90 via-peach-50/90 to-white/95"></div>
-  </div>
-  <div class="relative max-w-6xl mx-auto px-4 py-6">
-    <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-5 sm:px-8 py-6 shadow">
-      <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
-      <div class="mt-1 text-6xl sm:text-7xl font-extrabold text-red-700 leading-tight">रक्तदाता पोर्टल</div>
-      <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
-        माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
-      </p>
-      <div class="mt-4 inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
-        <img src="seva-pakhwada-2025-clean-1024.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded" />
-        <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
+  <!-- Header strip -->
+  <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
+    <div class="max-w-6xl mx-auto px-4 py-2"></div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-center opacity-20"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-white/90 via-peach-50/90 to-white/95"></div>
+    </div>
+    <div class="relative max-w-6xl mx-auto px-4 py-6">
+      <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-5 sm:px-8 py-6 shadow">
+        <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
+        <div class="mt-1 text-6xl sm:text-7xl font-extrabold text-red-700 leading-tight">रक्तदाता पोर्टल</div>
+        <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
+          माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
+        </p>
+
+        <!-- Badges row -->
+        <div class="mt-4 flex items-center justify-between gap-3">
+          <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm">
+            <span class="i">🧡</span> <b>सेवा सही संकल्प</b>
+          </span>
+          <div class="inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
+            <img src="seva-pakhwada-2025-clean-1024.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded">
+            <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
+          </div>
+          <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm">
+            <b>सेवा परमो धर्म</b> <span class="i">🩸</span>
+          </span>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-
+  <!-- Form -->
   <main class="max-w-6xl mx-auto p-4 space-y-4">
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
       <h1 class="text-2xl sm:text-3xl font-extrabold text-saffron-800 mb-1 text-center sm:text-left">रक्तदाता पंजीकरण</h1>
@@ -119,7 +130,7 @@
           <textarea id="f_notes" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" rows="3" placeholder="विशेष जानकारी (उदाहरण: उपलब्ध समय)"></textarea>
         </div>
         <div class="sm:col-span-2 flex items-center gap-3">
-          <button class="px-6 py-3 rounded-xl bg-saffron-700 text-white font-semibold w-full sm:w-auto">जमा करें</button>
+          <button id="btnSubmit" class="px-6 py-3 rounded-xl bg-saffron-700 text-white font-semibold w-full sm:w-auto">जमा करें</button>
           <span id="formMsg" class="text-sm"></span>
         </div>
       </form>
@@ -127,6 +138,15 @@
   </main>
 
   <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500 text-center">© <span id="year"></span> भारतीय जनता पार्टी • जिला मंदसौर</footer>
+
+  <!-- Success Modal -->
+  <div id="okModal" class="modal fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+    <div class="bg-white w-[90%] max-w-md rounded-2xl p-5 text-center">
+      <div class="text-2xl font-extrabold text-saffron-800">धन्यवाद!</div>
+      <p class="mt-2 text-slate-700">आपका पंजीकरण सफल रहा। आवश्यकता पड़ने पर टीम आपसे संपर्क करेगी।</p>
+      <button id="okClose" class="mt-4 px-4 py-2 rounded-xl bg-saffron-700 text-white">ठीक है</button>
+    </div>
+  </div>
 
   <script>
     const MANDALS = ["अन्य","भेंसोदा","भानपुरा","गरोठ","मेलखेडा","खड़ावदा","शामगढ़","सुवासरा","बसाई","सीतामऊ","क्यामपुर","सीतामऊ ग्रामीण","गुर्जर बरडिया","धुंधधड़का","बुढा","पिपलिया मंडी","मल्हारगढ़","दलोदा","मगरामाता जी","मंदसौर ग्रामीण","मंदसौर उत्तर","मंदसौर दक्षिण","अन्य जिले से"];
@@ -137,47 +157,66 @@
     fill($('f_group'), BLOOD_GROUPS, 'चुनें');
     fill($('f_mandal'), MANDALS, 'चुनें');
 
-    const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
-    const TELEGRAM_CHAT_ID = "@bjpbloodbot";
-    async function sendTelegram(text) {
+    // === Telegram ===
+    // नया bot token/target भरें: चैनल के लिए @username, private/group के लिए -100… numeric id
+    const TELEGRAM_BOT_TOKEN = "PASTE_YOUR_NEW_BOT_TOKEN";
+    const TELEGRAM_CHAT_ID   = "@BJPBLOODREQUEST"; // <-- इसे अपने channel/group id से अपडेट करें
+    async function sendTelegram(text){
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-      try {
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type':'application/json' },
+      try{
+        const res = await fetch(url,{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
         });
         if(!res.ok) throw new Error('HTTP '+res.status);
-      } catch(err) {
+      }catch(err){
+        // CORS-safe fallback
         const img = new Image();
         img.src = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(TELEGRAM_CHAT_ID)}&text=${encodeURIComponent(text)}`;
       }
     }
-    function showToast(txt, ok=true){ const t=document.getElementById('toast'); t.className='toast'; t.innerHTML=`<div class="mx-auto max-w-lg bg-white border rounded-2xl shadow px-4 py-3 ${ok?'border-green-600':'border-red-600'}"><div class="text-sm ${ok?'text-green-700':'text-red-700'}">${txt}</div></div>`; setTimeout(()=>t.classList.add('hidden'), 3500); }
+
+    function showToast(txt, ok=true){
+      const t=$('toast');
+      t.className='toast';
+      t.innerHTML=`<div class="mx-auto max-w-lg bg-white border rounded-2xl shadow px-4 py-3 ${ok?'border-green-600':'border-red-600'}"><div class="text-sm ${ok?'text-green-700':'text-red-700'}">${txt}</div></div>`;
+      setTimeout(()=>t.classList.add('hidden'), 3500);
+    }
   </script>
 
   <script type="module">
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
-    const { getFirestore, collection, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
-    
-const firebaseConfig = {
-  apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
-  authDomain: "blodddonation-9c44e.firebaseapp.com",
-  projectId: "blodddonation-9c44e",
-  storageBucket: "blodddonation-9c44e.firebasestorage.app",
-  messagingSenderId: "636578091772",
-  appId: "1:636578091772:web:276d08168f8fc9c221fd79",
-  measurementId: "G-3TPG0JCF3R"
-};
+    const { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } =
+      await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
+      authDomain: "blodddonation-9c44e.firebaseapp.com",
+      projectId: "blodddonation-9c44e",
+      storageBucket: "blodddonation-9c44e.firebasestorage.app",
+      messagingSenderId: "636578091772",
+      appId: "1:636578091772:web:276d08168f8fc9c221fd79",
+      measurementId: "G-3TPG0JCF3R"
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // duplicate-submission guard
+    let submitting = false;
+
     document.getElementById('donorForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
+      if (submitting) return;               // prevent double submit
+      submitting = true;
+      const btn = document.getElementById('btnSubmit'); btn.disabled = true; btn.classList.add('opacity-60','cursor-not-allowed');
+
       const $ = (id)=>document.getElementById(id);
       const msg = $('formMsg'); msg.textContent='';
+
       try {
+        // payload
         const payload = {
           name: $('f_name').value.trim(),
           phone: $('f_phone').value.trim().replace(/[^0-9]/g,''),
@@ -192,16 +231,44 @@ const firebaseConfig = {
           notes: $('f_notes').value.trim(),
           createdAt: serverTimestamp(),
         };
+
+        // client-side duplicate check (by phone)
+        if (!payload.phone || payload.phone.length !== 10) {
+          throw new Error('कृपया 10 अंकों का मोबाइल नंबर भरें।');
+        }
+        const qDup = query(collection(db,'donors'), where('phone','==', payload.phone));
+        const dupSnap = await getDocs(qDup);
+        if (!dupSnap.empty) {
+          showToast('यह मोबाइल पहले से रजिस्टर्ड है।', false);
+          msg.className='text-red-700'; msg.textContent='यह मोबाइल पहले से रजिस्टर्ड है।';
+          return;
+        }
+
+        // save
         await addDoc(collection(db,'donors'), payload);
+
+        // UI feedback + Telegram
         msg.className = 'text-green-700';
         msg.textContent = '✅ धन्यवाद! आपका विवरण सफलतापूर्वक जमा हो गया।';
         showToast('नया रक्तदाता रजिस्टर हुआ।', true);
         sendTelegram(`🆕 नया रक्तदाता\nनाम: ${payload.name}\nमोबाइल: ${payload.phone}\nब्लड: ${payload.bloodGroup||'-'}\nमंडल: ${payload.mandal||'-'}\nपता: ${payload.address||'-'}`);
+
         document.getElementById('donorForm').reset();
+
+        // success modal
+        const okModal = document.getElementById('okModal');
+        okModal.classList.remove('hidden'); okModal.classList.add('flex');
+        document.getElementById('okClose').onclick = ()=>{
+          okModal.classList.add('hidden'); okModal.classList.remove('flex');
+        };
       } catch(err) {
         console.error(err);
-        msg.className='text-red-700'; msg.textContent='❌ त्रुटि: कृपया बाद में पुनः प्रयास करें।';
+        msg.className='text-red-700';
+        msg.textContent='❌ त्रुटि: ' + (err?.message || 'कृपया बाद में पुनः प्रयास करें।');
         showToast('पंजीकरण में समस्या हुई।', false);
+      } finally {
+        submitting = false;
+        btn.disabled = false; btn.classList.remove('opacity-60','cursor-not-allowed');
       }
     });
   </script>
