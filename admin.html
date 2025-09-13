@@ -14,10 +14,10 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { devanagari: ['"Noto Sans Devanagari"','system-ui','sans-serif'] },
+          fontFamily: { devanagari: ['"Noto Sans Devanagari"', 'system-ui', 'sans-serif'] },
           colors: {
-            saffron: { 50:'#FFF4E8',100:'#FFE8D6',200:'#FFD7B3',300:'#FFC48A',400:'#FFA24D',500:'#FF7F0E',600:'#E06900',700:'#C25700',800:'#A34500',900:'#873800' },
-            peach: { 50:'#FFF7EF',100:'#FFEFE0',200:'#FFE3C6' }
+            saffron:{50:'#FFF4E8',100:'#FFE8D6',200:'#FFD7B3',300:'#FFC48A',400:'#FFA24D',500:'#FF7F0E',600:'#E06900',700:'#C25700',800:'#A34500',900:'#873800'},
+            peach:{50:'#FFF7EF',100:'#FFEFE0',200:'#FFE3C6'}
           }
         }
       }
@@ -25,15 +25,16 @@
   </script>
   <style>
     body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
-    .modal { transition: opacity .2s ease; }
+    .toast { position: fixed; inset-inline: 0; top: 10px; margin-inline: auto; width: fit-content; z-index: 50; }
+    .modal { transition: opacity .2s ease }
   </style>
 
-  <!-- Charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="min-h-screen bg-slate-50">
+  <div id="toast" class="toast hidden"></div>
 
-  <!-- Header -->
+  <!-- Top strip -->
   <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
     <div class="max-w-6xl mx-auto px-4 py-2"></div>
   </header>
@@ -51,9 +52,18 @@
         <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
           माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
         </p>
-        <div class="mt-4 inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
-          <img src="seva-pakhwada-2025-clean-1024.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded" />
-          <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
+        <!-- badges -->
+        <div class="mt-4 flex items-center justify-between gap-3">
+          <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm">
+            <span>🧡</span><b>सेवा सही संकल्प</b>
+          </span>
+          <div class="inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
+            <img src="Sevapakhwada.png" alt="सेवा पखवाड़ा 2025" class="h-14 sm:h-16 w-auto rounded">
+            <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
+          </div>
+          <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm">
+            <b>सेवा परमो धर्म</b><span>🩸</span>
+          </span>
         </div>
       </div>
     </div>
@@ -63,46 +73,35 @@
     <!-- Admin Gate -->
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
       <h2 class="text-lg font-semibold mb-2">Admin पहुँच</h2>
-      <div id="adminGate" class="flex items-center gap-2 flex-wrap">
-        <input id="adminPin" type="password" class="rounded-xl border px-4 py-3" placeholder="Admin PIN" />
-        <button id="btnUnlock" class="px-4 py-3 rounded-xl bg-red-600 text-white">Unlock</button>
-        <span class="text-xs text-slate-500">(डेमो PIN: 2720 — बदलें)</span>
-
-        <!-- Google Sign-in -->
-        <button id="btnLogin" class="px-3 py-2 rounded-xl border">Google Sign-in</button>
-        <button id="btnLogout" class="px-3 py-2 rounded-xl border hidden">Logout</button>
-        <span id="who" class="text-xs text-slate-600"></span>
-
-        <button id="demoOpen" class="ml-auto px-3 py-2 rounded-xl border text-slate-700">Demo View</button>
+      <div id="adminGate" class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+        <div class="flex items-center gap-2">
+          <input id="adminPin" type="password" class="rounded-xl border px-4 py-3" placeholder="Admin PIN" />
+          <button id="btnUnlock" class="px-4 py-3 rounded-xl bg-red-600 text-white">Unlock</button>
+        </div>
+        <span class="text-xs text-slate-500">(डेमो PIN: 2720 — असली सुरक्षा Firestore Rules/Auth से)</span>
       </div>
       <div id="adminOk" class="hidden text-green-700 font-semibold">Admin सक्षम</div>
-      <p class="text-xs text-slate-500 mt-1">नोट: यह केवल UI गेट है। असली सुरक्षा Firestore Rules/Auth से लागू करें।</p>
-      <p id="adminErr" class="hidden mt-2 text-sm text-red-600"></p>
     </div>
 
-    <!-- Admin Area -->
-    <div id="adminArea" class="hidden space-y-4">
-      <!-- Telegram Settings -->
-      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-        <h3 class="text-base font-semibold mb-3">Telegram सेटिंग / टेस्ट</h3>
-        <p class="text-sm text-slate-600 mb-2">
-          <b>Chat IDs</b>: चैनल <code>@username</code> (उदा. <b>@BJPBLOODREQUEST</b>), ग्रुप <code>-100…</code>, यूज़र numeric id.
-        </p>
-        <div class="flex items-center gap-2 mb-3 flex-wrap">
-          <input id="tgIds" class="rounded-xl border px-4 py-3 flex-1" placeholder="@BJPBLOODREQUEST,-100xxxxxxxxxx,12345678" />
-          <button id="tgSave" class="px-4 py-3 rounded-xl bg-slate-900 text-white">Save IDs</button>
+    <!-- Telegram Settings -->
+    <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
+      <h3 class="text-base font-semibold mb-3">Telegram अलर्ट</h3>
+      <div class="grid sm:grid-cols-3 gap-3 items-end">
+        <div class="sm:col-span-2">
+          <label class="text-sm text-slate-600">Chat IDs (कॉमा से अलग करें) — DM/यूज़र के लिए numeric id, चैनल के लिए @username, प्राइवेट/ग्रुप के लिए -100…</label>
+          <input id="tgIds" class="mt-1 w-full rounded-xl border px-4 py-3" />
+          <p class="text-xs text-slate-500 mt-1">उदा: <code>733804072</code> या <code>@BJPBLOODREQUEST</code> या दोनों: <code>733804072,@BJPBLOODREQUEST</code></p>
         </div>
-        <div class="flex items-center gap-2 flex-wrap">
-          <input id="tgText" class="rounded-xl border px-4 py-3 flex-1" value="पोर्टल कनेक्टेड ✅" />
-          <button id="tgSend" class="px-4 py-3 rounded-xl bg-saffron-700 text-white">Send</button>
-          <span id="tgStatus" class="text-xs text-slate-600"></span>
-        </div>
-        <div class="mt-2 text-xs text-slate-600">
-          Helper: <a class="underline" target="_blank" href="https://api.telegram.org/bot8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ/getUpdates">getUpdates</a>
+        <div class="flex gap-2">
+          <button id="btnSaveTg" class="px-4 py-3 rounded-xl bg-saffron-700 text-white">Save IDs</button>
+          <button id="btnSendTest" class="px-4 py-3 rounded-xl bg-slate-900 text-white">Send</button>
         </div>
       </div>
+      <p id="tgStatus" class="text-xs text-slate-600 mt-2"></p>
+    </div>
 
-      <!-- Donation Logger -->
+    <!-- Donation Logger -->
+    <div id="adminArea" class="hidden space-y-4">
       <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
         <h3 class="text-base font-semibold mb-3">दान लॉग करें</h3>
         <div class="grid gap-3 sm:grid-cols-2">
@@ -141,18 +140,26 @@
             <button id="btnSaveDonation" class="px-4 py-3 rounded-xl bg-saffron-700 text-white font-semibold">सेव करें</button>
             <button id="btnExportDonors" class="px-4 py-3 rounded-xl bg-slate-900 text-white">Export Donors CSV</button>
             <button id="btnExportDonations" class="px-4 py-3 rounded-xl bg-slate-900 text-white">Export Donations CSV</button>
-            <span id="donateStatus" class="text-xs text-slate-600"></span>
           </div>
         </div>
       </div>
 
-      <!-- Donors with Filters + Count + Pagination -->
+      <!-- Donor List with filters + count + pagination -->
       <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-        <div class="flex items-center justify-between mb-2">
-          <h3 class="text-base font-semibold">डोनर सूची (फ़िल्टर सहित)</h3>
-          <div class="text-sm text-slate-600">कुल: <b id="donorsCount">0</b></div>
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+          <div>
+            <h3 class="text-base font-semibold">डोनर सूची (फ़िल्टर सहित)</h3>
+            <p class="text-sm text-slate-600">कुल: <b id="countAll">0</b> • फ़िल्टर के बाद: <b id="countFiltered">0</b></p>
+          </div>
+          <div class="flex items-center gap-2 text-sm">
+            <span>पेज:</span>
+            <button id="pgPrev" class="px-3 py-1 rounded bg-slate-100 border">‹</button>
+            <span id="pgInfo">1/1</span>
+            <button id="pgNext" class="px-3 py-1 rounded bg-slate-100 border">›</button>
+          </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mt-3">
           <input id="fText" class="rounded-xl border px-4 py-3 text-base" placeholder="नाम/मोबाइल/पता" />
           <select id="fGroup" class="rounded-xl border px-4 py-3 text-base"></select>
           <select id="fMandal" class="rounded-xl border px-4 py-3 text-base"></select>
@@ -164,7 +171,7 @@
         </div>
 
         <div class="mt-3 overflow-x-auto -mx-2 sm:mx-0">
-          <table class="min-w-[1000px] w-full text-sm">
+          <table class="min-w-[980px] w-full text-sm">
             <thead>
               <tr class="bg-slate-100 text-slate-700">
                 <th class="p-2 text-left">नाम</th>
@@ -174,21 +181,11 @@
                 <th class="p-2 text-left">पता</th>
                 <th class="p-2 text-left">आख़िरी दान</th>
                 <th class="p-2 text-left">इच्छा</th>
-                <th class="p-2 text-left">कार्रवाई</th>
+                <th class="p-2 text-left">क्रिया</th>
               </tr>
             </thead>
-            <tbody id="donorsTbody">
-              <tr><td colspan="8" class="p-3 text-slate-400">लोड हो रहा है…</td></tr>
-            </tbody>
+            <tbody id="donorsTbody"></tbody>
           </table>
-        </div>
-
-        <div class="flex items-center justify-between mt-2">
-          <div class="text-xs text-slate-500">Page <span id="pgCur">1</span> / <span id="pgTotal">1</span></div>
-          <div class="flex gap-2">
-            <button id="pgPrev" class="px-3 py-2 rounded-lg border">पिछला</button>
-            <button id="pgNext" class="px-3 py-2 rounded-lg border">अगला</button>
-          </div>
         </div>
       </div>
 
@@ -224,9 +221,7 @@
               <th class="p-2 text-left">अस्पताल</th>
             </tr>
           </thead>
-          <tbody id="donationsTbody">
-            <tr><td colspan="7" class="p-3 text-slate-400">अभी कोई प्रविष्टि नहीं</td></tr>
-          </tbody>
+          <tbody id="donationsTbody"></tbody>
         </table>
       </div>
 
@@ -244,37 +239,38 @@
               <th class="p-2 text-left">अस्पताल/नोट्स</th>
             </tr>
           </thead>
-          <tbody id="reqTbody">
-            <tr><td colspan="6" class="p-3 text-slate-400">कोई रिक्वेस्ट नहीं</td></tr>
-          </tbody>
+          <tbody id="reqTbody"></tbody>
         </table>
       </div>
     </div>
   </main>
 
-  <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500 text-center">
-    © <span id="year"></span> भारतीय जनता पार्टी • जिला मंदसौर
-  </footer>
+  <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500 text-center">© <span id="year"></span> भारतीय जनता पार्टी • जिला मंदसौर</footer>
 
-  <!-- Edit Modal -->
+  <!-- Edit Donor Modal -->
   <div id="editModal" class="modal fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
-    <div class="bg-white w-[90%] max-w-lg rounded-2xl p-4">
-      <div class="text-lg font-semibold mb-2">ਡोनर संपादन</div>
-      <div class="grid gap-3">
-        <input id="ed_name" class="rounded-xl border px-4 py-3" placeholder="नाम" />
-        <input id="ed_phone" class="rounded-xl border px-4 py-3" placeholder="मोबाइल" />
+    <div class="bg-white w-[92%] max-w-2xl rounded-2xl p-5">
+      <h3 class="text-lg font-semibold">डोनर संपादन</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+        <input id="ed_name" class="rounded-xl border px-4 py-3" placeholder="नाम">
+        <input id="ed_phone" class="rounded-xl border px-4 py-3" placeholder="मोबाइल">
+        <input id="ed_whatsapp" class="rounded-xl border px-4 py-3" placeholder="व्हाट्सऐप">
         <select id="ed_group" class="rounded-xl border px-4 py-3"></select>
         <select id="ed_mandal" class="rounded-xl border px-4 py-3"></select>
-        <textarea id="ed_address" class="rounded-xl border px-4 py-3" rows="2" placeholder="पता"></textarea>
-        <select id="ed_willing" class="rounded-xl border px-4 py-3">
-          <option value="">इच्छा (खाली)</option>
-          <option value="yes">इच्छुक</option>
-          <option value="no">अनिच्छुक</option>
+        <input id="ed_address" class="rounded-xl border px-4 py-3" placeholder="वार्ड/बूथ/पता">
+        <input id="ed_age" type="number" class="rounded-xl border px-4 py-3" placeholder="उम्र">
+        <select id="ed_gender" class="rounded-xl border px-4 py-3">
+          <option value="">लिंग</option><option>पुरुष</option><option>महिला</option><option>अन्य</option>
         </select>
+        <input id="ed_last" type="date" class="rounded-xl border px-4 py-3">
+        <select id="ed_willing" class="rounded-xl border px-4 py-3">
+          <option value="yes">इच्छुक</option><option value="no">अनिच्छुक</option>
+        </select>
+        <textarea id="ed_notes" class="sm:col-span-2 rounded-xl border px-4 py-3" rows="2" placeholder="नोट्स"></textarea>
       </div>
       <div class="flex justify-end gap-2 mt-4">
-        <button id="ed_cancel" class="px-3 py-2 rounded-xl border">Cancel</button>
-        <button id="ed_save" class="px-3 py-2 rounded-xl bg-saffron-700 text-white">Save</button>
+        <button id="btnEdCancel" class="px-4 py-2 rounded-xl border">रद्द</button>
+        <button id="btnEdSave" class="px-4 py-2 rounded-xl bg-saffron-700 text-white">सेव</button>
       </div>
     </div>
   </div>
@@ -285,16 +281,24 @@
     const $ = (id)=>document.getElementById(id);
     document.getElementById('year').textContent = new Date().getFullYear();
     const fmtTS = (ts)=>{ try{ const d = ts?.toDate? ts.toDate(): new Date(ts); return d.toLocaleDateString('en-GB'); }catch{ return '' } };
+    const fill = (el, arr, first)=>{ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
+
+    // Telegram config (token + default DM id)
+    const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
+    let TELEGRAM_CHAT_IDS = (localStorage.getItem('tgIds') || '733804072').split(',').map(x=>x.trim()).filter(Boolean);
+
+    function showToast(txt, ok=true){
+      const t=$('toast');
+      t.className='toast';
+      t.innerHTML=`<div class="mx-auto max-w-lg bg-white border rounded-2xl shadow px-4 py-3 ${ok?'border-green-600':'border-red-600'}"><div class="text-sm ${ok?'text-green-700':'text-red-700'}">${txt}</div></div>`;
+      setTimeout(()=>t.classList.add('hidden'), 3500);
+    }
   </script>
 
   <script type="module">
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
     const { getFirestore, collection, onSnapshot, query, orderBy, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } =
       await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
-
-    /* Google Auth */
-    const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } =
-      await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js');
 
     const firebaseConfig = {
       apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
@@ -309,195 +313,102 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Auth init
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-    $('btnLogin').onclick = async () => {
-      try { await signInWithPopup(auth, provider); }
-      catch(e){ alert('Login error: ' + (e?.message||e)); }
-    };
-    $('btnLogout').onclick = async () => { await signOut(auth); };
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        $('who').textContent = user.email || '';
-        $('btnLogin').classList.add('hidden');
-        $('btnLogout').classList.remove('hidden');
-      } else {
-        $('who').textContent = '';
-        $('btnLogin').classList.remove('hidden');
-        $('btnLogout').classList.add('hidden');
-      }
-    });
-
-    // --- Admin Gate (UI) ---
+    // ---- Admin gate (UI) ----
     let adminOK = false;
-    const openAdmin = () => {
-      adminOK = true;
-      $('adminGate').classList.add('hidden');
-      $('adminOk').classList.remove('hidden');
-      $('adminArea').classList.remove('hidden');
-      const el = $('tgIds');
-      if (el) el.value = (localStorage.getItem('tgIds') || '@BJPBLOODREQUEST');
-    };
     $('btnUnlock').onclick = () => {
       const pin = ($('adminPin').value || '').trim();
-      if(pin === '2720'){ openAdmin(); } else alert('गलत PIN');
+      if(pin === '2720'){
+        adminOK = true;
+        $('adminGate').classList.add('hidden');
+        $('adminOk').classList.remove('hidden');
+        $('adminArea').classList.remove('hidden');
+      } else alert('गलत PIN');
     };
-    $('demoOpen').onclick = openAdmin;
-    if (location.search.includes('demo=1') || location.hash.includes('open')) openAdmin();
 
-    // --- Telegram ---
-    const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
-    let TELEGRAM_CHAT_IDS = (localStorage.getItem("tgIds")||"@BJPBLOODREQUEST")
-      .split(",").map(x=>x.trim()).filter(Boolean);
+    // ---- Telegram UI ----
+    const tgInput = $('tgIds');
+    tgInput.value = (localStorage.getItem('tgIds') || '733804072');
+    $('btnSaveTg').onclick = ()=>{
+      localStorage.setItem('tgIds', tgInput.value.trim());
+      TELEGRAM_CHAT_IDS = tgInput.value.split(',').map(x=>x.trim()).filter(Boolean);
+      $('tgStatus').textContent = 'IDs सेव हो गईं ✅';
+    };
+    $('btnSendTest').onclick = ()=> sendTelegram(`Test ✅ ${new Date().toLocaleString()}`);
 
-    function setTelegramIds(csv){
-      TELEGRAM_CHAT_IDS = (csv||"").split(",").map(x=>x.trim()).filter(Boolean);
-      localStorage.setItem("tgIds", TELEGRAM_CHAT_IDS.join(","));
-    }
     async function sendTelegram(text){
-      const ids = TELEGRAM_CHAT_IDS && TELEGRAM_CHAT_IDS.length ? TELEGRAM_CHAT_IDS : ["@BJPBLOODREQUEST"];
+      const ids = TELEGRAM_CHAT_IDS && TELEGRAM_CHAT_IDS.length ? TELEGRAM_CHAT_IDS : ['733804072'];
       $('tgStatus').textContent = 'भेजा जा रहा है…';
       try{
-        ids.forEach(id => {
-          const u = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(id)}&text=${encodeURIComponent(text)}`;
-          const img = new Image(); img.src = u; // CORS-safe GET
-        });
+        // 1) Netlify function (recommended)
+        let ok = true;
+        for (const id of ids) {
+          const r = await fetch('/.netlify/functions/send-tg', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ chat_id: id, text })
+          });
+          ok = ok && r.ok;
+        }
+        if (ok) { $('tgStatus').textContent = 'भेज दिया गया ✅'; return; }
+      }catch(e){ /* ignore & fallback */ }
+
+      try{
+        // 2) Direct Telegram API (if allowed by network)
+        for (const id of ids) {
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,{
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ chat_id:id, text })
+          });
+        }
         $('tgStatus').textContent = 'भेज दिया गया ✅';
       }catch(e){
-        $('tgStatus').textContent = 'Error: ' + (e?.message || e);
+        // 3) CORS-safe pixel fallback
+        for (const id of TELEGRAM_CHAT_IDS) {
+          const img = new Image();
+          img.src = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(id)}&text=${encodeURIComponent(text)}`;
+        }
+        $('tgStatus').textContent = 'भेजने की कोशिश की गई (fallback) ⚠️';
       }
-      return true;
     }
-    $('tgSave').onclick = ()=>{ setTelegramIds($('tgIds').value); alert('Saved ✓'); };
-    $('tgSend').onclick = ()=> sendTelegram(($('tgText').value || 'Test'));
 
-    // --- Data listeners ---
+    // ---- Data state ----
     let donors = []; let donations = []; let requests = [];
-    const donorsTbody = $('donorsTbody'); const sel = $('selDonor');
+    const donorsTbody = $('donorsTbody');
+    const sel = $('selDonor');
 
     onSnapshot(query(collection(db,'donors'), orderBy('createdAt','desc')), snap=>{
       donors = snap.docs.map(d=>({ id:d.id, ...d.data() }));
       renderAdminDonorSelect();
       renderDonorTable();
       updateCharts();
-    }, err => showErr('donors', err));
-
+    });
     onSnapshot(query(collection(db,'donations'), orderBy('date','desc')), snap=>{
       donations = snap.docs.map(d=>({ id:d.id, ...d.data() }));
       renderDonationsTable();
       updateCharts();
-    }, err => showErr('donations', err));
-
+    });
     onSnapshot(query(collection(db,'requests'), orderBy('createdAt','desc')), snap=>{
       requests = snap.docs.map(d=>({ id:d.id, ...d.data() }));
       renderRequestsTable();
-    }, err => showErr('requests', err));
+    });
 
-    function showErr(path, err){
-      const el = $('adminErr'); el.classList.remove('hidden');
-      el.textContent = `Firestore त्रुटि (${path}): ` + (err?.message || err);
-    }
-
-    // --- Donor select (Donation Logger) ---
     function renderAdminDonorSelect(){
-      if(!sel) return;
       sel.innerHTML = '<option value="">—</option>';
-      donors.forEach(d=> sel.insertAdjacentHTML('beforeend',
-        `<option value="${d.id}">${d.name||''} • ${d.bloodGroup||''} • ${d.mandal||''}</option>`));
-      sel.onchange = ()=>{
-        const d = donors.find(x=>x.id===sel.value);
-        $('selDonorInfo').textContent = d ? `मोबाइल: ${d.phone||''} • आख़िरी दान: ${d.lastDonationDate?fmtTS(d.lastDonationDate):'—'}` : '';
-      };
+      donors.forEach(d=> sel.insertAdjacentHTML('beforeend', `<option value="${d.id}">${d.name||''} • ${d.bloodGroup||''} • ${d.mandal||''}</option>`));
+      sel.onchange = ()=>{ const d = donors.find(x=>x.id===sel.value); $('selDonorInfo').textContent = d ? `मोबाइल: ${d.phone||''} • आख़िरी दान: ${d.lastDonationDate?fmtTS(d.lastDonationDate):'—'}` : ''; };
     }
 
-    // --- Filters + Pagination ---
-    const fText = $('fText'); const fGroup = $('fGroup'); const fMandal = $('fMandal'); const fWilling = $('fWilling');
-    function fill(el, arr, first){ if(!el) return; el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
-    fill(fGroup, BLOOD_GROUPS, 'ब्लड ग्रुप');
-    fill(fMandal, MANDALS, 'मंडल');
-    [fText,fGroup,fMandal,fWilling].forEach(el=> el && el.addEventListener('input', ()=>renderDonorTable(false)));
+    // Filters + pagination
+    const fText=$('fText'), fGroup=$('fGroup'), fMandal=$('fMandal'), fWilling=$('fWilling');
+    fill(fGroup, BLOOD_GROUPS, 'ब्लड ग्रुप'); fill(fMandal, MANDALS, 'मंडल');
+    [fText,fGroup,fMandal,fWilling].forEach(el=> el.addEventListener('input', renderDonorTable));
+    let page=1, perPage=100;
+    $('pgPrev').onclick=()=>{ if(page>1){ page--; renderDonorTable(); } };
+    $('pgNext').onclick=()=>{ page++; renderDonorTable(); };
 
-    let pageSize = 100;
-    let curPage = 1;
-    let filteredRows = [];
-    const pgCur = $('pgCur');
-    const pgTotal = $('pgTotal');
-    const pgPrev = $('pgPrev');
-    const pgNext = $('pgNext');
-
-    function setPage(p){
-      const total = Math.max(1, Math.ceil(filteredRows.length / pageSize));
-      curPage = Math.min(Math.max(1, p), total);
-      if (pgCur) pgCur.textContent = String(curPage);
-      if (pgTotal) pgTotal.textContent = String(total);
-    }
-    if (pgPrev) pgPrev.onclick = ()=>{ setPage(curPage - 1); renderDonorTable(true); };
-    if (pgNext) pgNext.onclick = ()=>{ setPage(curPage + 1); renderDonorTable(true); };
-
-    // --- Edit/Delete helpers ---
-    let editingDonorId = null;
-    const editModal = $('editModal');
-    const ed_name = $('ed_name'), ed_phone = $('ed_phone'), ed_group = $('ed_group'),
-          ed_mandal = $('ed_mandal'), ed_address = $('ed_address'), ed_willing = $('ed_willing');
-
-    function fillEditDropdowns(){
-      if (ed_group && !ed_group.options.length) BLOOD_GROUPS.forEach(g=> ed_group.insertAdjacentHTML('beforeend', `<option value="${g}">${g}</option>`));
-      if (ed_mandal && !ed_mandal.options.length) MANDALS.forEach(m=> ed_mandal.insertAdjacentHTML('beforeend', `<option value="${m}">${m}</option>`));
-    }
-    function openEdit(d){
-      fillEditDropdowns();
-      editingDonorId = d.id;
-      ed_name.value = d.name || '';
-      ed_phone.value = d.phone || '';
-      ed_group.value = d.bloodGroup || '';
-      ed_mandal.value = d.mandal || '';
-      ed_address.value = d.address || '';
-      ed_willing.value = (d.willing===false || (typeof d.willing==='string' && d.willing.toLowerCase()==='no')) ? 'no'
-                        : (d.willing ? 'yes' : '');
-      editModal.classList.remove('hidden');
-      editModal.classList.add('flex');
-    }
-    function closeEdit(){
-      editModal.classList.add('hidden');
-      editModal.classList.remove('flex');
-      editingDonorId = null;
-    }
-    if ($('ed_cancel')) $('ed_cancel').onclick = closeEdit;
-    if ($('ed_save')) $('ed_save').onclick = async ()=>{
-      if (!editingDonorId) return closeEdit();
-      const payload = {
-        name: ed_name.value.trim(),
-        phone: ed_phone.value.trim(),
-        bloodGroup: ed_group.value || null,
-        mandal: ed_mandal.value || null,
-        address: ed_address.value.trim(),
-        willing: ed_willing.value ? (ed_willing.value === 'yes') : null
-      };
-      try{
-        await updateDoc(doc(db,'donors', editingDonorId), payload);
-        closeEdit();
-      }catch(e){ alert('Save error: ' + (e?.message||e)); }
-    };
-    async function deleteDonor(id){
-      if (!confirm('क्या आप इस डोनर को हटाना चाहते हैं?')) return;
-      try{
-        await deleteDoc(doc(db,'donors', id));
-      }catch(e){ alert('Delete error: ' + (e?.message||e)); }
-    }
-
-    // --- Donors table (count + actions + pagination) ---
-    function renderDonorTable(skipResetPage){
-      if(!donorsTbody) return;
-      donorsTbody.innerHTML='';
-      if(!donors.length){
-        donorsTbody.innerHTML = '<tr><td colspan="8" class="p-3 text-slate-400">डोनर नहीं मिले (या Firestore खाली है)</td></tr>';
-        if ($('donorsCount')) $('donorsCount').textContent = '0';
-        setPage(1);
-        return;
-      }
-      const t=(fText?.value||'').toLowerCase(), g=fGroup?.value, m=fMandal?.value, w=fWilling?.value;
-      filteredRows = donors.filter(d=>{
+    function applyFilters(){
+      const t=(fText.value||'').toLowerCase(), g=fGroup.value, m=fMandal.value, w=fWilling.value;
+      return donors.filter(d=>{
         const okText = !t || [d.name,d.phone,d.address].some(v=> (v||'').toLowerCase().includes(t));
         const okG = !g || d.bloodGroup===g;
         const okM = !m || d.mandal===m;
@@ -505,20 +416,20 @@
         const okW = !w || (w==='yes'? will : !will);
         return okText && okG && okM && okW;
       });
+    }
 
-      if ($('donorsCount')) $('donorsCount').textContent = String(filteredRows.length);
-      if (!skipResetPage) setPage(1);
+    function renderDonorTable(){
+      const rows = applyFilters();
+      $('countAll').textContent = donors.length;
+      $('countFiltered').textContent = rows.length;
 
-      const start = (curPage - 1) * pageSize;
-      const end = start + pageSize;
-      const rows = filteredRows.slice(start, end);
+      const totalPages = Math.max(1, Math.ceil(rows.length/perPage));
+      if(page>totalPages) page = totalPages;
+      $('pgInfo').textContent = `${page}/${totalPages}`;
+      const slice = rows.slice((page-1)*perPage, page*perPage);
 
-      if(!rows.length){
-        donorsTbody.innerHTML = '<tr><td colspan="8" class="p-3 text-slate-400">फ़िल्टर/पेज अनुसार कोई डोनर नहीं</td></tr>';
-        return;
-      }
-
-      rows.forEach(d=> donorsTbody.insertAdjacentHTML('beforeend', `
+      donorsTbody.innerHTML='';
+      slice.forEach(d=> donorsTbody.insertAdjacentHTML('beforeend', `
         <tr class="odd:bg-white even:bg-slate-50">
           <td class="p-2 font-medium">${d.name||''}</td>
           <td class="p-2"><a class="underline" href="tel:${d.phone||''}">${d.phone||''}</a></td>
@@ -528,54 +439,92 @@
           <td class="p-2">${d.lastDonationDate?fmtTS(d.lastDonationDate):'—'}</td>
           <td class="p-2">${(d.willing===false || (typeof d.willing==='string' && d.willing.toLowerCase()==='no'))?'नहीं':'हाँ'}</td>
           <td class="p-2">
-            <button class="px-2 py-1 rounded-lg border text-xs btn-edit" data-id="${d.id}">Edit</button>
-            <button class="px-2 py-1 rounded-lg border text-xs btn-del ml-1" data-id="${d.id}">Delete</button>
+            <button class="text-blue-700 underline" data-act="edit" data-id="${d.id}">Edit</button>
+            <span class="mx-1">•</span>
+            <button class="text-red-700 underline" data-act="del" data-id="${d.id}">Delete</button>
           </td>
         </tr>`));
 
-      // attach actions
-      document.querySelectorAll('.btn-edit').forEach(b=>{
-        b.onclick = ()=>{
-          const d = donors.find(x=> x.id === b.dataset.id);
-          if (d) openEdit(d);
+      // row actions
+      donorsTbody.querySelectorAll('button[data-act="del"]').forEach(btn=>{
+        btn.onclick = async ()=>{
+          if(!adminOK) return alert('Admin आवश्यक');
+          const id = btn.dataset.id;
+          if(!confirm('डोनर एंट्री डिलीट करें?')) return;
+          try{
+            await deleteDoc(doc(db,'donors', id));
+            showToast('डोनर हटाया गया', true);
+          }catch(e){ console.error(e); alert('Firestore अनुमति/त्रुटि: ' + (e?.message||e)); }
         };
       });
-      document.querySelectorAll('.btn-del').forEach(b=>{
-        b.onclick = ()=> deleteDonor(b.dataset.id);
+      donorsTbody.querySelectorAll('button[data-act="edit"]').forEach(btn=>{
+        btn.onclick = ()=> openEditModal(btn.dataset.id);
       });
     }
 
-    // --- Save donation (with Telegram alert) ---
+    // Edit modal
+    fill($('ed_group'), BLOOD_GROUPS, 'ब्लड ग्रुप'); fill($('ed_mandal'), MANDALS, 'मंडल');
+    $('btnEdCancel').onclick = ()=> toggleEdit(false);
+    let editingId=null;
+    function openEditModal(id){
+      const d = donors.find(x=>x.id===id); if(!d) return;
+      editingId = id;
+      $('ed_name').value = d.name||''; $('ed_phone').value = d.phone||''; $('ed_whatsapp').value = d.whatsapp||'';
+      $('ed_group').value = d.bloodGroup||''; $('ed_mandal').value = d.mandal||'';
+      $('ed_address').value = d.address||''; $('ed_age').value = d.age||'';
+      $('ed_gender').value = d.gender||''; $('ed_notes').value = d.notes||'';
+      $('ed_last').value = d.lastDonationDate ? new Date(d.lastDonationDate.toDate ? d.lastDonationDate.toDate() : d.lastDonationDate).toISOString().slice(0,10) : '';
+      $('ed_willing').value = (d.willing===false || (typeof d.willing==='string' && d.willing.toLowerCase()==='no'))?'no':'yes';
+      toggleEdit(true);
+    }
+    function toggleEdit(show){
+      const m = $('editModal'); if(show){ m.classList.remove('hidden'); m.classList.add('flex'); } else { m.classList.add('hidden'); m.classList.remove('flex'); }
+    }
+    $('btnEdSave').onclick = async ()=>{
+      if(!adminOK) return alert('Admin आवश्यक');
+      if(!editingId) return;
+      try{
+        const payload = {
+          name:$('ed_name').value.trim(),
+          phone:$('ed_phone').value.trim(),
+          whatsapp:$('ed_whatsapp').value.trim(),
+          bloodGroup:$('ed_group').value,
+          mandal:$('ed_mandal').value,
+          address:$('ed_address').value.trim(),
+          age: $('ed_age').value? Number($('ed_age').value): null,
+          gender:$('ed_gender').value,
+          notes:$('ed_notes').value.trim(),
+          willing: $('ed_willing').value==='yes',
+          lastDonationDate: $('ed_last').value ? new Date($('ed_last').value) : null
+        };
+        await updateDoc(doc(db,'donors', editingId), payload);
+        toggleEdit(false);
+        showToast('डोनर अपडेट हुआ', true);
+      }catch(e){ console.error(e); alert('Firestore अनुमति/त्रुटि: ' + (e?.message||e)); }
+    };
+
+    // Save donation
     $('btnSaveDonation').onclick = async ()=>{
       if(!adminOK) return alert('Admin आवश्यक');
-      const id = $('selDonor').value; const d = donors.find(x=>x.id===id);
-      if(!d) return alert('डोनर चुनें');
-
+      const id = sel.value; const d = donors.find(x=>x.id===id); if(!d) return alert('डोनर चुनें');
       const payload = {
         donorId: d.id, donorName: d.name, donorPhone: d.phone,
         mandal: d.mandal, bloodGroup: d.bloodGroup,
-        recipientName: ($('d_recipient').value || '').trim(),
-        recipientPhone: ($('d_recipient_phone').value || '').trim(),
-        units: Number(($('d_units').value||1)),
-        hospital: ($('d_hospital').value || '').trim(),
+        recipientName: $('d_recipient').value.trim(),
+        recipientPhone: $('d_recipient_phone').value.trim(),
+        units: Number($('d_units').value||1),
+        hospital: $('d_hospital').value.trim(),
         date: $('d_date').value ? new Date($('d_date').value) : new Date(),
-        notes: ($('d_notes').value || '').trim(),
+        notes: $('d_notes').value.trim(),
         createdAt: serverTimestamp(),
       };
-      try{
-        await addDoc(collection(db,'donations'), payload);
-        await updateDoc(doc(db,'donors', d.id), { lastDonationDate: payload.date });
-        $('donateStatus').textContent = 'सेव हो गया ✅';
-        // Telegram alert
-        sendTelegram(`🩸 दान प्रविष्टि\nडोनर: ${payload.donorName} (${payload.bloodGroup||'-'}, ${payload.mandal||'-'})\nयूनिट: ${payload.units||1}\nरोगी: ${payload.recipientName||'-'}\nअस्पताल: ${payload.hospital||'-'}\nतारीख़: ${payload.date.toLocaleDateString('en-GB')}`);
-        ['d_recipient','d_recipient_phone','d_units','d_hospital','d_date','d_notes'].forEach(i=> $(i) && ($(i).value=''));
-        $('d_units').value='1';
-      }catch(e){
-        alert('सेव त्रुटि: ' + (e?.message||e));
-      }
+      await addDoc(collection(db,'donations'), payload);
+      await updateDoc(doc(db,'donors', d.id), { lastDonationDate: payload.date });
+      alert('दान प्रविष्टि सेव हो गया।');
+      ["d_recipient","d_recipient_phone","d_units","d_hospital","d_date","d_notes"].forEach(i=> $(i).value=''); $('d_units').value='1';
     };
 
-    // --- CSV Exports ---
+    // Export CSV
     $('btnExportDonors').onclick = ()=>{
       const header = ['name','phone','whatsapp','bloodGroup','mandal','address','age','gender','lastDonationDate','willing','createdAt'];
       const rows = donors.map(d=> ([
@@ -595,12 +544,11 @@
     function downloadCSV(filename, rows){
       const esc = (v)=> '"'+String(v).replaceAll('"','""')+'"';
       const csv = rows.map(r=> r.map(esc).join(',')).join('\n');
-      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-      const url = URL.createObjectURL(blob);
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'}); const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     }
 
-    // --- Charts ---
+    // Charts
     let chartGroups, chartMandals, chartMonthly;
     function updateCharts(){
       const groups = BLOOD_GROUPS.map(g=>({label:g, count: donors.filter(d=>d.bloodGroup===g).length}));
@@ -613,15 +561,13 @@
       const cfgBar = (labels, data)=>({ type:'bar', data:{ labels, datasets:[{ label:'कुल', data }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}});
       const cfgLine = (labels, data)=>({ type:'line', data:{ labels, datasets:[{ label:'यूनिट', data, tension:0.3 }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}});
 
-      const gEl = $('chartGroups'); if(gEl){ if(chartGroups) chartGroups.destroy(); chartGroups = new Chart(gEl, cfgBar(groups.map(x=>x.label), groups.map(x=>x.count))); }
-      const mEl = $('chartMandals'); if(mEl){ if(chartMandals) chartMandals.destroy(); chartMandals = new Chart(mEl, cfgBar(mandalsSorted.map(x=>x[0]), mandalsSorted.map(x=>x[1]))); }
-      const moEl = $('chartMonthly'); if(moEl){ if(chartMonthly) chartMonthly.destroy(); chartMonthly = new Chart(moEl, cfgLine(months.map(x=>x[0]), months.map(x=>x[1]))); }
+      const gEl = document.getElementById('chartGroups'); if(chartGroups) chartGroups.destroy(); chartGroups = new Chart(gEl, cfgBar(groups.map(x=>x.label), groups.map(x=>x.count)));
+      const mEl = document.getElementById('chartMandals'); if(chartMandals) chartMandals.destroy(); chartMandals = new Chart(mEl, cfgBar(mandalsSorted.map(x=>x[0]), mandalsSorted.map(x=>x[1])));
+      const moEl = document.getElementById('chartMonthly'); if(chartMonthly) chartMonthly.destroy(); chartMonthly = new Chart(moEl, cfgLine(months.map(x=>x[0]), months.map(x=>x[1])));
     }
 
-    // --- Donations table ---
     function renderDonationsTable(){
-      const tb = $('donationsTbody'); if(!tb) return; tb.innerHTML='';
-      if(!donations.length){ tb.innerHTML='<tr><td colspan="7" class="p-3 text-slate-400">अभी कोई प्रविष्टि नहीं</td></tr>'; return; }
+      const tb = $('donationsTbody'); tb.innerHTML='';
       donations.forEach(x=> tb.insertAdjacentHTML('beforeend', `
         <tr class="odd:bg-white even:bg-slate-50">
           <td class="p-2">${x.date?fmtTS(x.date):'—'}</td>
@@ -634,10 +580,8 @@
         </tr>`));
     }
 
-    // --- Requests table ---
     function renderRequestsTable(){
-      const tb = $('reqTbody'); if(!tb) return; tb.innerHTML='';
-      if(!requests.length){ tb.innerHTML='<tr><td colspan="6" class="p-3 text-slate-400">कोई रिक्वेस्ट नहीं</td></tr>'; return; }
+      const tb = $('reqTbody'); tb.innerHTML='';
       requests.forEach(r=> tb.insertAdjacentHTML('beforeend', `
         <tr class="odd:bg-white even:bg-slate-50">
           <td class="p-2">${r.createdAt?fmtTS(r.createdAt):'—'}</td>
