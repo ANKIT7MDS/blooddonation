@@ -5,72 +5,95 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin • रक्तदाता पोर्टल</title>
   
-<!-- Tailwind + Google Font -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        fontFamily: { devanagari: ['"Noto Sans Devanagari"', 'system-ui', 'sans-serif'] },
-        colors: {
-          saffron: { 50:'#FFF4E8',100:'#FFE8D6',200:'#FFD7B3',300:'#FFC48A',400:'#FFA24D',500:'#FF7F0E',600:'#E06900',700:'#C25700',800:'#A34500',900:'#873800' },
-          peach: { 50:'#FFF7EF',100:'#FFEFE0',200:'#FFE3C6' }
+  <!-- Tailwind + Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { devanagari: ['"Noto Sans Devanagari"', 'system-ui', 'sans-serif'] },
+          colors: {
+            saffron: { 50:'#FFF4E8',100:'#FFE8D6',200:'#FFD7B3',300:'#FFC48A',400:'#FFA24D',500:'#FF7F0E',600:'#E06900',700:'#C25700',800:'#A34500',900:'#873800' },
+            peach: { 50:'#FFF7EF',100:'#FFEFE0',200:'#FFE3C6' }
+          }
         }
       }
     }
-  }
-</script>
-<style>
-  body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
-  .toast { position: fixed; inset-inline: 0; top: 10px; margin-inline: auto; width: fit-content; z-index: 50; }
-</style>
+  </script>
+  <style>
+    body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
+    .toast { position: fixed; inset-inline: 0; top: 12px; margin-inline: auto; width: fit-content; z-index: 50; }
+  </style>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="min-h-screen bg-slate-50">
   
-<header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
-  <div class="max-w-6xl mx-auto px-4 py-2"></div>
-</header>
+  <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
+    <div class="max-w-6xl mx-auto px-4 py-2"></div>
+  </header>
 
-  
-<section class="relative overflow-hidden">
-  <div class="absolute inset-0">
-    <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-center opacity-20"></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-white/90 via-peach-50/90 to-white/95"></div>
-  </div>
-  <div class="relative max-w-6xl mx-auto px-4 py-6">
-    <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-5 sm:px-8 py-6 shadow">
-      <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
-      <div class="mt-1 text-6xl sm:text-7xl font-extrabold text-red-700 leading-tight">रक्तदाता पोर्टल</div>
-      <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
-        माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
-      </p>
-      <div class="mt-4 inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
-        <img src="seva-pakhwada-2025-clean-1024.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded" />
-        <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-center opacity-20"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-white/90 via-peach-50/90 to-white/95"></div>
+    </div>
+    <div class="relative max-w-6xl mx-auto px-4 py-6">
+      <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-5 sm:px-8 py-6 shadow">
+        <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
+        <div class="mt-1 text-6xl sm:text-7xl font-extrabold text-red-700 leading-tight">रक्तदाता पोर्टल</div>
+        <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
+          माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
+        </p>
+        <div class="mt-4 inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
+          <img src="seva-pakhwada-2025-clean-1024.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded" />
+          <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
+        </div>
       </div>
     </div>
-  </div>
-</section>
-
+  </section>
 
   <main class="max-w-6xl mx-auto p-4 space-y-4">
+    <!-- Admin Gate -->
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
       <h2 class="text-lg font-semibold mb-2">Admin पहुँच</h2>
-      <div id="adminGate" class="flex items-center gap-2">
+      <div id="adminGate" class="flex items-center gap-2 flex-wrap">
         <input id="adminPin" type="password" class="rounded-xl border px-4 py-3" placeholder="Admin PIN" />
         <button id="btnUnlock" class="px-4 py-3 rounded-xl bg-red-600 text-white">Unlock</button>
         <span class="text-xs text-slate-500">(डेमो PIN: 2720 — बदलें)</span>
+        <button id="demoOpen" class="ml-auto px-3 py-2 rounded-xl border text-slate-700">Demo View</button>
       </div>
       <div id="adminOk" class="hidden text-green-700 font-semibold">Admin सक्षम</div>
       <p class="text-xs text-slate-500 mt-1">नोट: यह केवल UI गेट है। असली सुरक्षा Firestore Rules/Auth से लागू करें।</p>
+      <p id="adminErr" class="hidden mt-2 text-sm text-red-600"></p>
     </div>
 
+    <!-- Admin Area -->
     <div id="adminArea" class="hidden space-y-4">
+      <!-- Telegram Settings Card -->
+      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
+        <h3 class="text-base font-semibold mb-3">Telegram सेटिंग / टेस्ट</h3>
+        <p class="text-sm text-slate-600 mb-2">
+          <b>Chat IDs</b>: चैनल <code>@username</code> (उदा. <b>@BJPBLOODREQUEST</b>), ग्रुप <code>-100…</code>, यूज़र numeric id.
+        </p>
+        <div class="flex items-center gap-2 mb-3 flex-wrap">
+          <input id="tgIds" class="rounded-xl border px-4 py-3 flex-1" placeholder="@BJPBLOODREQUEST,-100xxxxxxxxxx,12345678" />
+          <button id="tgSave" class="px-4 py-3 rounded-xl bg-slate-900 text-white">Save IDs</button>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <input id="tgText" class="rounded-xl border px-4 py-3 flex-1" value="पोर्टल कनेक्टेड ✅" />
+          <button id="tgSend" class="px-4 py-3 rounded-xl bg-saffron-700 text-white">Send</button>
+          <span id="tgStatus" class="text-xs text-slate-600"></span>
+        </div>
+        <div class="mt-2 text-xs text-slate-600">
+          Helper: <a class="underline" target="_blank" href="https://api.telegram.org/bot8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ/getUpdates">getUpdates</a>
+        </div>
+      </div>
+
+      <!-- Donation Logger -->
       <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
         <h3 class="text-base font-semibold mb-3">दान लॉग करें</h3>
         <div class="grid gap-3 sm:grid-cols-2">
@@ -109,10 +132,12 @@
             <button id="btnSaveDonation" class="px-4 py-3 rounded-xl bg-saffron-700 text-white font-semibold">सेव करें</button>
             <button id="btnExportDonors" class="px-4 py-3 rounded-xl bg-slate-900 text-white">Export Donors CSV</button>
             <button id="btnExportDonations" class="px-4 py-3 rounded-xl bg-slate-900 text-white">Export Donations CSV</button>
+            <span id="donateStatus" class="text-xs text-slate-600"></span>
           </div>
         </div>
       </div>
 
+      <!-- Donors with Filters -->
       <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
         <h3 class="text-base font-semibold mb-3">डोनर सूची (फ़िल्टर सहित)</h3>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -138,11 +163,14 @@
                 <th class="p-2 text-left">इच्छा</th>
               </tr>
             </thead>
-            <tbody id="donorsTbody"></tbody>
+            <tbody id="donorsTbody">
+              <tr><td colspan="7" class="p-3 text-slate-400">लोड हो रहा है…</td></tr>
+            </tbody>
           </table>
         </div>
       </div>
 
+      <!-- Charts -->
       <div class="grid md:grid-cols-2 gap-4">
         <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
           <h3 class="text-base font-semibold mb-3">ब्लड ग्रुप अनुसार डोनर</h3>
@@ -159,6 +187,7 @@
         <div class="h-64"><canvas id="chartMonthly"></canvas></div>
       </div>
 
+      <!-- Recent Donations -->
       <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border overflow-x-auto -mx-2 sm:mx-0">
         <h3 class="text-base font-semibold mb-3">Recent Donations</h3>
         <table class="min-w-[720px] w-full text-sm">
@@ -173,10 +202,13 @@
               <th class="p-2 text-left">अस्पताल</th>
             </tr>
           </thead>
-          <tbody id="donationsTbody"></tbody>
+          <tbody id="donationsTbody">
+            <tr><td colspan="7" class="p-3 text-slate-400">अभी कोई प्रविष्टि नहीं</td></tr>
+          </tbody>
         </table>
       </div>
 
+      <!-- Requests -->
       <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border overflow-x-auto -mx-2 sm:mx-0">
         <h3 class="text-base font-semibold mb-3">Requests (रक्त आवश्यकता)</h3>
         <table class="min-w-[720px] w-full text-sm">
@@ -190,7 +222,9 @@
               <th class="p-2 text-left">अस्पताल/नोट्स</th>
             </tr>
           </thead>
-          <tbody id="reqTbody"></tbody>
+          <tbody id="reqTbody">
+            <tr><td colspan="6" class="p-3 text-slate-400">कोई रिक्वेस्ट नहीं</td></tr>
+          </tbody>
         </table>
       </div>
     </div>
@@ -210,68 +244,112 @@
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
     const { getFirestore, collection, onSnapshot, query, orderBy, addDoc, updateDoc, doc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
     
-const firebaseConfig = {
-  apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
-  authDomain: "blodddonation-9c44e.firebaseapp.com",
-  projectId: "blodddonation-9c44e",
-  storageBucket: "blodddonation-9c44e.firebasestorage.app",
-  messagingSenderId: "636578091772",
-  appId: "1:636578091772:web:276d08168f8fc9c221fd79",
-  measurementId: "G-3TPG0JCF3R"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
+      authDomain: "blodddonation-9c44e.firebaseapp.com",
+      projectId: "blodddonation-9c44e",
+      storageBucket: "blodddonation-9c44e.firebasestorage.app",
+      messagingSenderId: "636578091772",
+      appId: "1:636578091772:web:276d08168f8fc9c221fd79",
+      measurementId: "G-3TPG0JCF3R"
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // --- Admin Gate ---
     let adminOK = false;
-    document.getElementById('btnUnlock').onclick = () => {
-      const pin = (document.getElementById('adminPin').value || '').trim();
-      if(pin === '2720'){
-        adminOK = true;
-        document.getElementById('adminGate').classList.add('hidden');
-        document.getElementById('adminOk').classList.remove('hidden');
-        document.getElementById('adminArea').classList.remove('hidden');
-      } else alert('गलत PIN');
+    const openAdmin = () => {
+      adminOK = true;
+      $('adminGate').classList.add('hidden');
+      $('adminOk').classList.remove('hidden');
+      $('adminArea').classList.remove('hidden');
+      const el = $('tgIds');
+      if (el) el.value = (localStorage.getItem('tgIds') || '@BJPBLOODREQUEST');
     };
+    $('btnUnlock').onclick = () => {
+      const pin = ($('adminPin').value || '').trim();
+      if(pin === '2720'){ openAdmin(); } else alert('गलत PIN');
+    };
+    $('demoOpen').onclick = openAdmin;
+    if (location.search.includes('demo=1') || location.hash.includes('open')) openAdmin();
 
+    // --- Telegram ---
+    const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
+    let TELEGRAM_CHAT_IDS = (localStorage.getItem("tgIds")||"@BJPBLOODREQUEST").split(",").map(x=>x.trim()).filter(Boolean);
+    function setTelegramIds(csv){
+      TELEGRAM_CHAT_IDS = (csv||"").split(",").map(x=>x.trim()).filter(Boolean);
+      localStorage.setItem("tgIds", TELEGRAM_CHAT_IDS.join(","));
+    }
+    async function sendTelegram(text){
+      const ids = TELEGRAM_CHAT_IDS && TELEGRAM_CHAT_IDS.length ? TELEGRAM_CHAT_IDS : ["@BJPBLOODREQUEST"];
+      $('tgStatus').textContent = 'भेजा जा रहा है…';
+      try{
+        ids.forEach(id => {
+          const u = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(id)}&text=${encodeURIComponent(text)}`;
+          const img = new Image(); img.src = u;  // CORS-safe GET
+        });
+        $('tgStatus').textContent = 'भेज दिया गया ✅';
+      }catch(e){
+        $('tgStatus').textContent = 'Error: ' + (e?.message || e);
+      }
+      return true;
+    }
+    $('tgSave').onclick = ()=>{ setTelegramIds($('tgIds').value); alert('Saved ✓'); };
+    $('tgSend').onclick = ()=> sendTelegram(($('tgText').value || 'Test'));
+
+    // --- Data listeners ---
     let donors = []; let donations = []; let requests = [];
-    const sel = document.getElementById('selDonor');
-    const donorsTbody = document.getElementById('donorsTbody');
+    const donorsTbody = $('donorsTbody'); const sel = $('selDonor');
 
     onSnapshot(query(collection(db,'donors'), orderBy('createdAt','desc')), snap=>{
       donors = snap.docs.map(d=>({ id:d.id, ...d.data() }));
       renderAdminDonorSelect();
       renderDonorTable();
       updateCharts();
-    });
+    }, err => showErr('donors', err));
+
     onSnapshot(query(collection(db,'donations'), orderBy('date','desc')), snap=>{
       donations = snap.docs.map(d=>({ id:d.id, ...d.data() }));
       renderDonationsTable();
       updateCharts();
-    });
+    }, err => showErr('donations', err));
+
     onSnapshot(query(collection(db,'requests'), orderBy('createdAt','desc')), snap=>{
       requests = snap.docs.map(d=>({ id:d.id, ...d.data() }));
       renderRequestsTable();
-    });
+    }, err => showErr('requests', err));
 
-    function renderAdminDonorSelect(){
-      sel.innerHTML = '<option value="">—</option>';
-      donors.forEach(d=> sel.insertAdjacentHTML('beforeend', `<option value="${d.id}">${d.name||''} • ${d.bloodGroup||''} • ${d.mandal||''}</option>`));
-      sel.onchange = ()=>{ const d = donors.find(x=>x.id===sel.value); document.getElementById('selDonorInfo').textContent = d ? `मोबाइल: ${d.phone||''} • आख़िरी दान: ${d.lastDonationDate?fmtTS(d.lastDonationDate):'—'}` : ''; };
+    function showErr(path, err){
+      const el = $('adminErr'); el.classList.remove('hidden');
+      el.textContent = `Firestore त्रुटि (${path}): ` + (err?.message || err);
     }
 
-    const fText = document.getElementById('fText');
-    const fGroup = document.getElementById('fGroup');
-    const fMandal = document.getElementById('fMandal');
-    const fWilling = document.getElementById('fWilling');
-    function fill(el, arr, first){ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
+    function renderAdminDonorSelect(){
+      if(!sel) return;
+      sel.innerHTML = '<option value="">—</option>';
+      donors.forEach(d=> sel.insertAdjacentHTML('beforeend', `<option value="${d.id}">${d.name||''} • ${d.bloodGroup||''} • ${d.mandal||''}</option>`));
+      sel.onchange = ()=>{
+        const d = donors.find(x=>x.id===sel.value);
+        $('selDonorInfo').textContent = d ? `मोबाइल: ${d.phone||''} • आख़िरी दान: ${d.lastDonationDate?fmtTS(d.lastDonationDate):'—'}` : '';
+      };
+    }
+
+    // Filters
+    const fText = $('fText'); const fGroup = $('fGroup'); const fMandal = $('fMandal'); const fWilling = $('fWilling');
+    function fill(el, arr, first){ if(!el) return; el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
     fill(fGroup, BLOOD_GROUPS, 'ब्लड ग्रुप');
     fill(fMandal, MANDALS, 'मंडल');
-    ;[fText,fGroup,fMandal,fWilling].forEach(el=> el.addEventListener('input', renderDonorTable));
+    [fText,fGroup,fMandal,fWilling].forEach(el=> el && el.addEventListener('input', renderDonorTable));
 
     function renderDonorTable(){
+      if(!donorsTbody) return;
       donorsTbody.innerHTML='';
-      const t=(fText.value||'').toLowerCase(), g=fGroup.value, m=fMandal.value, w=fWilling.value;
+      if(!donors.length){
+        donorsTbody.innerHTML = '<tr><td colspan="7" class="p-3 text-slate-400">डोनर नहीं मिले (या Firestore खाली है)</td></tr>';
+        return;
+      }
+      const t=(fText?.value||'').toLowerCase(), g=fGroup?.value, m=fMandal?.value, w=fWilling?.value;
       const rows = donors.filter(d=>{
         const okText = !t || [d.name,d.phone,d.address].some(v=> (v||'').toLowerCase().includes(t));
         const okG = !g || d.bloodGroup===g;
@@ -280,6 +358,10 @@ const firebaseConfig = {
         const okW = !w || (w==='yes'? will : !will);
         return okText && okG && okM && okW;
       });
+      if(!rows.length){
+        donorsTbody.innerHTML = '<tr><td colspan="7" class="p-3 text-slate-400">फ़िल्टर अनुसार कोई डोनर नहीं</td></tr>';
+        return;
+      }
       rows.forEach(d=> donorsTbody.insertAdjacentHTML('beforeend', `
         <tr class="odd:bg-white even:bg-slate-50">
           <td class="p-2 font-medium">${d.name||''}</td>
@@ -292,28 +374,32 @@ const firebaseConfig = {
         </tr>`));
     }
 
-    document.getElementById('btnSaveDonation').onclick = async ()=>{
+    // Save donation
+    $('btnSaveDonation').onclick = async ()=>{
       if(!adminOK) return alert('Admin आवश्यक');
       const id = sel.value; const d = donors.find(x=>x.id===id); if(!d) return alert('डोनर चुनें');
       const payload = {
         donorId: d.id, donorName: d.name, donorPhone: d.phone,
         mandal: d.mandal, bloodGroup: d.bloodGroup,
-        recipientName: document.getElementById('d_recipient').value.trim(),
-        recipientPhone: document.getElementById('d_recipient_phone').value.trim(),
-        units: Number(document.getElementById('d_units').value||1),
-        hospital: document.getElementById('d_hospital').value.trim(),
-        date: document.getElementById('d_date').value ? new Date(document.getElementById('d_date').value) : new Date(),
-        notes: document.getElementById('d_notes').value.trim(),
+        recipientName: ($('d_recipient').value || '').trim(),
+        recipientPhone: ($('d_recipient_phone').value || '').trim(),
+        units: Number(($('d_units').value||1)),
+        hospital: ($('d_hospital').value || '').trim(),
+        date: $('d_date').value ? new Date($('d_date').value) : new Date(),
+        notes: ($('d_notes').value || '').trim(),
         createdAt: serverTimestamp(),
       };
       await addDoc(collection(db,'donations'), payload);
       await updateDoc(doc(db,'donors', d.id), { lastDonationDate: payload.date });
-      alert('दान प्रविष्टि सेव हो गया।');
-      ["d_recipient","d_recipient_phone","d_units","d_hospital","d_date","d_notes"].forEach(i=> document.getElementById(i).value='');
-      document.getElementById('d_units').value='1';
+      $('donateStatus').textContent = 'सेव हो गया ✅';
+      // Telegram alert
+      sendTelegram(`🩸 दान प्रविष्टि\nडोनर: ${payload.donorName} (${payload.bloodGroup||'-'}, ${payload.mandal||'-'})\nयूनिट: ${payload.units||1}\nरोगी: ${payload.recipientName||'-'}\nअस्पताल: ${payload.hospital||'-'}\nतारीख़: ${payload.date.toLocaleDateString('en-GB')}`);
+      ['d_recipient','d_recipient_phone','d_units','d_hospital','d_date','d_notes'].forEach(i=> $(i) && ($(i).value=''));
+      $('d_units').value='1';
     };
 
-    document.getElementById('btnExportDonors').onclick = ()=>{
+    // Exports
+    $('btnExportDonors').onclick = ()=>{
       const header = ['name','phone','whatsapp','bloodGroup','mandal','address','age','gender','lastDonationDate','willing','createdAt'];
       const rows = donors.map(d=> ([
         d.name||'', d.phone||'', d.whatsapp||'', d.bloodGroup||'', d.mandal||'', (d.address||'').replace(/\n/g,' '),
@@ -321,7 +407,7 @@ const firebaseConfig = {
       ]));
       downloadCSV('donors.csv', [header, ...rows]);
     };
-    document.getElementById('btnExportDonations').onclick = ()=>{
+    $('btnExportDonations').onclick = ()=>{
       const header = ['date','donorName','donorPhone','bloodGroup','mandal','units','recipientName','recipientPhone','hospital'];
       const rows = donations.map(x=> ([
         (x.date?fmtTS(x.date):''), x.donorName||'', x.donorPhone||'', x.bloodGroup||'', x.mandal||'', x.units||'',
@@ -337,6 +423,7 @@ const firebaseConfig = {
       const a = document.createElement('a'); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     }
 
+    // Charts
     let chartGroups, chartMandals, chartMonthly;
     function updateCharts(){
       const groups = BLOOD_GROUPS.map(g=>({label:g, count: donors.filter(d=>d.bloodGroup===g).length}));
@@ -349,17 +436,19 @@ const firebaseConfig = {
       const cfgBar = (labels, data)=>({ type:'bar', data:{ labels, datasets:[{ label:'कुल', data }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}});
       const cfgLine = (labels, data)=>({ type:'line', data:{ labels, datasets:[{ label:'यूनिट', data, tension:0.3 }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}});
 
-      const gEl = document.getElementById('chartGroups'); if(chartGroups) chartGroups.destroy(); chartGroups = new Chart(gEl, cfgBar(groups.map(x=>x.label), groups.map(x=>x.count)));
-      const mEl = document.getElementById('chartMandals'); if(chartMandals) chartMandals.destroy(); chartMandals = new Chart(mEl, cfgBar(mandalsSorted.map(x=>x[0]), mandalsSorted.map(x=>x[1])));
-      const moEl = document.getElementById('chartMonthly'); if(chartMonthly) chartMonthly.destroy(); chartMonthly = new Chart(moEl, cfgLine(months.map(x=>x[0]), months.map(x=>x[1])));
+      const gEl = $('chartGroups'); if(gEl){ if(chartGroups) chartGroups.destroy(); chartGroups = new Chart(gEl, cfgBar(groups.map(x=>x.label), groups.map(x=>x.count))); }
+      const mEl = $('chartMandals'); if(mEl){ if(chartMandals) chartMandals.destroy(); chartMandals = new Chart(mEl, cfgBar(mandalsSorted.map(x=>x[0]), mandalsSorted.map(x=>x[1]))); }
+      const moEl = $('chartMonthly'); if(moEl){ if(chartMonthly) chartMonthly.destroy(); chartMonthly = new Chart(moEl, cfgLine(months.map(x=>x[0]), months.map(x=>x[1]))); }
     }
 
+    // Recent Donations table
     function renderDonationsTable(){
-      const tb = document.getElementById('donationsTbody'); tb.innerHTML='';
+      const tb = $('donationsTbody'); if(!tb) return; tb.innerHTML='';
+      if(!donations.length){ tb.innerHTML='<tr><td colspan="7" class="p-3 text-slate-400">अभी कोई प्रविष्टि नहीं</td></tr>'; return; }
       donations.forEach(x=> tb.insertAdjacentHTML('beforeend', `
         <tr class="odd:bg-white even:bg-slate-50">
           <td class="p-2">${x.date?fmtTS(x.date):'—'}</td>
-          <td class="p-2 font-medium">${x.donorName} <span class="text-slate-400">(${x.donorPhone||''})</span></td>
+          <td class="p-2 font-medium">${x.donorName||'-'} <span class="text-slate-400">(${x.donorPhone||''})</span></td>
           <td class="p-2">${x.bloodGroup||''}</td>
           <td class="p-2">${x.mandal||''}</td>
           <td class="p-2">${x.units||''}</td>
@@ -368,8 +457,10 @@ const firebaseConfig = {
         </tr>`));
     }
 
+    // Requests table
     function renderRequestsTable(){
-      const tb = document.getElementById('reqTbody'); tb.innerHTML='';
+      const tb = $('reqTbody'); if(!tb) return; tb.innerHTML='';
+      if(!requests.length){ tb.innerHTML='<tr><td colspan="6" class="p-3 text-slate-400">कोई रिक्वेस्ट नहीं</td></tr>'; return; }
       requests.forEach(r=> tb.insertAdjacentHTML('beforeend', `
         <tr class="odd:bg-white even:bg-slate-50">
           <td class="p-2">${r.createdAt?fmtTS(r.createdAt):'—'}</td>
