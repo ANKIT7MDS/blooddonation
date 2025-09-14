@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -29,85 +30,56 @@
     .modal{ transition:opacity .2s ease }
   </style>
 </head>
-<body class="min-h-screen bg-slate-50">
+<body class="min-h-screen bg-peach-50">
   <div id="toast" class="toast hidden"></div>
 
-  <!-- Header strip -->
-  <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
-    <div class="max-w-6xl mx-auto px-4 py-2"></div>
-  </header>
-
-  <!-- Hero -->
-  <section class="relative overflow-hidden">
-    <div class="absolute inset-0">
-      <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-center opacity-20"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-white/90 via-peach-50/90 to-white/95"></div>
-    </div>
-    <div class="relative max-w-6xl mx-auto px-4 py-6">
-      <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-5 sm:px-8 py-6 shadow">
-        <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
-        <div class="mt-1 text-6xl sm:text-7xl font-extrabold text-red-700 leading-tight">रक्तदाता पोर्टल</div>
-        <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
-          माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
-        </p>
-
-        <!-- Badges row -->
-        <div class="mt-4 flex items-center justify-between gap-3">
-          <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm">
-            <span class="i">🧡</span> <b>सेवा सही संकल्प</b>
-          </span>
-          <div class="inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
-            <!-- UPDATED LOGO -->
-            <img src="Sevapakhwada.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded">
-            <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
-          </div>
-          <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm">
-            <b>सेवा परमो धर्म</b> <span class="i">🩸</span>
-          </span>
+  <header class="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg">
+      <div class="max-w-6xl mx-auto px-4 py-4 text-center">
+        <div class="flex justify-center items-center gap-4">
+          <img src="https://seva-pakhwada.in/assets/img/Sevapakhwada.png" alt="सेवा पखवाड़ा Logo" class="h-14 sm:h-16 bg-white p-1 rounded-md">
+          <h1 class="text-2xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी जिला मंदसौर</h1>
         </div>
       </div>
-    </div>
-  </section>
+  </header>
 
-  <!-- Form -->
-  <main class="max-w-6xl mx-auto p-4 space-y-4">
+   <main class="max-w-6xl mx-auto p-4 space-y-4">
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-saffron-800 mb-1 text-center sm:text-left">रक्तदाता पंजीकरण</h1>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-orange-600 mb-1 text-center sm:text-left">रक्तदाता पंजीकरण</h1>
       <p class="text-sm text-slate-600 mb-4 text-center sm:text-left">कृपया सही जानकारी भरें — आवश्यकता पड़ने पर आपसे संपर्क किया जाएगा।</p>
 
-      <form id="donorForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <form id="donorForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="text-sm text-slate-600">पूरा नाम</label>
-          <input required id="f_name" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" placeholder="जैसे: राम शर्मा" autocomplete="name" />
+          <input required id="f_name" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="जैसे: राम शर्मा" autocomplete="name" />
         </div>
         <div>
           <label class="text-sm text-slate-600">मोबाइल</label>
-          <input required id="f_phone" pattern="[0-9]{10}" inputmode="numeric" autocomplete="tel" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" placeholder="10 अंकों का नंबर" />
+          <input required id="f_phone" pattern="[0-9]{10}" inputmode="numeric" autocomplete="tel" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="10 अंकों का नंबर" />
         </div>
         <div>
           <label class="text-sm text-slate-600">व्हाट्सऐप नंबर (वैकल्पिक)</label>
-          <input id="f_whatsapp" pattern="[0-9]{10}" inputmode="numeric" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" placeholder="optional" />
+          <input id="f_whatsapp" pattern="[0-9]{10}" inputmode="numeric" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="यदि मोबाइल से अलग है" />
         </div>
         <div>
           <label class="text-sm text-slate-600">ब्लड ग्रुप</label>
-          <select required id="f_group" class="mt-1 w-full rounded-xl border px-4 py-4 text-base"></select>
+          <select required id="f_group" class="mt-1 w-full rounded-xl border px-4 py-3 text-base"></select>
         </div>
         <div>
-          <label class="text-sm text-slate-600">मंडल (वैकल्पिक)</label>
-          <select id="f_mandal" class="mt-1 w-full rounded-xl border px-4 py-4 text-base"></select>
+          <label class="text-sm text-slate-600">मंडल</label>
+          <select id="f_mandal" class="mt-1 w-full rounded-xl border px-4 py-3 text-base"></select>
         </div>
         <div class="sm:col-span-2">
           <label class="text-sm text-slate-600">वार्ड / बूथ / पता</label>
-          <input id="f_address" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" placeholder="उदाहरण: वार्ड 12, बूथ 45, राम टेकरी रोड" />
+          <input id="f_address" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="उदाहरण: वार्ड 12, बूथ 45, राम टेकरी रोड" />
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="text-sm text-slate-600">उम्र</label>
-            <input type="number" min="18" max="65" id="f_age" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" placeholder="18-65" />
+            <input type="number" min="18" max="65" id="f_age" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" placeholder="18-65" />
           </div>
           <div>
             <label class="text-sm text-slate-600">लिंग</label>
-            <select id="f_gender" class="mt-1 w-full rounded-xl border px-4 py-4 text-base">
+            <select id="f_gender" class="mt-1 w-full rounded-xl border px-4 py-3 text-base">
               <option value="">चुने</option>
               <option value="पुरुष">पुरुष</option>
               <option value="महिला">महिला</option>
@@ -117,24 +89,30 @@
         </div>
         <div>
           <label class="text-sm text-slate-600">आख़िरी रक्तदान (यदि किया है)</label>
-          <input type="date" id="f_last" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" />
+          <input type="date" id="f_last" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" />
         </div>
         <div>
-          <label class="text-sm text-slate-600">क्या आवश्यकता पड़ने पर आपको रक्त दान के लिए संपर्क कर सकते हैं?</label>
-          <select id="f_willing" class="mt-1 w-full rounded-xl border px-4 py-4 text-base">
+          <label class="text-sm text-slate-600">क्या आवश्यकता पड़ने पर संपर्क कर सकते हैं?</label>
+          <select id="f_willing" class="mt-1 w-full rounded-xl border px-4 py-3 text-base">
             <option value="yes">हाँ</option>
             <option value="no">नहीं</option>
           </select>
         </div>
         <div class="sm:col-span-2">
           <label class="text-sm text-slate-600">नोट्स</label>
-          <textarea id="f_notes" class="mt-1 w-full rounded-xl border px-4 py-4 text-base" rows="3" placeholder="विशेष जानकारी (उदाहरण: उपलब्ध समय)"></textarea>
+          <textarea id="f_notes" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" rows="3" placeholder="विशेष जानकारी (उदाहरण: उपलब्ध समय)"></textarea>
         </div>
         <div class="sm:col-span-2 flex items-center gap-3">
-          <button id="btnSubmit" class="px-6 py-3 rounded-xl bg-saffron-700 text-white font-semibold w-full sm:w-auto">जमा करें</button>
+          <button id="btnSubmit" class="px-6 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold w-full sm:w-auto">जमा करें</button>
           <span id="formMsg" class="text-sm"></span>
         </div>
       </form>
+    </div>
+    
+    <!-- Chart -->
+    <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
+        <h3 class="text-base font-semibold mb-3">ब्लड ग्रुप-वाइज़ उपलब्ध डोनर</h3>
+        <div class="h-64"><canvas id="chartGroups"></canvas></div>
     </div>
   </main>
 
@@ -142,10 +120,10 @@
 
   <!-- Success Modal -->
   <div id="okModal" class="modal fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
-    <div class="bg-white w-[90%] max-w-md rounded-2xl p-5 text-center">
-      <div class="text-2xl font-extrabold text-saffron-800">धन्यवाद!</div>
+    <div class="bg-white w-[90%] max-w-md rounded-2xl p-6 text-center">
+      <div class="text-2xl font-extrabold text-orange-600">धन्यवाद!</div>
       <p class="mt-2 text-slate-700">आपका पंजीकरण सफल रहा। आवश्यकता पड़ने पर टीम आपसे संपर्क करेगी।</p>
-      <button id="okClose" class="mt-4 px-4 py-2 rounded-xl bg-saffron-700 text-white">ठीक है</button>
+      <button id="okClose" class="mt-4 px-5 py-2 rounded-xl bg-orange-500 text-white font-semibold">ठीक है</button>
     </div>
   </div>
 
@@ -158,28 +136,16 @@
     fill($('f_group'), BLOOD_GROUPS, 'चुनें');
     fill($('f_mandal'), MANDALS, 'चुनें');
 
-    // === Telegram ===
-    // UPDATED: आपका टोकन + आपका DM chat id
     const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
-    const TELEGRAM_CHAT_ID   = "733804072"; // DM के लिए numeric id
+    const TELEGRAM_CHAT_ID   = "733804072";
 
     async function sendTelegram(text){
-      try{
-        // Recommended: Netlify serverless relay (अगर लगाया है)
-        await fetch('/.netlify/functions/send-tg', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
-        });
-      }catch(e){
-        // Direct API fallback (कुछ नेटवर्क पर ब्लॉक हो सकता है)
         try{
           await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
             method: 'POST', headers: {'Content-Type':'application/json'},
             body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
           });
         }catch(_){}
-      }
     }
 
     function showToast(txt, ok=true){
@@ -192,7 +158,7 @@
 
   <script type="module">
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
-    const { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } =
+    const { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs, onSnapshot, orderBy } =
       await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
 
     const firebaseConfig = {
@@ -208,20 +174,17 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // duplicate-submission guard
     let submitting = false;
-
     document.getElementById('donorForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
-      if (submitting) return;               // prevent double submit
+      if (submitting) return;
       submitting = true;
-      const btn = document.getElementById('btnSubmit'); btn.disabled = true; btn.classList.add('opacity-60','cursor-not-allowed');
+      const btn = document.getElementById('btnSubmit'); btn.disabled = true; btn.classList.add('opacity-60');
 
       const $ = (id)=>document.getElementById(id);
       const msg = $('formMsg'); msg.textContent='';
 
       try {
-        // payload
         const payload = {
           name: $('f_name').value.trim(),
           phone: $('f_phone').value.trim().replace(/[^0-9]/g,''),
@@ -237,30 +200,23 @@
           createdAt: serverTimestamp(),
         };
 
-        // client-side duplicate check (by phone)
         if (!payload.phone || payload.phone.length !== 10) {
           throw new Error('कृपया 10 अंकों का मोबाइल नंबर भरें।');
         }
+        if (!payload.name) throw new Error('कृपया पूरा नाम भरें।');
+        if (!payload.bloodGroup) throw new Error('कृपया ब्लड ग्रुप चुनें।');
+        
         const qDup = query(collection(db,'donors'), where('phone','==', payload.phone));
         const dupSnap = await getDocs(qDup);
         if (!dupSnap.empty) {
-          showToast('यह मोबाइल पहले से रजिस्टर्ड है।', false);
-          msg.className='text-red-700'; msg.textContent='यह मोबाइल पहले से रजिस्टर्ड है।';
-          return;
+          throw new Error('यह मोबाइल पहले से रजिस्टर्ड है।');
         }
 
-        // save
         await addDoc(collection(db,'donors'), payload);
-
-        // UI feedback + Telegram
-        msg.className = 'text-green-700';
-        msg.textContent = '✅ धन्यवाद! आपका विवरण सफलतापूर्वक जमा हो गया।';
-        showToast('नया रक्तदाता रजिस्टर हुआ।', true);
+        
         sendTelegram(`🆕 नया रक्तदाता\nनाम: ${payload.name}\nमोबाइल: ${payload.phone}\nब्लड: ${payload.bloodGroup||'-'}\nमंडल: ${payload.mandal||'-'}\nपता: ${payload.address||'-'}`);
-
         document.getElementById('donorForm').reset();
 
-        // success modal
         const okModal = document.getElementById('okModal');
         okModal.classList.remove('hidden'); okModal.classList.add('flex');
         document.getElementById('okClose').onclick = ()=>{
@@ -270,12 +226,27 @@
         console.error(err);
         msg.className='text-red-700';
         msg.textContent='❌ त्रुटि: ' + (err?.message || 'कृपया बाद में पुनः प्रयास करें।');
-        showToast('पंजीकरण में समस्या हुई।', false);
+        showToast(err?.message || 'पंजीकरण में समस्या हुई।', false);
       } finally {
         submitting = false;
-        btn.disabled = false; btn.classList.remove('opacity-60','cursor-not-allowed');
+        btn.disabled = false; btn.classList.remove('opacity-60');
       }
     });
+
+    let chartGroups;
+    onSnapshot(query(collection(db,'donors'), orderBy('createdAt','desc')), snap=>{
+      const donors = snap.docs.map(d=> d.data());
+      const groupCounts = BLOOD_GROUPS.map(g => donors.filter(d => d.bloodGroup===g && (d.willing === true || d.willing === 'yes')).length);
+      const elG = document.getElementById('chartGroups');
+      if(chartGroups) chartGroups.destroy();
+      chartGroups = new Chart(elG, {
+        type:'bar',
+        data:{ labels:BLOOD_GROUPS, datasets:[{ label:'उपलब्ध डोनर', data:groupCounts, backgroundColor: 'rgba(255, 127, 14, 0.6)', borderColor: 'rgba(255, 127, 14, 1)', borderWidth: 1 }] },
+        options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0, beginAtZero: true }}}}
+      });
+    });
+
   </script>
 </body>
 </html>
+
