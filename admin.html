@@ -26,127 +26,143 @@
   <style>
     body{ font-family:"Noto Sans Devanagari",system-ui,sans-serif }
     .toast{ position:fixed; inset-inline:0; top:10px; margin-inline:auto; width:fit-content; z-index:50 }
+    .modal{ transition:opacity .2s ease }
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- html2canvas + jsPDF for export -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
-<body class="min-h-screen bg-slate-50">
+<body class="min-h-screen bg-peach-50">
   <div id="toast" class="toast hidden"></div>
 
-  <!-- Header strip -->
-  <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
-    <div class="max-w-6xl mx-auto px-4 py-2"></div>
-  </header>
-
-  <!-- Hero -->
-  <section class="relative overflow-hidden">
-    <div class="absolute inset-0">
-      <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-center opacity-20"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-white/90 via-peach-50/90 to-white/95"></div>
-    </div>
-    <div class="relative max-w-6xl mx-auto px-4 py-6">
-      <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-5 sm:px-8 py-6 shadow">
-        <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
-        <div class="mt-1 text-6xl sm:text-7xl font-extrabold text-red-700 leading-tight">रक्तदाता पोर्टल</div>
-        <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
-          माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
-        </p>
-
-        <div class="mt-4 flex items-center justify-between gap-3">
-          <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm">🧡 <b>सेवा सही संकल्प</b></span>
-          <div class="inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
-            <img src="Sevapakhwada.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded" />
-            <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
-          </div>
-          <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm"><b>सेवा परमो धर्म</b> 🩸</span>
+  <header class="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg">
+      <div class="max-w-6xl mx-auto px-4 py-4 text-center">
+        <div class="flex justify-center items-center gap-4">
+          <img src="https://seva-pakhwada.in/assets/img/Sevapakhwada.png" alt="सेवा पखवाड़ा Logo" class="h-14 sm:h-16 bg-white p-1 rounded-md">
+          <h1 class="text-2xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी जिला मंदसौर</h1>
         </div>
       </div>
-    </div>
-  </section>
+  </header>
 
   <main class="max-w-6xl mx-auto p-4 space-y-4">
+    <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border text-center relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 opacity-20 pointer-events-none">
+            <img src="MODI 069745253.png" alt="नरेंद्र मोदी" class="w-60 h-auto">
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-red-700 leading-tight">एडमिन पैनल</h2>
+        <p class="mt-2 text-slate-600">पोर्टल प्रबंधन एवं डाटा अवलोकन</p>
+         <div class="mt-4 flex items-center justify-center gap-3 flex-wrap">
+             <span class="inline-flex items-center gap-2 bg-peach-50/80 rounded-2xl px-3 py-2 border text-sm">🧡 <b>सेवा ही संकल्प</b></span>
+             <span class="inline-flex items-center gap-2 bg-peach-50/80 rounded-2xl px-3 py-2 border text-sm"><b>सेवा परमो धर्म</b> 🩸</span>
+        </div>
+    </div>
+
     <!-- Admin Gate -->
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
       <h2 class="text-lg font-semibold mb-2">Admin पहुँच</h2>
-
-      <!-- PIN Gate (जैसा था वैसा) -->
-      <div id="adminGate" class="flex items-center gap-2 flex-wrap">
-        <input id="adminPin" type="password" class="rounded-xl border px-4 py-3" placeholder="Admin PIN" />
-        <button id="btnUnlock" class="px-4 py-3 rounded-xl bg-red-600 text-white">Unlock</button>
-        <span class="text-xs text-slate-500">(डेमो PIN: 2720 — बदलें)</span>
-      </div>
-
-      <!-- Google Login (नया जोड़ा) -->
-      <div id="authBox" class="mt-3 flex items-center gap-3 flex-wrap">
-        <button id="btnGoogle" class="px-4 py-3 rounded-xl bg-saffron-700 text-white">Google से Login</button>
-        <div id="whoami" class="text-sm text-slate-600 hidden">
-          Logged in: <span id="userEmail"></span>
-          <button id="btnLogout" class="ml-3 px-3 py-1 rounded-lg bg-slate-800 text-white text-xs">Logout</button>
+      <div id="adminGate" class="space-y-3">
+        <div class="flex items-center gap-2 flex-wrap">
+            <input id="adminPin" type="password" class="rounded-xl border px-4 py-3" placeholder="Admin PIN" />
+            <button id="btnUnlock" class="px-4 py-3 rounded-xl bg-red-600 text-white font-semibold">Unlock</button>
         </div>
-        <span class="text-xs text-slate-500">(*) Admin ईमेल सूची Firestore: <code>settings/admins</code></span>
+        <div class="flex items-center gap-2 flex-wrap">
+            <button id="btnGoogle" class="px-4 py-3 rounded-xl bg-blue-600 text-white font-semibold">Google से Login करें</button>
+            <div id="whoami" class="text-sm text-slate-600 hidden">
+              लॉग इन: <span id="userEmail" class="font-semibold"></span>
+              <button id="btnLogout" class="ml-2 px-3 py-1 rounded-lg bg-slate-800 text-white text-xs">Logout</button>
+            </div>
+        </div>
       </div>
-
-      <div id="adminOk" class="hidden text-green-700 font-semibold mt-2">Admin सक्षम</div>
-      <p class="text-xs text-slate-500 mt-1">नोट: PIN केवल UI गेट है। वास्तविक सुरक्षा Firestore Rules/Auth से लागू करें।</p>
+      <div id="adminOk" class="hidden text-green-700 font-semibold mt-2">✅ Admin पहुँच सक्षम</div>
     </div>
 
     <!-- Admin Area -->
     <div id="adminArea" class="hidden space-y-4">
+      <!-- Exports -->
+      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
+        <h3 class="text-base font-semibold mb-3">डाटा एक्सपोर्ट</h3>
+        <div class="flex items-center gap-3 flex-wrap">
+            <button id="btnExportDonors" class="px-4 py-3 rounded-xl bg-slate-800 text-white font-semibold">डोनर सूची (CSV)</button>
+            <button id="btnExportDonations" class="px-4 py-3 rounded-xl bg-slate-800 text-white font-semibold">दान सूची (CSV)</button>
+            <button id="btnExportMandalPDF" class="px-4 py-3 rounded-xl bg-emerald-700 text-white font-semibold">मंडल रिपोर्ट (PDF)</button>
+            <button id="btnExportGroupPDF" class="px-4 py-3 rounded-xl bg-sky-700 text-white font-semibold">ग्रुप रिपोर्ट (PDF)</button>
+        </div>
+      </div>
+      
       <!-- Donation Log -->
       <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-        <h3 class="text-base font-semibold mb-3">दान लॉग करें</h3>
+        <h3 class="text-base font-semibold mb-3">सीधा दान लॉग करें (बिना अनुरोध के)</h3>
         <div class="grid gap-3 sm:grid-cols-2">
-          <div>
-            <label class="text-sm text-slate-600">डोनर चुनें</label>
-            <select id="selDonor" class="mt-1 w-full rounded-xl border px-4 py-3"></select>
-            <p id="selDonorInfo" class="text-xs text-slate-500 mt-1"></p>
-          </div>
-          <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="text-sm text-slate-600">यूनिट</label>
-              <input type="number" min="1" id="d_units" class="mt-1 w-full rounded-xl border px-4 py-3" value="1" />
+              <label class="text-sm text-slate-600">डोनर का मोबाइल नंबर</label>
+              <div class="flex items-center gap-2 mt-1">
+                  <input id="searchDonorPhone" class="w-full rounded-xl border px-4 py-3" placeholder="10 अंकों का नंबर खोजें" />
+                  <button id="btnFindDonor" class="px-4 py-3 rounded-xl bg-slate-700 text-white">खोजें</button>
+              </div>
+              <div id="foundDonorInfo" class="mt-2 p-3 bg-slate-100 rounded-lg hidden text-sm"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-sm text-slate-600">यूनिट</label>
+                <input type="number" min="1" id="d_units" class="mt-1 w-full rounded-xl border px-4 py-3" value="1" />
+              </div>
+              <div>
+                <label class="text-sm text-slate-600">तारीख़</label>
+                <input type="date" id="d_date" class="mt-1 w-full rounded-xl border px-4 py-3" />
+              </div>
             </div>
             <div>
-              <label class="text-sm text-slate-600">तारीख़</label>
-              <input type="date" id="d_date" class="mt-1 w-full rounded-xl border px-4 py-3" />
+              <label class="text-sm text-slate-600">रोगी का नाम</label>
+              <input id="d_recipient" class="mt-1 w-full rounded-xl border px-4 py-3" placeholder="किसको दिया?" />
             </div>
-          </div>
-          <div>
-            <label class="text-sm text-slate-600">रोगी का नाम</label>
-            <input id="d_recipient" class="mt-1 w-full rounded-xl border px-4 py-3" placeholder="किसको दिया?" />
-          </div>
-          <div>
-            <label class="text-sm text-slate-600">रोगी मोबाइल</label>
-            <input id="d_recipient_phone" class="mt-1 w-full rounded-xl border px-4 py-3" placeholder="optional" />
-          </div>
-          <div>
-            <label class="text-sm text-slate-600">अस्पताल/स्थान</label>
-            <input id="d_hospital" class="mt-1 w-full rounded-xl border px-4 py-3" placeholder="जैसे: जिला अस्पताल" />
-          </div>
-          <div class="sm:col-span-2">
-            <label class="text-sm text-slate-600">नोट्स</label>
-            <textarea id="d_notes" class="mt-1 w-full rounded-xl border px-4 py-3" rows="2"></textarea>
-          </div>
-          <div class="sm:col-span-2 flex items-center gap-3 flex-wrap">
-            <button id="btnSaveDonation" class="px-4 py-3 rounded-xl bg-saffron-700 text-white font-semibold">सेव करें</button>
-            <button id="btnExportDonors" class="px-4 py-3 rounded-xl bg-slate-900 text-white">Export Donors CSV</button>
-            <button id="btnExportDonations" class="px-4 py-3 rounded-xl bg-slate-900 text-white">Export Donations CSV</button>
-            <!-- NEW: Mandal summary export buttons -->
-            <div class="ml-auto flex gap-2 items-center">
-              <button id="btnExportMandalPDF" class="px-4 py-3 rounded-xl bg-emerald-700 text-white">मंडल रिपोर्ट (PDF)</button>
-              <button id="btnExportMandalJPG" class="px-4 py-3 rounded-xl bg-emerald-800 text-white">मंडल रिपोर्ट (JPG)</button>
+            <div>
+              <label class="text-sm text-slate-600">रोगी मोबाइल</label>
+              <input id="d_recipient_phone" class="mt-1 w-full rounded-xl border px-4 py-3" placeholder="10 अंकों का नंबर" required />
             </div>
-          </div>
+            <div>
+              <label class="text-sm text-slate-600">अस्पताल/स्थान</label>
+              <input id="d_hospital" class="mt-1 w-full rounded-xl border px-4 py-3" placeholder="जैसे: जिला अस्पताल" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="text-sm text-slate-600">नोट्स</label>
+              <textarea id="d_notes" class="mt-1 w-full rounded-xl border px-4 py-3" rows="2"></textarea>
+            </div>
+            <div class="sm:col-span-2 flex items-center gap-3 flex-wrap">
+              <button id="btnSaveDonation" class="px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold">सेव करें</button>
+            </div>
+        </div>
+      </div>
+      
+      <!-- Requests Management -->
+      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
+        <h3 class="text-base font-semibold mb-3 flex items-center gap-3">
+            रक्त आवश्यकता अनुरोध
+            <span id="requestNotification" class="hidden h-7 w-7 bg-red-500 text-white text-sm rounded-full flex items-center justify-center font-bold">0</span>
+        </h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-[1200px] w-full text-sm">
+                <thead>
+                    <tr class="bg-slate-100 text-slate-700">
+                        <th class="p-2 text-left">विवरण</th>
+                        <th class="p-2 text-left">स्टेटस</th>
+                        <th class="p-2 text-left">किसने दिया (डोनर)</th>
+                        <th class="p-2 text-left">यूनिट</th>
+                        <th class="p-2 text-left">एक्शन</th>
+                    </tr>
+                </thead>
+                <tbody id="reqTbody"></tbody>
+            </table>
+        </div>
+        <div id="requestsPagination" class="mt-3 text-center">
+            <button id="btnSeeMoreRequests" class="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-sm font-semibold">और अनुरोध देखें</button>
         </div>
       </div>
 
       <!-- Donor List -->
       <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
         <div class="flex items-center justify-between flex-wrap gap-2">
-          <h3 class="text-base font-semibold">डोनर सूची (फ़िल्टर सहित)</h3>
+          <h3 class="text-base font-semibold">डोनर सूची</h3>
           <div class="text-sm text-slate-500">कुल डोनर: <b id="donorCount">0</b></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mt-2">
@@ -159,8 +175,8 @@
             <option value="no">अनिच्छुक</option>
           </select>
         </div>
-        <div class="mt-3 overflow-x-auto -mx-2 sm:mx-0">
-          <table class="min-w-[900px] w-full text-sm">
+        <div class="mt-3 overflow-x-auto">
+          <table class="min-w-full w-full text-sm">
             <thead>
               <tr class="bg-slate-100 text-slate-700">
                 <th class="p-2 text-left">नाम</th>
@@ -169,122 +185,85 @@
                 <th class="p-2 text-left">मंडल</th>
                 <th class="p-2 text-left">पता</th>
                 <th class="p-2 text-left">आख़िरी दान</th>
-                <th class="p-2 text-left">इच्छा</th>
+                <th class="p-2 text-left">एक्शन</th>
               </tr>
             </thead>
             <tbody id="donorsTbody"></tbody>
           </table>
         </div>
-        <!-- NEW: Pagination controls -->
         <div class="mt-3 flex items-center justify-between gap-3 flex-wrap">
-          <div class="text-sm text-slate-600">पेज साइज: 100</div>
+          <div id="paginationInfo" class="text-sm text-slate-600"></div>
           <div class="flex items-center gap-2">
-            <button id="pgFirst" class="px-3 py-1 rounded-lg border">⏮️</button>
-            <button id="pgPrev" class="px-3 py-1 rounded-lg border">◀️</button>
-            <span class="text-sm">पेज <b id="pgNum">1</b> / <b id="pgTotal">1</b></span>
-            <button id="pgNext" class="px-3 py-1 rounded-lg border">▶️</button>
-            <button id="pgLast" class="px-3 py-1 rounded-lg border">⏭️</button>
+            <button id="pgPrev" class="px-3 py-1 rounded-lg border">◀️ पिछला</button>
+            <span class="text-sm">पेज <b id="pgNum">1</b></span>
+            <button id="pgNext" class="px-3 py-1 rounded-lg border">अगला ▶️</button>
           </div>
         </div>
       </div>
-
-      <!-- Charts -->
+       <!-- Charts -->
       <div class="grid md:grid-cols-2 gap-4">
-        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-          <h3 class="text-base font-semibold mb-3">ब्लड ग्रुप अनुसार डोनर</h3>
-          <div class="h-64"><canvas id="chartGroups"></canvas></div>
-        </div>
-        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-          <h3 class="text-base font-semibold mb-3">मंडल अनुसार डोनर</h3>
-          <div class="h-64"><canvas id="chartMandals"></canvas></div>
-        </div>
-      </div>
-
-      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-        <h3 class="text-base font-semibold mb-3">माहवार रक्तदान (यूनिट)</h3>
-        <div class="h-64"><canvas id="chartMonthly"></canvas></div>
-      </div>
-
-      <!-- Recent Donations -->
-      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border overflow-x-auto -mx-2 sm:mx-0">
-        <h3 class="text-base font-semibold mb-3">Recent Donations</h3>
-        <table class="min-w-[720px] w-full text-sm">
-          <thead>
-            <tr class="bg-slate-100 text-slate-700">
-              <th class="p-2 text-left">तारीख़</th>
-              <th class="p-2 text-left">डोनर</th>
-              <th class="p-2 text-left">ब्लड</th>
-              <th class="p-2 text-left">मंडल</th>
-              <th class="p-2 text-left">यूनिट</th>
-              <th class="p-2 text-left">किसको</th>
-              <th class="p-2 text-left">अस्पताल</th>
-            </tr>
-          </thead>
-          <tbody id="donationsTbody"></tbody>
-        </table>
-      </div>
-
-      <!-- Requests Management (Status + Donor + Units + Actions) -->
-      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border overflow-x-auto -mx-2 sm:mx-0">
-        <h3 class="text-base font-semibold mb-3">Requests (रक्त आवश्यकता)</h3>
-
-        <div class="mb-3 flex flex-wrap gap-2 items-center">
-          <label class="text-sm text-slate-600">स्टेटस:</label>
-          <select id="reqFilter" class="rounded-xl border px-3 py-2 text-sm">
-            <option value="">सभी</option>
-            <option value="new">New</option>
-            <option value="pending">Pending</option>
-            <option value="fulfilled">Fulfilled</option>
-            <option value="closed">Closed</option>
-          </select>
-          <small class="text-slate-500 ml-2">स्टेटस फ़िल्टर करें</small>
-        </div>
-
-        <table class="min-w-[1100px] w-full text-sm">
-          <thead>
-            <tr class="bg-slate-100 text-slate-700">
-              <th class="p-2 text-left">तारीख़</th>
-              <th class="p-2 text-left">नाम/मोबाइल</th>
-              <th class="p-2 text-left">रोगी</th>
-              <th class="p-2 text-left">ग्रुप/यूनिट</th>
-              <th class="p-2 text-left">स्थान/अस्पताल</th>
-              <th class="p-2 text-left">Status</th>
-              <th class="p-2 text-left">Donor (किससे दिलवाया)</th>
-              <th class="p-2 text-left">Units</th>
-              <th class="p-2 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="reqTbody"></tbody>
-        </table>
+          <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
+            <h3 class="text-base font-semibold mb-3">ब्लड ग्रुप अनुसार डोनर</h3>
+            <div class="h-64"><canvas id="chartGroups"></canvas></div>
+          </div>
+          <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
+            <h3 class="text-base font-semibold mb-3">मंडल अनुसार डोनर</h3>
+            <div class="h-64"><canvas id="chartMandals"></canvas></div>
+          </div>
       </div>
     </div>
   </main>
 
-  <!-- Hidden: Mandal Summary card to render for export -->
-  <div id="mandalSummaryCard" class="hidden fixed top-0 left-0 w-[800px] p-8 bg-white text-slate-800">
-    <div class="text-center">
-      <div class="text-2xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
-      <div class="text-3xl font-extrabold text-red-700 mt-1">रक्तदाता पोर्टल</div>
-      <div id="ms-date" class="text-sm text-slate-600 mt-1"></div>
-      <div class="mt-2 text-base">मंडल-वार रजिस्टर डोनर सार</div>
-    </div>
-    <div class="mt-6">
-      <table class="w-full text-base">
-        <thead>
-          <tr class="bg-slate-100">
-            <th class="p-2 text-left">मंडल</th>
-            <th class="p-2 text-left">कुल रजिस्टर डोनर</th>
-          </tr>
-        </thead>
-        <tbody id="ms-body"></tbody>
-      </table>
-    </div>
-    <div class="mt-6 text-sm text-slate-700 border-t pt-3">
-      <div>संदेश: "आदरणीय मंडल अध्यक्ष जी, आपके मंडल को <span id="ms-one-line"></span> 150 पंजीयन का लक्ष्य दिया था आप इसे जल्द पूरा करे "</div>
-    </div>
-  </div>
+  <!-- Hidden elements for exports -->
+  <div id="mandalSummaryCard" class="hidden fixed top-0 left-0 w-[800px] p-8 bg-white text-slate-800"></div>
+  <div id="groupSummaryCard" class="hidden fixed top-0 left-0 w-[800px] p-8 bg-white text-slate-800"></div>
 
   <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500 text-center">© <span id="year"></span> भारतीय जनता पार्टी • जिला मंदसौर</footer>
+
+  <!-- Edit Donor Modal -->
+  <div id="editModal" class="modal fixed inset-0 bg-black/40 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl p-5">
+      <h2 class="text-xl font-bold mb-4">डोनर एडिट करें</h2>
+      <form id="editForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <input type="hidden" id="edit_id">
+        <div>
+            <label class="text-sm">पूरा नाम</label>
+            <input required id="edit_name" class="mt-1 w-full rounded-xl border px-4 py-3"/>
+        </div>
+        <div>
+            <label class="text-sm">मोबाइल</label>
+            <input required id="edit_phone" pattern="[0-9]{10}" class="mt-1 w-full rounded-xl border px-4 py-3"/>
+        </div>
+        <div>
+            <label class="text-sm">ब्लड ग्रुप</label>
+            <select required id="edit_group" class="mt-1 w-full rounded-xl border px-4 py-3"></select>
+        </div>
+        <div>
+            <label class="text-sm">मंडल</label>
+            <select id="edit_mandal" class="mt-1 w-full rounded-xl border px-4 py-3"></select>
+        </div>
+        <div class="sm:col-span-2">
+            <label class="text-sm">पता</label>
+            <input id="edit_address" class="mt-1 w-full rounded-xl border px-4 py-3"/>
+        </div>
+        <div>
+            <label class="text-sm">आख़िरी रक्तदान</label>
+            <input type="date" id="edit_last" class="mt-1 w-full rounded-xl border px-4 py-3"/>
+        </div>
+        <div>
+           <label class="text-sm">दान के लिए इच्छुक?</label>
+           <select id="edit_willing" class="mt-1 w-full rounded-xl border px-4 py-3">
+             <option value="yes">हाँ</option>
+             <option value="no">नहीं</option>
+           </select>
+        </div>
+        <div class="sm:col-span-2 flex items-center gap-3 mt-4">
+            <button type="submit" class="px-5 py-2 rounded-xl bg-orange-500 text-white font-semibold">अपडेट करें</button>
+            <button type="button" id="editCancel" class="px-5 py-2 rounded-xl bg-slate-200">कैंसिल</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script>
     const BLOOD_GROUPS = ["A+","A-","B+","B-","O+","O-","AB+","AB-"];
@@ -292,21 +271,24 @@
     const $ = (id)=>document.getElementById(id);
     document.getElementById('year').textContent = new Date().getFullYear();
     const fmtTS = (ts)=>{ try{ const d = ts?.toDate? ts.toDate(): new Date(ts); return d.toLocaleDateString('en-GB'); }catch{ return '' } };
+    const fmtDateForInput = (ts) => { try { const d = ts?.toDate? ts.toDate(): new Date(ts); return d.toISOString().split('T')[0]; } catch { return ''; } };
+    
     function showToast(txt, ok=true){
       const t=$('toast');
       t.className='toast';
       t.innerHTML=`<div class="mx-auto max-w-lg bg-white border rounded-2xl shadow px-4 py-3 ${ok?'border-green-600':'border-red-600'}"><div class="text-sm ${ok?'text-green-700':'text-red-700'}">${txt}</div></div>`;
       setTimeout(()=>t.classList.add('hidden'), 3500);
     }
+     const fill = (el, arr, first)=>{ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
   </script>
 
   <script type="module">
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
-    const { getFirestore, collection, onSnapshot, query, orderBy, addDoc, updateDoc, doc, serverTimestamp, getDoc } =
+    const { getFirestore, collection, onSnapshot, query, orderBy, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, getDoc, getDocs } =
       await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js');
     const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } =
       await import('https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js');
-
+    
     const firebaseConfig = {
       apiKey: "AIzaSyA9LZaQJkAqr9F1YEFfRxa4aGiwvFevs9c",
       authDomain: "blodddonation-9c44e.firebaseapp.com",
@@ -320,98 +302,103 @@
     const app = initializeApp(firebaseConfig);
     const db  = getFirestore(app);
 
-    /* ---------- Admin Gate (PIN) ---------- */
     let adminOK = false;
-    $('btnUnlock').onclick = () => {
-      const pin = ($('adminPin').value || '').trim();
-      if(pin === '2720'){
+    
+    function grantAdminAccess() {
         adminOK = true;
         $('adminGate').classList.add('hidden');
         $('adminOk').classList.remove('hidden');
         $('adminArea').classList.remove('hidden');
-      } else alert('गलत PIN');
+    }
+    
+    $('btnUnlock').onclick = () => {
+      const pin = ($('adminPin').value || '').trim();
+      if(pin === '2412'){
+        grantAdminAccess();
+      } else {
+        alert('गलत PIN');
+      }
     };
-
-    /* ---------- Google Auth (email allowlist from settings/admins) ---------- */
+    
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    let ADMIN_EMAILS = [];
-    async function loadAdmins(){
-      try{
-        const snap = await getDoc(doc(db,'settings','admins'));
-        ADMIN_EMAILS = (snap.exists() && Array.isArray(snap.data().emails)) ? snap.data().emails.map(e=>String(e||'').toLowerCase()) : [];
-      }catch(e){ console.log('admins load error', e); }
-    }
-    await loadAdmins();
-
-    document.getElementById('btnGoogle').onclick = async ()=>{
+    $('btnGoogle').onclick = async ()=>{
       try { await signInWithPopup(auth, provider); } catch(e){ alert('Login error'); }
     };
-    document.getElementById('btnLogout').onclick = async ()=>{ await signOut(auth); };
+    $('btnLogout').onclick = async ()=>{ await signOut(auth); };
+    
+    let ADMIN_EMAILS = [];
+    async function checkAuth() {
+        try {
+            const snap = await getDoc(doc(db, 'settings', 'admins'));
+            ADMIN_EMAILS = (snap.exists() && Array.isArray(snap.data().emails)) ? snap.data().emails.map(e=>String(e||'').toLowerCase()) : [];
+        } catch(e) { console.error("Admin emails load error", e); }
 
-    onAuthStateChanged(auth, (user)=>{
-      const who = document.getElementById('whoami');
-      const mailEl = document.getElementById('userEmail');
-      if(user){
-        const email = (user.email||'').toLowerCase();
-        mailEl.textContent = user.email || '';
-        who.classList.remove('hidden');
-
-        if(ADMIN_EMAILS.includes(email)){
-          adminOK = true;
-          $('adminGate').classList.add('hidden');
-          $('adminOk').classList.remove('hidden');
-          $('adminArea').classList.remove('hidden');
-        }else{
-          adminOK = false;
-          alert('आपके ईमेल को Admin अनुमति नहीं है।');
-        }
-      }else{
-        who.classList.add('hidden');
-        // adminOK = false; // चाहें तो logout पर admin बंद करें
-      }
-    });
-
-    /* ---------- Data Streams ---------- */
-    let donors = []; let donations = []; let requests = [];
+        onAuthStateChanged(auth, (user) => {
+          const who = $('whoami'), mailEl = $('userEmail');
+          if (user) {
+            const email = (user.email||'').toLowerCase();
+            mailEl.textContent = user.email || '';
+            who.classList.remove('hidden');
+            if(ADMIN_EMAILS.includes(email)){
+              grantAdminAccess();
+            } else {
+              alert('आपके ईमेल को Admin अनुमति नहीं है।');
+            }
+          } else {
+            who.classList.add('hidden');
+          }
+        });
+    }
+    checkAuth();
+    
+    let donors = [];
+    let requests = [];
+    let isInitialRequestsLoad = true;
+    let requestsToShow = 3;
+    let chartGroups, chartMandals;
 
     onSnapshot(query(collection(db,'donors'), orderBy('createdAt','desc')), snap=>{
       donors = snap.docs.map(d=>({ id:d.id, ...d.data() }));
       $('donorCount').textContent = donors.length;
-      renderAdminDonorSelect();
       renderDonorTable();
+      renderRequestsTable(); 
       updateCharts();
     });
-    onSnapshot(query(collection(db,'donations'), orderBy('date','desc')), snap=>{
-      donations = snap.docs.map(d=>({ id:d.id, ...d.data() }));
-      renderDonationsTable();
-      updateCharts();
-    });
+
     onSnapshot(query(collection(db,'requests'), orderBy('createdAt','desc')), snap=>{
-      requests = snap.docs.map(d=>({ id:d.id, ...d.data() }));
-      renderRequestsTable();
+        requests = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+        const newRequestsCount = requests.filter(r => (r.status || 'new') === 'new').length;
+        const notificationBadge = $('requestNotification');
+        if (newRequestsCount > 0) {
+            notificationBadge.textContent = newRequestsCount;
+            notificationBadge.classList.remove('hidden');
+        } else {
+            notificationBadge.classList.add('hidden');
+        }
+
+        snap.docChanges().forEach(change => {
+            if (change.type === "added" && !isInitialRequestsLoad) {
+                showToast("नया रक्त अनुरोध प्राप्त हुआ!", true);
+            }
+        });
+        isInitialRequestsLoad = false;
+        renderRequestsTable();
     });
-
-    /* ---------- Donation log select ---------- */
-    const sel = $('selDonor');
-    function renderAdminDonorSelect(){
-      sel.innerHTML = '<option value="">—</option>';
-      donors.forEach(d=> sel.insertAdjacentHTML('beforeend', `<option value="${d.id}">${d.name||''} • ${d.bloodGroup||''} • ${d.mandal||''}</option>`));
-      sel.onchange = ()=>{ const d = donors.find(x=>x.id===sel.value); $('selDonorInfo').textContent = d ? `मोबाइल: ${d.phone||''} • आख़िरी दान: ${d.lastDonationDate?fmtTS(d.lastDonationDate):'—'}` : ''; };
-    }
-
-    /* ---------- Donor list filters + PAGINATION (100/pg) ---------- */
+    
     const fText = $('fText'); const fGroup = $('fGroup'); const fMandal = $('fMandal'); const fWilling = $('fWilling');
-    function fill(el, arr, first){ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
     fill(fGroup, BLOOD_GROUPS, 'ब्लड ग्रुप'); fill(fMandal, MANDALS, 'मंडल');
-    ;[fText,fGroup,fMandal,fWilling].forEach(el=> el.addEventListener('input', ()=>{ currentPage=1; renderDonorTable(); }));
-    const willingOk = (d)=> (d.willing===true || (typeof d.willing==='string' && d.willing.toLowerCase()==='yes'));
+    ;[fText,fGroup,fMandal,fWilling].forEach(el=> el.addEventListener('input', ()=>{ currentPage = 1; renderDonorTable(); }));
+    const willingOk = (d)=> (d.willing===true || String(d.willing).toLowerCase()==='yes');
+    
+    const PAGE_SIZE = 10;
+    let currentPage = 1;
 
-    const PAGE_SIZE = 100; let currentPage = 1; let totalPages = 1; let lastRows = [];
-    function applyFilters(){
+    function renderDonorTable(){
+      const tb=$('donorsTbody'); tb.innerHTML='';
       const t=(fText.value||'').toLowerCase(), g=fGroup.value, m=fMandal.value, w=fWilling.value;
-      return donors.filter(d=>{
+      const filtered = donors.filter(d=>{
         const okText = !t || [d.name,d.phone,d.address].some(v=> (v||'').toLowerCase().includes(t));
         const okG = !g || d.bloodGroup===g;
         const okM = !m || d.mandal===m;
@@ -419,313 +406,372 @@
         const okW = !w || (w==='yes'? will : !will);
         return okText && okG && okM && okW;
       });
-    }
 
-    function renderDonorTable(){
-      const tb=$('donorsTbody'); tb.innerHTML='';
-      lastRows = applyFilters();
-      totalPages = Math.max(1, Math.ceil(lastRows.length / PAGE_SIZE));
-      if(currentPage>totalPages) currentPage = totalPages;
-      const start = (currentPage-1)*PAGE_SIZE; const end = start + PAGE_SIZE;
-      const pageRows = lastRows.slice(start, end);
+      const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+      const pageRows = filtered.slice(start, end);
+
       pageRows.forEach(d=> tb.insertAdjacentHTML('beforeend', `
-        <tr class="odd:bg-white even:bg-slate-50">
+        <tr class="odd:bg-white even:bg-slate-50 hover:bg-peach-100">
           <td class="p-2 font-medium">${d.name||''}</td>
           <td class="p-2"><a class="underline" href="tel:${d.phone||''}">${d.phone||''}</a></td>
           <td class="p-2">${d.bloodGroup||''}</td>
           <td class="p-2">${d.mandal||''}</td>
           <td class="p-2">${d.address||''}</td>
           <td class="p-2">${d.lastDonationDate?fmtTS(d.lastDonationDate):'—'}</td>
-          <td class="p-2">${willingOk(d)?'हाँ':'नहीं'}</td>
+          <td class="p-2">
+            <div class="flex gap-2">
+              <button data-action="edit" data-id="${d.id}" class="px-2 py-1 text-xs bg-blue-500 text-white rounded">एडिट</button>
+              <button data-action="delete" data-id="${d.id}" class="px-2 py-1 text-xs bg-red-500 text-white rounded">डिलीट</button>
+            </div>
+          </td>
         </tr>`));
-      $('pgNum').textContent = String(currentPage);
-      $('pgTotal').textContent = String(totalPages);
-      $('pgPrev').disabled = $('pgFirst').disabled = (currentPage===1);
-      $('pgNext').disabled = $('pgLast').disabled = (currentPage===totalPages);
+      
+      $('pgNum').textContent = currentPage;
+      $('paginationInfo').textContent = `कुल ${filtered.length} में से ${start+1}-${Math.min(end, filtered.length)} दिखा रहा है।`;
+      $('pgPrev').disabled = currentPage === 1;
+      $('pgNext').disabled = currentPage === totalPages || filtered.length === 0;
     }
 
-    // Pagination buttons
-    $('pgFirst').onclick = ()=>{ currentPage=1; renderDonorTable(); };
-    $('pgPrev').onclick  = ()=>{ if(currentPage>1){ currentPage--; renderDonorTable(); } };
-    $('pgNext').onclick  = ()=>{ if(currentPage<totalPages){ currentPage++; renderDonorTable(); } };
-    $('pgLast').onclick  = ()=>{ currentPage=totalPages; renderDonorTable(); };
-
-    /* ---------- Save donation ---------- */
-    $('btnSaveDonation').onclick = async ()=>{
-      if(!adminOK) return alert('Admin आवश्यक');
-      const id = sel.value; const d = donors.find(x=>x.id===id); if(!d) return alert('डोनर चुनें');
-      const payload = {
-        donorId: d.id, donorName: d.name, donorPhone: d.phone,
-        mandal: d.mandal, bloodGroup: d.bloodGroup,
-        recipientName: $('d_recipient').value.trim(),
-        recipientPhone: $('d_recipient_phone').value.trim(),
-        units: Number($('d_units').value||1),
-        hospital: $('d_hospital').value.trim(),
-        date: $('d_date').value ? new Date($('d_date').value) : new Date(),
-        notes: $('d_notes').value.trim(),
-        createdAt: serverTimestamp(),
-      };
-      await addDoc(collection(db,'donations'), payload);
-      await updateDoc(doc(db,'donors', d.id), { lastDonationDate: payload.date });
-      showToast('दान प्रविष्टि सेव हो गया।', true);
-      ["d_recipient","d_recipient_phone","d_units","d_hospital","d_date","d_notes"].forEach(i=> $(i).value='');
-      $('d_units').value='1';
+    $('pgPrev').onclick = () => { if(currentPage > 1) { currentPage--; renderDonorTable(); } };
+    $('pgNext').onclick = () => { 
+        const totalFiltered = donors.filter(d => {
+            const t=(fText.value||'').toLowerCase(), g=fGroup.value, m=fMandal.value, w=fWilling.value;
+            const okText = !t || [d.name,d.phone,d.address].some(v=> (v||'').toLowerCase().includes(t));
+            const okG = !g || d.bloodGroup===g;
+            const okM = !m || d.mandal===m;
+            const will = willingOk(d);
+            const okW = !w || (w==='yes'? will : !will);
+            return okText && okG && okM && okW;
+        }).length;
+        if(currentPage < Math.ceil(totalFiltered / PAGE_SIZE)) {
+            currentPage++;
+            renderDonorTable();
+        }
     };
+    
+    function donorOptions(selectedId, searchTerm = ''){
+        const s = (searchTerm || '').toLowerCase();
+        let filteredDonors = s 
+            ? donors.filter(d => (d.name||'').toLowerCase().includes(s) || (d.phone||'').includes(s))
+            : donors;
 
-    /* ---------- Export CSV ---------- */
-    $('btnExportDonors').onclick = ()=>{
-      const header = ['name','phone','whatsapp','bloodGroup','mandal','address','age','gender','lastDonationDate','willing','createdAt'];
-      const rows = donors.map(d=> ([
-        d.name||'', d.phone||'', d.whatsapp||'', d.bloodGroup||'', d.mandal||'', (d.address||'').replace(/\n/g,' '),
-        d.age||'', d.gender||'', (d.lastDonationDate?fmtTS(d.lastDonationDate):''), (willingOk(d)?'yes':'no'), (d.createdAt?fmtTS(d.createdAt):'')
-      ]));
-      downloadCSV('donors.csv', [header, ...rows]);
-    };
-    $('btnExportDonations').onclick = ()=>{
-      const header = ['date','donorName','donorPhone','bloodGroup','mandal','units','recipientName','recipientPhone','hospital'];
-      const rows = donations.map(x=> ([
-        (x.date?fmtTS(x.date):''), x.donorName||'', x.donorPhone||'', x.bloodGroup||'', x.mंडल||x.mandal||'', x.units||'',
-        x.recipientName||'', x.recipientPhone||'', (x.hospital||'').replace(/\n/g,' ')
-      ]));
-      downloadCSV('donations.csv', [header, ...rows]);
-    };
-    function downloadCSV(filename, rows){
-      const esc = (v)=> '"'+String(v).replaceAll('"','""')+'"';
-      const csv = rows.map(r=> r.map(esc).join(',')).join('\n');
-      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'}); const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    }
+        const opts = ['<option value="">— डोनर चुनें —</option>'];
+        const selectedDonor = donors.find(d => d.id === selectedId);
+        if(selectedId && selectedDonor && !filteredDonors.some(d => d.id === selectedId)){
+            filteredDonors.unshift(selectedDonor);
+        }
 
-    /* ---------- Charts ---------- */
-    let chartGroups, chartMandals, chartMonthly;
-    function updateCharts(){
-      const groups = BLOOD_GROUPS.map(g=>({label:g, count: donors.filter(d=>d.bloodGroup===g).length}));
-      const mandalMap = new Map(); donors.forEach(d=>{ const k=d.mandal||'अनिर्दिष्ट'; mandalMap.set(k,(mandalMap.get(k)||0)+1) });
-      const mandalsSorted = Array.from(mandalMap.entries()).sort((a,b)=>b[1]-a[1]);
-
-      const monthMap = new Map();
-      donations.forEach(x=>{ const dt = x.date && x.date.toDate ? x.date.toDate() : new Date(x.date); const k = dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,'0'); monthMap.set(k,(monthMap.get(k)||0)+(Number(x.units)||1)); });
-      const months = Array.from(monthMap.entries()).sort((a,b)=> a[0].localeCompare(b[0]));
-
-      const cfgBar = (labels, data)=>({ type:'bar', data:{ labels, datasets:[{ label:'कुल', data }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}});
-      const cfgLine = (labels, data)=>({ type:'line', data:{ labels, datasets:[{ label:'यूनिट', data, tension:0.3 }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}});
-
-      const gEl = $('chartGroups'); if(chartGroups) chartGroups.destroy(); chartGroups = new Chart(gEl, cfgBar(groups.map(x=>x.label), groups.map(x=>x.count)));
-      const mEl = $('chartMandals'); if(chartMandals) chartMandals.destroy(); chartMandals = new Chart(mEl, cfgBar(mandalsSorted.map(x=>x[0]), mandalsSorted.map(x=>x[1])));
-      const moEl = $('chartMonthly'); if(chartMonthly) chartMonthly.destroy(); chartMonthly = new Chart(moEl, cfgLine(months.map(x=>x[0]), months.map(x=>x[1])));
-    }
-
-    function renderDonationsTable(){
-      const tb = $('donationsTbody'); tb.innerHTML='';
-      donations.forEach(x=> tb.insertAdjacentHTML('beforeend', `
-        <tr class="odd:bg-white even:bg-slate-50">
-          <td class="p-2">${x.date?fmtTS(x.date):'—'}</td>
-          <td class="p-2 font-medium">${x.donorName} <span class="text-slate-400">(${x.donorPhone||''})</span></td>
-          <td class="p-2">${x.bloodGroup||''}</td>
-          <td class="p-2">${x.mandal||''}</td>
-          <td class="p-2">${x.units||''}</td>
-          <td class="p-2">${x.recipientName||'—'}</td>
-          <td class="p-2">${x.hospital||'—'}</td>
-        </tr>`));
-    }
-
-    /* ---------- Requests Management (Status + Donor + Units + Actions) ---------- */
-    function donorOptions(selectedId){
-      const opts = ['<option value="">— Donor चुनें —</option>'];
-      donors.forEach(d=>{
-        const sel = d.id===selectedId ? 'selected' : '';
-        opts.push(`<option value="${d.id}" ${sel}>${d.name||''} • ${d.bloodGroup||''} • ${d.mandal||''}</option>`);
-      });
-      return opts.join('');
+        filteredDonors.slice(0, 50).forEach(d=>{ // Limit to 50 results for performance
+            const sel = d.id === selectedId ? 'selected' : '';
+            opts.push(`<option value="${d.id}" ${sel}>${d.name||''} (${d.phone})</option>`);
+        });
+        return opts.join('');
     }
 
     function renderRequestsTable(){
       const tb = $('reqTbody'); tb.innerHTML='';
-      const f = $('reqFilter')?.value || '';
-      const rows = requests.filter(r=> !f || (r.status||'new')===f);
+      const rows = requests.slice(0, requestsToShow);
 
       rows.forEach(r=>{
-        const created = r.createdAt? fmtTS(r.createdAt):'—';
         const status = (r.status||'new');
         const donorId = r.fulfilledByDonorId || '';
         const u = r.fulfilledUnits != null ? r.fulfilledUnits : (r.units||'');
 
         tb.insertAdjacentHTML('beforeend', `
-          <tr class="odd:bg-white even:bg-slate-50 align-top">
-            <td class="p-2">${created}</td>
-            <td class="p-2 font-medium">${r.requester||'-'} <div class="text-slate-400">${r.phone||''}</div></td>
-            <td class="p-2">${r.patient||'-'}</td>
-            <td class="p-2">${r.bloodGroup||'-'} / ${r.units||'-'}</td>
-            <td class="p-2">${r.location||'-'}<div class="text-slate-400">${r.hospital||'-'}</div></td>
-
+          <tr class="odd:bg-white even:bg-slate-50 align-top border-b">
             <td class="p-2">
-              <select id="rq-status-${r.id}" class="rounded-lg border px-2 py-1 text-sm">
+                <div class="font-medium">${r.requester||'-'} (${r.phone||''})</div>
+                <div class="text-xs text-slate-500">रोगी: ${r.patient||'-'}</div>
+                <div class="text-xs text-slate-500">ग्रुप/यूनिट: ${r.bloodGroup||'-'} / ${r.units||'-'}</div>
+                <div class="text-xs text-slate-500">स्थान: ${r.location||'-'}</div>
+                <div class="text-xs text-slate-500">अस्पताल: ${r.hospital||'-'}</div>
+                <div class="text-xs text-slate-400 mt-1">ID: ${r.id} | ${r.createdAt?fmtTS(r.createdAt):'—'}</div>
+            </td>
+            <td class="p-2">
+              <select id="rq-status-${r.id}" class="w-full rounded-lg border px-2 py-1 text-sm">
                 <option value="new" ${status==='new'?'selected':''}>New</option>
                 <option value="pending" ${status==='pending'?'selected':''}>Pending</option>
                 <option value="fulfilled" ${status==='fulfilled'?'selected':''}>Fulfilled</option>
                 <option value="closed" ${status==='closed'?'selected':''}>Closed</option>
               </select>
             </td>
-
             <td class="p-2">
-              <select id="rq-donor-${r.id}" class="rounded-lg border px-2 py-1 text-sm w-[240px]">
-                ${donorOptions(donorId)}
-              </select>
-              ${r.fulfilledByName ? `<div class="text-xs text-slate-500 mt-1">Saved: ${r.fulfilledByName}</div>`:''}
-            </td>
-
-            <td class="p-2">
-              <input id="rq-units-${r.id}" type="number" min="1" class="rounded-lg border px-2 py-1 text-sm w-20" value="${u||''}" />
-            </td>
-
-            <td class="p-2">
-              <div class="flex gap-2">
-                <button class="px-3 py-1 rounded-lg bg-slate-800 text-white text-xs" data-action="req-save" data-id="${r.id}">Save</button>
-                <button class="px-3 py-1 rounded-lg bg-saffron-700 text-white text-xs" data-action="req-log" data-id="${r.id}">Mark & Log</button>
+               <div class="flex flex-col gap-1">
+                  <input type="text" id="rq-search-${r.id}" data-req-id="${r.id}" class="w-full rounded-lg border px-2 py-1 text-sm" placeholder="नाम/मोबाइल से खोजें...">
+                  <select id="rq-donor-${r.id}" class="w-full rounded-lg border px-2 py-1 text-sm">
+                      ${donorOptions(donorId)}
+                  </select>
               </div>
+            </td>
+            <td class="p-2">
+              <input id="rq-units-${r.id}" type="number" min="1" class="w-20 rounded-lg border px-2 py-1 text-sm" value="${u||''}" placeholder="यूनिट"/>
+            </td>
+            <td class="p-2">
+              <button class="w-full px-3 py-2 rounded-lg bg-orange-500 text-white text-xs font-semibold" data-action="req-save" data-id="${r.id}">सेव करें</button>
               <div id="rq-msg-${r.id}" class="text-xs mt-1"></div>
             </td>
           </tr>
         `);
       });
-    }
 
-    document.getElementById('reqFilter')?.addEventListener('input', renderRequestsTable);
-
-    document.getElementById('reqTbody').addEventListener('click', async (e)=>{
-      const btn = e.target.closest('button'); if(!btn) return;
-      const id = btn.getAttribute('data-id');
-      const action = btn.getAttribute('data-action');
-      if(action==='req-save') await saveRequestUpdate(id, { logDonation:false });
-      if(action==='req-log')  await saveRequestUpdate(id, { logDonation:true  });
-    });
-
-    async function saveRequestUpdate(id, { logDonation }){
-      if(!adminOK){ alert('Admin आवश्यक'); return; }
-      const sEl = document.getElementById(`rq-status-${id}`);
-      const dEl = document.getElementById(`rq-donor-${id}`);
-      const uEl = document.getElementById(`rq-units-${id}`);
-      const msgEl = document.getElementById(`rq-msg-${id}`);
-
-      const status = sEl.value;
-      const donorId = dEl.value || '';
-      const units = Number(uEl.value||0) || null;
-      const req = requests.find(r=> r.id===id);
-
-      try{
-        // request update
-        let upd = { status, updatedAt: serverTimestamp(), fulfilledUnits: units };
-        if(donorId){
-          const d = donors.find(x=> x.id===donorId);
-          upd.fulfilledByDonorId = d.id;
-          upd.fulfilledByName = d.name || '';
-          upd.fulfilledByPhone = d.phone || '';
-          upd.fulfilledByGroup = d.bloodGroup || '';
-        }else{
-          upd.fulfilledByDonorId = null;
-          upd.fulfilledByName = null;
-          upd.fulfilledByPhone = null;
-          upd.fulfilledByGroup = null;
-        }
-        await updateDoc(doc(db,'requests', id), upd);
-
-        // optional: log donation
-        if(logDonation){
-          if(!donorId){ alert('कृपया Donor चुनें'); return; }
-          const d = donors.find(x=> x.id===donorId);
-          const donation = {
-            donorId: d.id, donorName: d.name, donorPhone: d.phone,
-            mandal: d.mandal, bloodGroup: d.bloodGroup,
-            recipientName: req.patient || '',
-            recipientPhone: req.phone || '',
-            units: units || (req.units||1),
-            hospital: req.hospital || req.location || '',
-            date: new Date(),
-            notes: `Request #${id} से लॉग`,
-            createdAt: serverTimestamp(),
-          };
-          await addDoc(collection(db,'donations'), donation);
-          await updateDoc(doc(db,'donors', d.id), { lastDonationDate: donation.date });
-        }
-
-        msgEl.className='text-xs text-green-700 mt-1';
-        msgEl.textContent='Saved.';
-        showToast('रिक्वेस्ट अपडेट हो गई।', true);
-      }catch(err){
-        console.error(err);
-        msgEl.className='text-xs text-red-700 mt-1';
-        msgEl.textContent='Error saving.';
-        showToast('सेव करने में समस्या हुई।', false);
+      const seeMoreBtn = $('btnSeeMoreRequests');
+      if (requests.length > requestsToShow) {
+        seeMoreBtn.classList.remove('hidden');
+      } else {
+        seeMoreBtn.classList.add('hidden');
       }
     }
+    
+    $('btnSeeMoreRequests').onclick = () => {
+        requestsToShow += 3;
+        renderRequestsTable();
+    };
 
-    /* ---------- Mandal Summary EXPORT (PDF/JPG) ---------- */
-    function buildMandalSummaryTable(){
-      const map = new Map();
-      donors.forEach(d=>{ const k=d.mandal||'अनिर्दिष्ट'; map.set(k,(map.get(k)||0)+1); });
-      const rows = Array.from(map.entries()).sort((a,b)=> a[0].localeCompare(b[0]));
-      const body = $('ms-body'); body.innerHTML='';
-      rows.forEach(([mandal,count])=>{
-        body.insertAdjacentHTML('beforeend', `<tr class="odd:bg-white even:bg-slate-50"><td class="p-2">${mandal}</td><td class="p-2">${count}</td></tr>`);
-      });
-      // placeholder single mandal line; fill dynamically on per-mandal export if needed later
-      $('ms-one-line').textContent = '—';
-      $('ms-date').textContent = 'दिनांक: ' + new Date().toLocaleDateString('hi-IN');
-      return rows;
+    $('reqTbody').addEventListener('input', e => {
+        const input = e.target.closest('input[id^="rq-search-"]');
+        if (!input) return;
+        const reqId = input.dataset.reqId;
+        const donorSelect = $(`rq-donor-${reqId}`);
+        const currentSelectedId = donorSelect.value;
+        const searchTerm = input.value;
+        donorSelect.innerHTML = donorOptions(currentSelectedId, searchTerm);
+    });
+
+    $('reqTbody').addEventListener('click', async (e)=>{
+      const btn = e.target.closest('button[data-action="req-save"]'); 
+      if(!btn || !adminOK) return;
+      
+      const id = btn.getAttribute('data-id');
+      const req = requests.find(r=> r.id===id);
+      if(!req) return;
+
+      const status = $(`rq-status-${id}`).value;
+      const donorId = $(`rq-donor-${id}`).value;
+      const units = Number($(`rq-units-${id}`).value || 0);
+      const msgEl = $(`rq-msg-${id}`);
+      
+      try {
+        let updatePayload = { status, updatedAt: serverTimestamp() };
+        let donor = null;
+
+        if(donorId) {
+            donor = donors.find(d => d.id === donorId);
+            if(donor) {
+              updatePayload.fulfilledByDonorId = donor.id;
+              updatePayload.fulfilledByName = donor.name;
+            }
+        }
+        if(units > 0) {
+            updatePayload.fulfilledUnits = units;
+        }
+
+        await updateDoc(doc(db, 'requests', id), updatePayload);
+
+        if(status === 'fulfilled' && donor && units > 0) {
+            const donationPayload = {
+                donorId: donor.id, donorName: donor.name, donorPhone: donor.phone,
+                mandal: donor.mandal, bloodGroup: donor.bloodGroup,
+                recipientName: req.patient || req.requester,
+                recipientPhone: req.phone,
+                units: units,
+                hospital: req.hospital || req.location || '',
+                date: new Date(),
+                notes: `Request ID: ${id} से लॉग किया गया`,
+                createdAt: serverTimestamp(),
+            };
+            await addDoc(collection(db, 'donations'), donationPayload);
+            await updateDoc(doc(db, 'donors', donor.id), { lastDonationDate: new Date() });
+            showToast('अनुरोध अपडेट हुआ और दान लॉग हो गया।', true);
+        } else {
+            showToast('अनुरोध अपडेट हो गया।', true);
+        }
+        msgEl.textContent = '✅ Saved';
+        setTimeout(() => msgEl.textContent = '', 2000);
+
+      } catch (err) {
+        console.error("Error saving request:", err);
+        showToast('अपडेट करने में त्रुटि हुई।', false);
+        msgEl.textContent = '❌ Error';
+      }
+    });
+
+    // Donation Log Logic
+    let selectedDonorForLog = null;
+    $('btnFindDonor').onclick = () => {
+        const phone = $('searchDonorPhone').value.trim();
+        const infoDiv = $('foundDonorInfo');
+        selectedDonorForLog = null;
+        infoDiv.classList.add('hidden');
+        if (phone.length !== 10) {
+            infoDiv.innerHTML = `<span class="text-red-600">कृपया 10 अंकों का नंबर डालें।</span>`;
+            infoDiv.classList.remove('hidden');
+            return;
+        }
+        const found = donors.find(d => d.phone === phone);
+        if (found) {
+            selectedDonorForLog = found;
+            infoDiv.innerHTML = `<b>नाम:</b> ${found.name} <br> <b>ब्लड ग्रुप:</b> ${found.bloodGroup} <br> <b>मंडल:</b> ${found.mandal}`;
+            infoDiv.classList.remove('hidden');
+        } else {
+            infoDiv.innerHTML = `<span class="text-red-600">इस नंबर से कोई डोनर नहीं मिला।</span>`;
+            infoDiv.classList.remove('hidden');
+        }
+    };
+    
+    $('btnSaveDonation').onclick = async ()=>{
+      if(!adminOK) return alert('Admin आवश्यक');
+      if(!selectedDonorForLog) return alert('कृपया पहले मोबाइल नंबर से डोनर खोजें।');
+      const d = selectedDonorForLog;
+      const recipientPhone = $('d_recipient_phone').value.trim();
+      if (!recipientPhone) return alert('रोगी का मोबाइल नंबर अनिवार्य है।');
+      
+      const payload = {
+        donorId: d.id, donorName: d.name, donorPhone: d.phone,
+        mandal: d.mandal, bloodGroup: d.bloodGroup,
+        recipientName: $('d_recipient').value.trim(),
+        recipientPhone: recipientPhone,
+        units: Number($('d_units').value||1),
+        hospital: $('d_hospital').value.trim(),
+        date: $('d_date').value ? new Date($('d_date').value) : new Date(),
+        notes: $('d_notes').value.trim(),
+        createdAt: serverTimestamp(),
+      };
+       
+      await addDoc(collection(db,'donations'), payload);
+      await updateDoc(doc(db,'donors', d.id), { lastDonationDate: payload.date });
+      showToast('दान प्रविष्टि सेव हो गया।', true);
+      ["d_recipient","d_recipient_phone","d_hospital","d_date","d_notes", "searchDonorPhone"].forEach(i=> $(i).value='');
+      $('d_units').value='1';
+      $('foundDonorInfo').classList.add('hidden');
+      selectedDonorForLog = null;
+    };
+    
+    $('donorsTbody').addEventListener('click', e => {
+        const btn = e.target.closest('button[data-action]');
+        if (!btn || !adminOK) return;
+        const id = btn.dataset.id;
+        if (btn.dataset.action === 'delete') {
+            if (confirm(`क्या आप वाकई इस डोनर को हटाना चाहते हैं?`)) {
+                deleteDoc(doc(db, 'donors', id))
+                    .then(() => showToast('डोनर हटा दिया गया।'))
+                    .catch(() => showToast('हटाने में त्रुटि हुई।', false));
+            }
+        }
+        if (btn.dataset.action === 'edit') {
+            const donor = donors.find(d => d.id === id);
+            if (donor) {
+                $('edit_id').value = donor.id;
+                $('edit_name').value = donor.name || '';
+                $('edit_phone').value = donor.phone || '';
+                $('edit_group').value = donor.bloodGroup || '';
+                $('edit_mandal').value = donor.mandal || '';
+                $('edit_address').value = donor.address || '';
+                $('edit_last').value = donor.lastDonationDate ? fmtDateForInput(donor.lastDonationDate) : '';
+                $('edit_willing').value = willingOk(donor) ? 'yes' : 'no';
+                $('editModal').classList.remove('hidden');
+                $('editModal').classList.add('flex');
+            }
+        }
+    });
+    
+    fill($('edit_group'), BLOOD_GROUPS);
+    fill($('edit_mandal'), MANDALS);
+    $('editCancel').onclick = () => {
+        $('editModal').classList.add('hidden');
+        $('editModal').classList.remove('flex');
+    };
+    $('editForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const id = $('edit_id').value;
+        const payload = {
+            name: $('edit_name').value, phone: $('edit_phone').value, bloodGroup: $('edit_group').value,
+            mandal: $('edit_mandal').value, address: $('edit_address').value,
+            lastDonationDate: $('edit_last').value ? new Date($('edit_last').value) : null,
+            willing: $('edit_willing').value === 'yes',
+        };
+        await updateDoc(doc(db, 'donors', id), payload);
+        showToast('डोनर अपडेट हो गया।');
+        $('editModal').classList.add('hidden');
+        $('editModal').classList.remove('flex');
+    });
+
+    function updateCharts() {
+        if (!donors.length) return;
+        const elG = $('chartGroups');
+        if (chartGroups) chartGroups.destroy();
+        const groupCounts = BLOOD_GROUPS.map(g => donors.filter(d => d.bloodGroup === g && willingOk(d)).length);
+        chartGroups = new Chart(elG, { type: 'bar', data: { labels: BLOOD_GROUPS, datasets: [{ label: 'उपलब्ध डोनर', data: groupCounts, backgroundColor: 'rgba(255, 127, 14, 0.6)' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { ticks: { precision: 0, beginAtZero: true } } } } });
+
+        const elM = $('chartMandals');
+        if (chartMandals) chartMandals.destroy();
+        const mandalMap = new Map();
+        donors.forEach(d => { if(willingOk(d)) { const k = d.mandal || 'अनिर्दिष्ट'; mandalMap.set(k, (mandalMap.get(k) || 0) + 1); } });
+        const mandalPairs = Array.from(mandalMap.entries()).sort((a,b) => b[1] - a[1]);
+        chartMandals = new Chart(elM, { type:'bar', data:{ labels: mandalPairs.map(p=>p[0]), datasets:[{ label:'डोनर', data: mandalPairs.map(p=>p[1]), backgroundColor: 'rgba(23, 190, 207, 0.6)' }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0, beginAtZero: true }}}} });
+    }
+    
+    function downloadCSV(filename, rows){
+      const esc = (v)=> '"'+String(v).replaceAll('"','""')+'"';
+      const csv = rows.map(r=> r.map(esc).join(',')).join('\n');
+      const blob = new Blob([`\uFEFF${csv}`], {type:'text/csv;charset=utf-8;'}); const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download=filename; a.click(); URL.revokeObjectURL(url);
     }
 
-    async function exportElementAsJPG(el, filename){
-      const canvas = await html2canvas(el, {scale:2, backgroundColor:'#ffffff'});
-      const dataURL = canvas.toDataURL('image/jpeg', 0.95);
-      const a = document.createElement('a'); a.href = dataURL; a.download = filename; a.click();
+    $('btnExportDonors').onclick = ()=>{
+      const header = ['नाम','मोबाइल','ब्लड ग्रुप','मंडल','पता','आख़िरी दान','इच्छुक'];
+      const rows = donors.map(d=> ([ d.name||'', d.phone||'', d.bloodGroup||'', d.mandal||'', (d.address||'').replace(/\n/g,' '), (d.lastDonationDate?fmtTS(d.lastDonationDate):''), (willingOk(d)?'yes':'no') ]));
+      downloadCSV('donors.csv', [header, ...rows]);
+    };
+
+    $('btnExportDonations').onclick = async ()=>{
+      const donationsSnap = await getDocs(query(collection(db, 'donations'), orderBy('date', 'desc')));
+      const donationsData = donationsSnap.docs.map(d => d.data());
+      const header = ['तारीख़','डोनर का नाम','डोनर का मोबाइल','ब्लड ग्रुप','मंडल','यूनिट','रोगी का नाम','रोगी का मोबाइल','अस्पताल'];
+      const rows = donationsData.map(x=> ([ (x.date?fmtTS(x.date):''), x.donorName||'', x.donorPhone||'', x.bloodGroup||'', x.mandal||'', x.units||'', x.recipientName||'', x.recipientPhone||'', (x.hospital||'').replace(/\n/g,' ') ]));
+      downloadCSV('donations.csv', [header, ...rows]);
+    };
+    
+    function buildSummaryTable(title, tableHeader, dataMap, cardElement) {
+        const rows = Array.from(dataMap.entries()).sort((a,b)=> a[0].localeCompare(b[0]));
+        let tableHTML = `<tr class="bg-slate-100"><th class="p-2 text-left">${tableHeader}</th><th class="p-2 text-left">कुल रजिस्टर डोनर</th></tr>`;
+        rows.forEach(([key,count])=>{ tableHTML += `<tr class="odd:bg-white even:bg-slate-50"><td class="p-2">${key}</td><td class="p-2">${count}</td></tr>`; });
+        cardElement.innerHTML = `<div class="text-center"><div class="text-2xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div><div class="text-3xl font-extrabold text-red-700 mt-1">रक्तदाता पोर्टल</div><div class="text-sm text-slate-600 mt-1">दिनांक: ${new Date().toLocaleDateString('hi-IN')}</div><div class="mt-2 text-base">${title}</div></div><div class="mt-6"><table class="w-full text-base">${tableHTML}</table></div>`;
     }
 
     async function exportElementAsPDF(el, filename){
       const { jsPDF } = window.jspdf;
+      el.classList.remove('hidden');
       const canvas = await html2canvas(el, {scale:2, backgroundColor:'#ffffff'});
+      el.classList.add('hidden');
       const imgData = canvas.toDataURL('image/jpeg', 0.95);
       const pdf = new jsPDF({ unit:'pt', format:'a4' });
       const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth - 72; // 1-inch margin both sides
+      const imgWidth = pageWidth - 80;
       const imgHeight = canvas.height * (imgWidth / canvas.width);
-      let y = 36; // top margin
-      if(imgHeight <= pageHeight - 72){
-        pdf.addImage(imgData, 'JPEG', 36, y, imgWidth, imgHeight);
-      }else{
-        // split to multiple pages if long
-        let sY = 0; const pageCanvas = document.createElement('canvas');
-        const ratio = imgWidth / canvas.width; const pageImgHeight = pageHeight - 72; // usable height
-        pageCanvas.width = canvas.width; pageCanvas.height = Math.floor(pageImgHeight / ratio);
-        const ctx = pageCanvas.getContext('2d');
-        while(sY < canvas.height){
-          ctx.clearRect(0,0,pageCanvas.width,pageCanvas.height);
-          ctx.drawImage(canvas, 0, sY, pageCanvas.width, pageCanvas.height, 0, 0, pageCanvas.width, pageCanvas.height);
-          const img = pageCanvas.toDataURL('image/jpeg', 0.95);
-          pdf.addImage(img, 'JPEG', 36, 36, imgWidth, pageImgHeight);
-          sY += pageCanvas.height;
-          if(sY < canvas.height) pdf.addPage();
-        }
-      }
+      pdf.addImage(imgData, 'JPEG', 40, 40, imgWidth, imgHeight);
       pdf.save(filename);
     }
 
-    function showAndMeasure(el){ el.classList.remove('hidden'); el.style.position='static'; return ()=>{ el.style.position=''; el.classList.add('hidden'); } }
-
     $('btnExportMandalPDF').onclick = async ()=>{
-      const rows = buildMandalSummaryTable();
-      const cleanup = showAndMeasure($('mandalSummaryCard'));
-      await exportElementAsPDF($('mandalSummaryCard'), 'mandal-summary.pdf');
-      cleanup();
+      const map = new Map();
+      donors.forEach(d=>{ const k=d.mandal||'अनिर्दिष्ट'; map.set(k,(map.get(k)||0)+1); });
+      const card = $('mandalSummaryCard');
+      buildSummaryTable('मंडल-वार रजिस्टर डोनर सार', 'मंडल', map, card);
+      await exportElementAsPDF(card, 'mandal-summary.pdf');
       showToast('मंडल सार PDF तैयार।');
     };
-    $('btnExportMandalJPG').onclick = async ()=>{
-      buildMandalSummaryTable();
-      const cleanup = showAndMeasure($('mandalSummaryCard'));
-      await exportElementAsJPG($('mandalSummaryCard'), 'mandal-summary.jpg');
-      cleanup();
-      showToast('मंडल सार JPG तैयार।');
+
+    $('btnExportGroupPDF').onclick = async ()=>{
+      const map = new Map();
+      donors.forEach(d=>{ const k=d.bloodGroup||'अनिर्दिष्ट'; map.set(k,(map.get(k)||0)+1); });
+      const card = $('groupSummaryCard');
+      buildSummaryTable('ब्लड ग्रुप-वार रजिस्टर डोनर सार', 'ब्लड ग्रुप', map, card);
+      await exportElementAsPDF(card, 'blood-group-summary.pdf');
+      showToast('ब्लड ग्रुप सार PDF तैयार।');
     };
   </script>
 </body>
 </html>
+
