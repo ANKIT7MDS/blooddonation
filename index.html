@@ -3,16 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>डोनर सर्च • रक्तदाता पोर्टल</title>
+  <title>डोनर खोज • रक्तदाता पोर्टल</title>
 
   <!-- Tailwind + Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Charts -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  
   <script>
     tailwind.config = {
       theme: {
@@ -29,66 +27,50 @@
   <style>
     body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
     .toast { position: fixed; inset-inline: 0; top: 10px; margin-inline: auto; width: fit-content; z-index: 50; }
+    .modal{ transition:opacity .2s ease }
   </style>
 </head>
-<body class="min-h-screen bg-slate-50">
+<body class="min-h-screen bg-peach-50">
   <div id="toast" class="toast hidden"></div>
 
-  <!-- Top strip -->
-  <header class="bg-gradient-to-r from-saffron-800 to-saffron-600 text-white">
-    <div class="max-w-6xl mx-auto px-4 py-2"></div>
-  </header>
-
-  <!-- Hero -->
-  <section class="relative overflow-hidden">
-    <div class="absolute inset-0">
-      <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/6/6d/Official_portrait_of_prime_minister_of_India%2C_Narendra_Modi.jpg')] bg-cover bg-center opacity-20"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-white/90 via-peach-50/90 to-white/95"></div>
-    </div>
-    <div class="relative max-w-6xl mx-auto px-4 py-6">
-      <div class="mx-auto text-center bg-white/70 backdrop-blur-sm border rounded-3xl px-5 sm:px-8 py-6 shadow">
-        <div class="text-slate-900 text-3xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
-        <div class="mt-1 text-6xl sm:text-7xl font-extrabोल्ड text-red-700 leading-tight">रक्तदाता पोर्टल</div>
-        <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
-          माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
-        </p>
-
-        <!-- Badges row -->
-        <div class="mt-4 flex items-center justify-between gap-3">
-          <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm">
-            🧡 <b>सेवा सही संकल्प</b>
-          </span>
-          <div class="inline-flex items-center gap-3 bg-white rounded-2xl px-3 py-2 border">
-            <!-- UPDATED LOGO -->
-            <img src="Sevapakhwada.png" alt="सेवा पखवाड़ा 2025" class="h-12 w-auto rounded" />
-            <span class="text-sm">रक्तदान • सेवा • सहयोग</span>
-          </div>
-          <span class="inline-flex items-center gap-2 bg-white/90 rounded-2xl px-3 py-2 border text-sm">
-            <b>सेवा परमो धर्म</b> 🩸
-          </span>
+  <header class="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg">
+      <div class="max-w-6xl mx-auto px-4 py-4 text-center">
+        <div class="flex justify-center items-center gap-4">
+          <img src="https://seva-pakhwada.in/assets/img/Sevapakhwada.png" alt="सेवा पखवाड़ा Logo" class="h-14 sm:h-16 bg-white p-1 rounded-md">
+          <h1 class="text-2xl sm:text-4xl font-extrabold">भारतीय जनता पार्टी जिला मंदसौर</h1>
         </div>
       </div>
-    </div>
-  </section>
+  </header>
 
   <main class="max-w-6xl mx-auto p-4 space-y-4">
+    <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border text-center">
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-red-700 leading-tight">रक्तदाता पोर्टल</h2>
+         <p class="mt-3 text-slate-700 text-base sm:text-lg max-w-3xl mx-auto">
+             माननीय प्रधानमंत्री श्री नरेंद्र मोदी जी के जन्म दिवस <b>17 सितम्बर</b> के अवसर पर, यह पोर्टल आम नागरिकों की सेवा में समर्पित है।
+        </p>
+        <div class="mt-4">
+          <a href="register.html" class="px-6 py-3 rounded-xl bg-orange-500 text-white font-semibold hover:bg-orange-600 transition-colors inline-block">
+            रक्तदाता के रूप में रजिस्टर करें
+          </a>
+        </div>
+    </div>
+
+
     <!-- Search -->
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
       <div class="flex items-center justify-between gap-2 flex-wrap">
-        <h2 class="text-lg font-semibold">डोनर सर्च</h2>
+        <h2 class="text-lg font-semibold">डोनर खोजें</h2>
         <div id="resultInfo" class="text-sm text-slate-500"></div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3">
-        <input id="qText" class="rounded-xl border px-4 py-3 text-base" placeholder="नाम/मोबाइल/वार्ड/बूथ/पता" />
+        <input id="qText" class="rounded-xl border px-4 py-3 text-base" placeholder="नाम/मोबाइल/पता" />
         <select id="qGroup" class="rounded-xl border px-4 py-3 text-base"></select>
         <select id="qMandal" class="rounded-xl border px-4 py-3 text-base"></select>
       </div>
-      <div class="mt-3 flex flex-wrap gap-2" id="chipGroups"></div>
-
+      
       <p class="mt-3 text-xs sm:text-sm text-slate-600">
-        रक्तदाताओं की गोपनीयता एवं सुरक्षा नियमों के कारण आप 3 से अधिक डोनर नहीं देख सकते।
-        रक्त की आवश्यकता होने पर कृपया नीचे अनुरोध भेजें; हमारी टीम शीघ्र संपर्क करेगी।
+        रक्तदाताओं की गोपनीयता हेतु केवल 3 परिणाम दिखाए गए हैं। अधिक जानकारी या रक्त की आवश्यकता के लिए नीचे दिया गया अनुरोध फॉर्म भरें।
       </p>
 
       <div id="cardGrid" class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
@@ -96,7 +78,7 @@
 
     <!-- Request -->
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-      <h3 class="text-base font-semibold mb-3">रक्त की आवश्यकता अनुरोध</h3>
+      <h3 class="text-base font-semibold mb-3">रक्त की आवश्यकता हेतु अनुरोध</h3>
       <form id="reqForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="text-sm text-slate-600">आपका नाम</label>
@@ -112,7 +94,7 @@
         </div>
         <div>
           <label class="text-sm text-slate-600">ब्लड ग्रुप</label>
-          <select id="r_group" class="mt-1 w-full rounded-xl border px-4 py-3 text-base"></select>
+          <select id="r_group" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" required></select>
         </div>
         <div>
           <label class="text-sm text-slate-600">यूनिट</label>
@@ -127,26 +109,24 @@
           <textarea id="r_hospital" class="mt-1 w-full rounded-xl border px-4 py-3 text-base" rows="2" placeholder="अस्पताल, डॉक्टर, अन्य"></textarea>
         </div>
         <div class="sm:col-span-2 flex items-center gap-3">
-          <button class="px-5 py-3 rounded-xl bg-saffron-700 text-white font-semibold">अनुरोध भेजें</button>
+          <button class="px-5 py-3 rounded-xl bg-orange-500 text-white font-semibold hover:bg-orange-600 transition-colors">अनुरोध भेजें</button>
           <span id="reqMsg" class="text-sm"></span>
         </div>
       </form>
     </div>
-
-    <!-- Charts -->
-    <div class="grid md:grid-cols-2 gap-4">
-      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-        <h3 class="text-base font-semibold mb-3">ब्लड ग्रुप-वाइज़ उपलब्ध डोनर</h3>
-        <div class="h-64"><canvas id="chartGroups"></canvas></div>
-      </div>
-      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-        <h3 class="text-base font-semibold mb-3">मंडल-वाइज़ उपलब्ध डोनर</h3>
-        <div class="h-64"><canvas id="chartMandals"></canvas></div>
-      </div>
-    </div>
   </main>
 
   <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500 text-center">© <span id="year"></span> भारतीय जनता पार्टी • जिला मंदसौर</footer>
+
+  <!-- Success Modal -->
+  <div id="reqOkModal" class="modal fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+    <div class="bg-white w-[90%] max-w-md rounded-2xl p-6 text-center">
+      <div class="text-2xl font-extrabold text-green-600">अनुरोध प्राप्त हुआ!</div>
+      <p class="mt-2 text-slate-700">आपकी रिक्वेस्ट प्राप्त हो गयी है। जिला भाजपा कार्यालय से जल्द ही कोई आपसे संपर्क करेगा।</p>
+      <button id="reqOkClose" class="mt-4 px-5 py-2 rounded-xl bg-orange-500 text-white font-semibold">ठीक है</button>
+    </div>
+  </div>
+
 
   <script>
     const MANDALS = ["अन्य","भेंसोदा","भानपुरा","गरोठ","मेलखेडा","खड़ावदा","शामगढ़","सुवासरा","बसाई","सीतामऊ","क्यामपुर","सीतामऊ ग्रामीण","गुर्जर बरडिया","धुंधधड़का","बुढा","पिपलिया मंडी","मल्हारगढ़","दलोदा","मगरामाता जी","मंदसौर ग्रामीण","मंदसौर उत्तर","मंदसौर दक्षिण","अन्य जिले से"];
@@ -157,27 +137,15 @@
     fill($('qGroup'), BLOOD_GROUPS, 'ब्लड ग्रुप');
     fill($('qMandal'), MANDALS, 'मंडल');
     fill($('r_group'), BLOOD_GROUPS, 'चुनें');
-    const cg = document.getElementById('chipGroups');
-    BLOOD_GROUPS.forEach(g=>{ const b=document.createElement('button'); b.type='button'; b.className='px-3 py-1 rounded-full bg-peach-100 text-saffron-800 border hover:bg-white'; b.textContent=g; b.onclick=()=>{ $('qGroup').value=g; render(); }; cg.appendChild(b); });
+
     const fmtTS = (ts)=>{ try{ const d = ts?.toDate? ts.toDate(): new Date(ts); return d.toLocaleDateString('en-GB'); }catch{ return '' } };
     const isWilling = (d)=>{ if(!d) return true; const w=d.willing; if(w===false) return false; if(typeof w==='string'){ const s=w.trim().toLowerCase(); if(['no','नहीं','nahi','nai'].includes(s)) return false; } return true; };
 
-    /* TELEGRAM (Working: Function -> Direct API) */
     const TELEGRAM_BOT_TOKEN = "8462350268:AAH2Za886P4VPrLbLWa-RcxL0pbRNwwIfKQ";
-    const TELEGRAM_CHAT_ID   = "733804072"; // आपका numeric DM id
+    const TELEGRAM_CHAT_ID   = "733804072";
 
     async function sendTelegram(text) {
       try {
-        // 1) Netlify function (recommended)
-        const r = await fetch('/.netlify/functions/send-tg', {
-          method: 'POST',
-          headers: { 'Content-Type':'application/json' },
-          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
-        });
-        if (r.ok) return;
-      } catch(_) {}
-      try {
-        // 2) Direct API fallback
         await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type':'application/json' },
@@ -211,10 +179,10 @@
     const db = getFirestore(app);
 
     let donors = [];
+
     onSnapshot(query(collection(db,'donors'), orderBy('createdAt','desc')), snap=>{
       donors = snap.docs.map(d=>({ id:d.id, ...d.data() }));
       render();
-      updateCharts();
     });
 
     ['qText','qGroup','qMandal'].forEach(id=> document.getElementById(id).addEventListener('input', render));
@@ -224,41 +192,44 @@
       const t = $('qText').value.trim().toLowerCase();
       const g = $('qGroup').value;
       const m = $('qMandal').value;
+      
       const rowsAll = donors.filter(d=>{
         const okText = !t || [d.name,d.phone,d.address,d.city].some(v=> (v||'').toLowerCase().includes(t));
         const okG = !g || d.bloodGroup===g;
         const okM = !m || d.mandal===m;
         return okText && okG && okM && isWilling(d);
       });
-      const rows = rowsAll.slice(0,3); // privacy: max 3
-      $('resultInfo').textContent = rowsAll.length ? `${rows.length}/${rowsAll.length} परिणाम (गोपनीयता सीमा)` : 'कोई परिणाम नहीं';
+      
+      const shuffled = rowsAll.sort(() => 0.5 - Math.random());
+      const rows = shuffled.slice(0, 3);
+
+      $('resultInfo').textContent = rowsAll.length ? `${rows.length}/${rowsAll.length} परिणाम प्रदर्शित` : 'कोई परिणाम नहीं';
       const grd = $('cardGrid'); grd.innerHTML='';
       rows.forEach(d=>{
         const waNum = (d.whatsapp || d.phone || '').replace(/\D/g,'');
-        const msg = encodeURIComponent(`नमस्कार ${d.name||''}, रक्तदान हेतु सहायता चाहिए।`);
-        const addressLine = d.address ? `<div><b>वार्ड/बूथ/पता:</b> ${d.address}</div>` : '';
+        const msg = encodeURIComponent(`नमस्कार ${d.name||''} जी, रक्तदान हेतु सहायता चाहिए। यह अनुरोध भाजपा जिला मंदसौर रक्तदाता पोर्टल ( https://raktdata-mandsaur.netlify.app/ ) से है।`);
+        const addressLine = d.address ? `<div><b>पता:</b> ${d.address}</div>` : '';
         grd.insertAdjacentHTML('beforeend', `
-          <div class="bg-white border rounded-2xl p-3 flex flex-col gap-2">
+          <div class="bg-white border rounded-2xl p-4 flex flex-col gap-2 hover:shadow-lg transition-shadow text-left">
             <div class="flex items-center justify-between">
-              <div class="font-semibold text-slate-800">${d.name||''}</div>
-              <span class="text-xs px-2 py-1 rounded-full bg-peach-100 text-saffron-800 border">${d.bloodGroup||''}</span>
+              <div class="font-semibold text-slate-800 text-lg">${d.name||''}</div>
+              <span class="text-base px-3 py-1 rounded-full bg-red-100 text-red-700 border border-red-200 font-bold">${d.bloodGroup||''}</span>
             </div>
-            <div class="text-sm text-slate-600">
+            <div class="text-sm text-slate-600 space-y-1">
               <div><b>मंडल:</b> ${d.mandal||'—'}</div>
               ${addressLine}
-              <div><b>मोबाइल:</b> <a class="underline" href="tel:${d.phone||''}">${d.phone||''}</a></div>
-              ${d.whatsapp ? `<div><b>व्हाट्सऐप:</b> <a class="underline" href="https://wa.me/${waNum}">+91 ${waNum}</a></div>` : ''}
+              <div><b>मोबाइल:</b> <a class="underline font-semibold" href="tel:${d.phone||''}">${d.phone||''}</a></div>
+              ${d.whatsapp ? `<div><b>व्हाट्सऐप:</b> <a class="underline font-semibold" href="https://wa.me/91${waNum}">+91 ${waNum}</a></div>` : ''}
               <div><b>आख़िरी दान:</b> ${d.lastDonationDate? fmtTS(d.lastDonationDate):'—'}</div>
             </div>
-            <div class="flex gap-2 pt-1">
-              <a class="px-3 py-2 rounded-xl bg-saffron-700 text-white text-sm" href="tel:${d.phone||''}">कॉल</a>
-              <a class="px-3 py-2 rounded-xl bg-green-600 text-white text-sm" target="_blank" href="https://wa.me/${waNum}?text=${msg}">व्हाट्सऐप</a>
+            <div class="flex gap-2 pt-2 mt-auto">
+              <a class="flex-1 text-center px-3 py-2 rounded-xl bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600" href="tel:${d.phone||''}">कॉल करें</a>
+              <a class="flex-1 text-center px-3 py-2 rounded-xl bg-green-500 text-white text-sm font-semibold hover:bg-green-600" target="_blank" href="https://wa.me/91${waNum}?text=${msg}">व्हाट्सऐप करें</a>
             </div>
           </div>`);
       });
     }
 
-    // Request submit
     document.getElementById('reqForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
       const $ = (id)=>document.getElementById(id);
@@ -273,12 +244,22 @@
         createdAt: serverTimestamp(),
         status: "new"
       };
+      
+      if (!payload.requester || !payload.phone || !payload.bloodGroup) {
+          showToast('कृपया नाम, मोबाइल और ब्लड ग्रुप भरें।', false);
+          return;
+      }
+      
       const msg = $('reqMsg'); msg.textContent='';
       try {
         await addDoc(collection(db,'requests'), payload);
-        msg.className = 'text-green-700';
-        msg.textContent = '✅ अनुरोध सफलतापूर्वक दर्ज हो गया। हमारी टीम शीघ्र संपर्क करेगी।';
-        showToast('आपका अनुरोध दर्ज हो गया।', true);
+        const modal = $('reqOkModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        $('reqOkClose').onclick = () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
         sendTelegram(`🆘 रक्त अनुरोध\nनाम: ${payload.requester}\nमोबाइल: ${payload.phone}\nरोगी: ${payload.patient||'-'}\nब्लड: ${payload.bloodGroup||'-'} (${payload.units} यूनिट)\nस्थान: ${payload.location||'-'}\nअस्पताल/नोट्स: ${payload.hospital||'-'}`);
         e.target.reset();
       } catch(err) {
@@ -287,32 +268,7 @@
         showToast('अनुरोध भेजने में समस्या हुई।', false);
       }
     });
-
-    /* Charts */
-    let chartGroups, chartMandals;
-    function updateCharts(){
-      // group-wise
-      const groupCounts = BLOOD_GROUPS.map(g => donors.filter(d => d.bloodGroup===g && isWilling(d)).length);
-      const elG = document.getElementById('chartGroups');
-      if(chartGroups) chartGroups.destroy();
-      chartGroups = new Chart(elG, {
-        type:'bar',
-        data:{ labels:BLOOD_GROUPS, datasets:[{ label:'डोनर', data:groupCounts }] },
-        options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}
-      });
-
-      // mandal-wise
-      const map = new Map();
-      donors.forEach(d=>{ if(!isWilling(d)) return; const k=d.mandal||'अनिर्दिष्ट'; map.set(k,(map.get(k)||0)+1); });
-      const mandalPairs = Array.from(map.entries()).sort((a,b)=> b[1]-a[1]);
-      const elM = document.getElementById('chartMandals');
-      if(chartMandals) chartMandals.destroy();
-      chartMandals = new Chart(elM, {
-        type:'bar',
-        data:{ labels: mandalPairs.map(p=>p[0]), datasets:[{ label:'डोनर', data: mandalPairs.map(p=>p[1]) }] },
-        options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{ precision:0 }}}}
-      });
-    }
   </script>
 </body>
 </html>
+
