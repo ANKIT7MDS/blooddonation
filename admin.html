@@ -29,6 +29,9 @@
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- html2canvas + jsPDF for export -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 <body class="min-h-screen bg-slate-50">
   <div id="toast" class="toast hidden"></div>
@@ -131,6 +134,11 @@
             <button id="btnSaveDonation" class="px-4 py-3 rounded-xl bg-saffron-700 text-white font-semibold">सेव करें</button>
             <button id="btnExportDonors" class="px-4 py-3 rounded-xl bg-slate-900 text-white">Export Donors CSV</button>
             <button id="btnExportDonations" class="px-4 py-3 rounded-xl bg-slate-900 text-white">Export Donations CSV</button>
+            <!-- NEW: Mandal summary export buttons -->
+            <div class="ml-auto flex gap-2 items-center">
+              <button id="btnExportMandalPDF" class="px-4 py-3 rounded-xl bg-emerald-700 text-white">मंडल रिपोर्ट (PDF)</button>
+              <button id="btnExportMandalJPG" class="px-4 py-3 rounded-xl bg-emerald-800 text-white">मंडल रिपोर्ट (JPG)</button>
+            </div>
           </div>
         </div>
       </div>
@@ -166,6 +174,17 @@
             </thead>
             <tbody id="donorsTbody"></tbody>
           </table>
+        </div>
+        <!-- NEW: Pagination controls -->
+        <div class="mt-3 flex items-center justify-between gap-3 flex-wrap">
+          <div class="text-sm text-slate-600">पेज साइज: 100</div>
+          <div class="flex items-center gap-2">
+            <button id="pgFirst" class="px-3 py-1 rounded-lg border">⏮️</button>
+            <button id="pgPrev" class="px-3 py-1 rounded-lg border">◀️</button>
+            <span class="text-sm">पेज <b id="pgNum">1</b> / <b id="pgTotal">1</b></span>
+            <button id="pgNext" class="px-3 py-1 rounded-lg border">▶️</button>
+            <button id="pgLast" class="px-3 py-1 rounded-lg border">⏭️</button>
+          </div>
         </div>
       </div>
 
@@ -240,6 +259,30 @@
       </div>
     </div>
   </main>
+
+  <!-- Hidden: Mandal Summary card to render for export -->
+  <div id="mandalSummaryCard" class="hidden fixed top-0 left-0 w-[800px] p-8 bg-white text-slate-800">
+    <div class="text-center">
+      <div class="text-2xl font-extrabold">भारतीय जनता पार्टी • जिला मंदसौर</div>
+      <div class="text-3xl font-extrabold text-red-700 mt-1">रक्तदाता पोर्टल</div>
+      <div id="ms-date" class="text-sm text-slate-600 mt-1"></div>
+      <div class="mt-2 text-base">मंडल-वार रजिस्टर डोनर सार</div>
+    </div>
+    <div class="mt-6">
+      <table class="w-full text-base">
+        <thead>
+          <tr class="bg-slate-100">
+            <th class="p-2 text-left">मंडल</th>
+            <th class="p-2 text-left">कुल रजिस्टर डोनर</th>
+          </tr>
+        </thead>
+        <tbody id="ms-body"></tbody>
+      </table>
+    </div>
+    <div class="mt-6 text-sm text-slate-700 border-t pt-3">
+      <div>संदेश: "आदरणीय मंडल अध्यक्ष जी, आपके मंडल से <span id="ms-one-line"></span> डोनर रजिस्टर हैं — बाकी सब ठीक है, कोई परिवर्तन नहीं करना है।"</div>
+    </div>
+  </div>
 
   <footer class="max-w-6xl mx-auto p-4 text-xs text-slate-500 text-center">© <span id="year"></span> भारतीय जनता पार्टी • जिला मंदसौर</footer>
 
@@ -358,25 +401,34 @@
       sel.onchange = ()=>{ const d = donors.find(x=>x.id===sel.value); $('selDonorInfo').textContent = d ? `मोबाइल: ${d.phone||''} • आख़िरी दान: ${d.lastDonationDate?fmtTS(d.lastDonationDate):'—'}` : ''; };
     }
 
-    /* ---------- Donor list filters ---------- */
+    /* ---------- Donor list filters + PAGINATION (100/pg) ---------- */
     const fText = $('fText'); const fGroup = $('fGroup'); const fMandal = $('fMandal'); const fWilling = $('fWilling');
     function fill(el, arr, first){ el.innerHTML=''; if(first) el.insertAdjacentHTML('beforeend', `<option value="">${first}</option>`); arr.forEach(x=> el.insertAdjacentHTML('beforeend', `<option value="${x}">${x}</option>`)); }
     fill(fGroup, BLOOD_GROUPS, 'ब्लड ग्रुप'); fill(fMandal, MANDALS, 'मंडल');
-    ;[fText,fGroup,fMandal,fWilling].forEach(el=> el.addEventListener('input', renderDonorTable));
+    ;[fText,fGroup,fMandal,fWilling].forEach(el=> el.addEventListener('input', ()=>{ currentPage=1; renderDonorTable(); }));
     const willingOk = (d)=> (d.willing===true || (typeof d.willing==='string' && d.willing.toLowerCase()==='yes'));
 
-    function renderDonorTable(){
-      const tb=$('donorsTbody'); tb.innerHTML='';
+    const PAGE_SIZE = 100; let currentPage = 1; let totalPages = 1; let lastRows = [];
+    function applyFilters(){
       const t=(fText.value||'').toLowerCase(), g=fGroup.value, m=fMandal.value, w=fWilling.value;
-      const rows = donors.filter(d=>{
+      return donors.filter(d=>{
         const okText = !t || [d.name,d.phone,d.address].some(v=> (v||'').toLowerCase().includes(t));
         const okG = !g || d.bloodGroup===g;
         const okM = !m || d.mandal===m;
-        const will = (d.willing===true || (typeof d.willing==='string' && d.willing.toLowerCase()==='yes'));
+        const will = willingOk(d);
         const okW = !w || (w==='yes'? will : !will);
         return okText && okG && okM && okW;
       });
-      rows.forEach(d=> tb.insertAdjacentHTML('beforeend', `
+    }
+
+    function renderDonorTable(){
+      const tb=$('donorsTbody'); tb.innerHTML='';
+      lastRows = applyFilters();
+      totalPages = Math.max(1, Math.ceil(lastRows.length / PAGE_SIZE));
+      if(currentPage>totalPages) currentPage = totalPages;
+      const start = (currentPage-1)*PAGE_SIZE; const end = start + PAGE_SIZE;
+      const pageRows = lastRows.slice(start, end);
+      pageRows.forEach(d=> tb.insertAdjacentHTML('beforeend', `
         <tr class="odd:bg-white even:bg-slate-50">
           <td class="p-2 font-medium">${d.name||''}</td>
           <td class="p-2"><a class="underline" href="tel:${d.phone||''}">${d.phone||''}</a></td>
@@ -386,7 +438,17 @@
           <td class="p-2">${d.lastDonationDate?fmtTS(d.lastDonationDate):'—'}</td>
           <td class="p-2">${willingOk(d)?'हाँ':'नहीं'}</td>
         </tr>`));
+      $('pgNum').textContent = String(currentPage);
+      $('pgTotal').textContent = String(totalPages);
+      $('pgPrev').disabled = $('pgFirst').disabled = (currentPage===1);
+      $('pgNext').disabled = $('pgLast').disabled = (currentPage===totalPages);
     }
+
+    // Pagination buttons
+    $('pgFirst').onclick = ()=>{ currentPage=1; renderDonorTable(); };
+    $('pgPrev').onclick  = ()=>{ if(currentPage>1){ currentPage--; renderDonorTable(); } };
+    $('pgNext').onclick  = ()=>{ if(currentPage<totalPages){ currentPage++; renderDonorTable(); } };
+    $('pgLast').onclick  = ()=>{ currentPage=totalPages; renderDonorTable(); };
 
     /* ---------- Save donation ---------- */
     $('btnSaveDonation').onclick = async ()=>{
@@ -422,7 +484,7 @@
     $('btnExportDonations').onclick = ()=>{
       const header = ['date','donorName','donorPhone','bloodGroup','mandal','units','recipientName','recipientPhone','hospital'];
       const rows = donations.map(x=> ([
-        (x.date?fmtTS(x.date):''), x.donorName||'', x.donorPhone||'', x.bloodGroup||'', x.mандल||x.mandal||'', x.units||'',
+        (x.date?fmtTS(x.date):''), x.donorName||'', x.donorPhone||'', x.bloodGroup||'', x.mंडल||x.mandal||'', x.units||'',
         x.recipientName||'', x.recipientPhone||'', (x.hospital||'').replace(/\n/g,' ')
       ]));
       downloadCSV('donations.csv', [header, ...rows]);
@@ -596,6 +658,74 @@
         showToast('सेव करने में समस्या हुई।', false);
       }
     }
+
+    /* ---------- Mandal Summary EXPORT (PDF/JPG) ---------- */
+    function buildMandalSummaryTable(){
+      const map = new Map();
+      donors.forEach(d=>{ const k=d.mandal||'अनिर्दिष्ट'; map.set(k,(map.get(k)||0)+1); });
+      const rows = Array.from(map.entries()).sort((a,b)=> a[0].localeCompare(b[0]));
+      const body = $('ms-body'); body.innerHTML='';
+      rows.forEach(([mandal,count])=>{
+        body.insertAdjacentHTML('beforeend', `<tr class="odd:bg-white even:bg-slate-50"><td class="p-2">${mandal}</td><td class="p-2">${count}</td></tr>`);
+      });
+      // placeholder single mandal line; fill dynamically on per-mandal export if needed later
+      $('ms-one-line').textContent = '—';
+      $('ms-date').textContent = 'दिनांक: ' + new Date().toLocaleDateString('hi-IN');
+      return rows;
+    }
+
+    async function exportElementAsJPG(el, filename){
+      const canvas = await html2canvas(el, {scale:2, backgroundColor:'#ffffff'});
+      const dataURL = canvas.toDataURL('image/jpeg', 0.95);
+      const a = document.createElement('a'); a.href = dataURL; a.download = filename; a.click();
+    }
+
+    async function exportElementAsPDF(el, filename){
+      const { jsPDF } = window.jspdf;
+      const canvas = await html2canvas(el, {scale:2, backgroundColor:'#ffffff'});
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+      const pdf = new jsPDF({ unit:'pt', format:'a4' });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth - 72; // 1-inch margin both sides
+      const imgHeight = canvas.height * (imgWidth / canvas.width);
+      let y = 36; // top margin
+      if(imgHeight <= pageHeight - 72){
+        pdf.addImage(imgData, 'JPEG', 36, y, imgWidth, imgHeight);
+      }else{
+        // split to multiple pages if long
+        let sY = 0; const pageCanvas = document.createElement('canvas');
+        const ratio = imgWidth / canvas.width; const pageImgHeight = pageHeight - 72; // usable height
+        pageCanvas.width = canvas.width; pageCanvas.height = Math.floor(pageImgHeight / ratio);
+        const ctx = pageCanvas.getContext('2d');
+        while(sY < canvas.height){
+          ctx.clearRect(0,0,pageCanvas.width,pageCanvas.height);
+          ctx.drawImage(canvas, 0, sY, pageCanvas.width, pageCanvas.height, 0, 0, pageCanvas.width, pageCanvas.height);
+          const img = pageCanvas.toDataURL('image/jpeg', 0.95);
+          pdf.addImage(img, 'JPEG', 36, 36, imgWidth, pageImgHeight);
+          sY += pageCanvas.height;
+          if(sY < canvas.height) pdf.addPage();
+        }
+      }
+      pdf.save(filename);
+    }
+
+    function showAndMeasure(el){ el.classList.remove('hidden'); el.style.position='static'; return ()=>{ el.style.position=''; el.classList.add('hidden'); } }
+
+    $('btnExportMandalPDF').onclick = async ()=>{
+      const rows = buildMandalSummaryTable();
+      const cleanup = showAndMeasure($('mandalSummaryCard'));
+      await exportElementAsPDF($('mandalSummaryCard'), 'mandal-summary.pdf');
+      cleanup();
+      showToast('मंडल सार PDF तैयार।');
+    };
+    $('btnExportMandalJPG').onclick = async ()=>{
+      buildMandalSummaryTable();
+      const cleanup = showAndMeasure($('mandalSummaryCard'));
+      await exportElementAsJPG($('mandalSummaryCard'), 'mandal-summary.jpg');
+      cleanup();
+      showToast('मंडल सार JPG तैयार।');
+    };
   </script>
 </body>
 </html>
