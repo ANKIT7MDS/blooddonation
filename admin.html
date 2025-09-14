@@ -48,7 +48,7 @@
   <main class="max-w-6xl mx-auto p-4 space-y-4">
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border text-center relative overflow-hidden">
         <div class="absolute -right-10 -bottom-10 opacity-20 pointer-events-none">
-            <img src="MODI 069745253.png" alt="नरेंद्र मोदी" class="w-60 h-auto">
+            <img src="https://i.ibb.co/9g0g4sM/MODI-069745253.png" alt="नरेंद्र मोदी" class="w-60 h-auto">
         </div>
         <h2 class="text-3xl sm:text-5xl font-extrabold text-red-700 leading-tight">एडमिन पैनल</h2>
         <p class="mt-2 text-slate-600">पोर्टल प्रबंधन एवं डाटा अवलोकन</p>
@@ -329,15 +329,19 @@
     $('btnLogout').onclick = async ()=>{ await signOut(auth); };
     
     let ADMIN_EMAILS = [];
-    async function checkAuth() {
-        try {
-            const snap = await getDoc(doc(db, 'settings', 'admins'));
-            ADMIN_EMAILS = (snap.exists() && Array.isArray(snap.data().emails)) ? snap.data().emails.map(e=>String(e||'').toLowerCase()) : [];
-        } catch(e) { console.error("Admin emails load error", e); }
-
-        onAuthStateChanged(auth, (user) => {
+    function checkAuth() {
+        onAuthStateChanged(auth, async (user) => {
           const who = $('whoami'), mailEl = $('userEmail');
           if (user) {
+            try {
+                const snap = await getDoc(doc(db, 'settings', 'admins'));
+                ADMIN_EMAILS = (snap.exists() && Array.isArray(snap.data().emails)) ? snap.data().emails.map(e=>String(e||'').toLowerCase()) : [];
+            } catch(e) { 
+                console.error("Admin emails load error", e); 
+                alert('Admin सूची लोड करने में त्रुटि हुई। अनुमति जाँची नहीं जा सकती।');
+                return;
+            }
+
             const email = (user.email||'').toLowerCase();
             mailEl.textContent = user.email || '';
             who.classList.remove('hidden');
